@@ -1,0 +1,567 @@
+create table if not exists DATI_VEICOLO_RITIRATO (
+  uuid_veicolo_ritirato uuid primary key default gen_random_uuid(),
+  uuid_azienda_ritiro_veicoli uuid,
+  uuid_modello_veicolo uuid,
+  uuid_stato_avanzamento_veicolo uuid,
+  anno_veicolo_ritirato integer check (anno_veicolo_ritirato >= 1900),
+  cilindrata_veicolo_ritirato numeric (4,0),
+  vin_veicolo_ritirato text check (char_length(vin_veicolo_ritirato) = 17),
+  targa_veicolo_ritirato text check (char_length(targa_veicolo_ritirato) = 7),
+  km_veicolo_ritirato numeric (7,0),
+  tipologia_detentore text,
+  forma_legale_detentore text,
+  ragione_sociale_detentore text,
+  sede_legale_detentore text,
+  nome_detentore text,
+  cognome_detentore text,
+  cf_detentore text check (char_length(cf_detentore) = 16),
+  piva_detentore text check (char_length(piva_detentore) = 11),
+  data_nascita_detentore date,
+  luogo_nascita_detentore text,
+  comune_residenza_detentore text,
+  provincia_residenza_detentore text,
+  cap_residenza_detentore text,
+  indirizzo_residenza_detentore text,
+  tipologia_documento_detentore text,
+  numero_documento_detentore text,
+  nazionalita_documento_detentore text,
+  data_rilascio_documento_detentore date,
+  ente_rilascio_documento_detentore text,
+  email_detentore text,
+  mobile_detentore numeric,
+  tipologia_documento_veicolo_ritirato text,
+  foto_documento_veicolo_ritirato text,
+  foto_documento_detentore text,
+  created_at_veicolo_ritirato timestamp with time zone default now()
+);
+
+
+
+
+create table if not exists AZIENDA_RITIRO_VEICOLI (
+  uuid_azienda_ritiro_veicoli uuid primary key default gen_random_uuid(),
+  uuid_rules uuid,
+  ragione_sociale_arv text,
+  piva_arv text (char_length(piva_arv) = 11),
+  sdi_arv text,
+  cap_legale_arv text,
+  citta_legale_arv text,
+  provincia_legale_arv text,
+  indirizzo_legale_arv text,
+  cap_operativa_arv text,
+  citta_operativa_arv text,
+  provincia_operativa_arv text,
+  indirizzo_operativa_arv text,
+  email_arv text,
+  telefono_arv text,
+  mobile_arv text,
+  mobile_autista_arv text,
+  created_at_arv timestamp with time zone default now()
+);
+
+
+create table if not exists RULES_USER (
+  uuid_rules uuid primary key default gen_random_uuid(),
+  alias_rules text,
+  created_at_rules timestamp with time zone default now()
+);
+
+
+
+
+create table if not exists STATO_AVANZAMENTO_DEMOLIZIONE (
+  uuid_stato_avanzamento_demolizione uuid primary key default gen_random_uuid(),
+  uuid_veicolo_ritirato uuid,
+  codice_stato_avanzamento numeric,
+  alias_stato_avanzamento text,
+  created_at_stato_avanzamento timestamp with time zone default now()
+);
+
+
+
+create table if not exists MODELLO_VEICOLO (
+  uuid_modello_veicolo uuid primary key default gen_random_uuid(),
+  modello_veicolo text,
+  marca_veicolo text,
+  created_at_modello_veicolo timestamp with time zone default now()
+);
+
+
+
+
+create table if not exists CERTIFICATO_DEMOLIZIONE (
+  uuid_certificato_demolizione uuid primary key default gen_random_uuid(),
+  uuid_veicolo_ritirato uuid,
+  documento_demolizione text,
+  altro_documento_demolizione text,
+  demolizione_completata boolean,
+  tipologia_demolizione text,
+  created_at_certificato_demolizione timestamp with time zone default now()
+);
+
+
+create table if not exists DEMOLIZIONE_TOTALE (
+  uuid_certificato_demolizione uuid
+);
+
+
+
+create table if not exists DEMOLIZIONE_PARZIALE (
+  uuid_certificato_demolizione uuid
+);
+
+
+
+create table if not exists MAGAZZINO_RICAMBIO (
+  uuid_ricambio_mag uuid primary key default gen_random_uuid(),
+  uuid_certificato_demolizione uuid,
+  uuid_tipologia_ricambio uuid,
+  codice_oem_ricambio_mag text,
+  codice_interno_ricambio_mag text,
+  codice_ean_ricambio_mag text,
+  condizione_ricambio text,
+  stato_usura_ricambio_mag text,
+  sito boolean,
+  qnt_ricambio_mag numeric,
+  foto_ricambio_mag text,
+  created_at_ricambio timestamp with time zone default now()
+);
+
+
+create table if not exists LISTINO_RICAMBIO (
+  uuid_listino uuid primary key default gen_random_uuid(),
+  uuid_ricambio_mag uuid,
+  uuid_sede uuid,
+  costo_acquisto_ru numeric(5,2) check (prezzo_di_vendita_ru is null or prezzo_di_vendita_ru >= 0),
+  prezzo_di_vendita_ru numeric(5,2) check (prezzo_di_vendita_ru is null or prezzo_di_vendita_ru >= 0),
+  sconto_ru numeric(3,0) check (sconto_ru between 0 and 100),
+  created_at_listino timestamp with time zone default now()
+);
+
+
+create table if not exists TIPOLOGIA_RICAMBIO (
+  uuid_tipologia_ricambio uuid primary key default gen_random_uuid(),
+  nome_ricambio text,
+  descrizione_ricambio text,
+  created_at_tipologia_ricambio timestamp with time zone default now()
+);
+
+
+
+create table if not exists MOVIMENTO_MAGAZZINO (
+  uuid_movimento_magazzino uuid primary key default gen_random_uuid(),
+  uuid_ricambio_mag uuid,
+  uuid_sede_entrata uuid,
+  uuid_sede_uscita uuid,
+  uuid_cliente uuid,
+  qnt_mov numeric(3,0),
+  tipologia_mov text,
+  note_mov text,
+  created_at_mov timestamp with time zone default now()
+);
+
+
+create table if not exists SEDE_MAGAZZINO (
+  uuid_sede uuid primary key default gen_random_uuid(),
+  nome_sede text,
+  cap_sede text,
+  provincia_sede text,
+  citta_sede text,
+  email_sede text,
+  telefono_sede text,
+  mobile_sede text,
+  disponibilita_mag boolean,
+  priorita_mag numeric,
+  created_at_sede timestamp with time zone default now()
+);
+
+
+create table if not exists MOVIMENTO_DDT (
+  uuid_movimento_ddt uuid primary key default gen_random_uuid(),
+  uuid_documento_ddt uuid,
+  uuid_movimento_magazzino uuid,
+  qnt_ddt numeric,
+  created_at_movimento_ddt timestamp with time zone default now()
+);
+
+create table if not exists DOCUMENTO_DDT (
+  uuid_documento_ddt uuid primary key default gen_random_uuid(),
+  uuid_cliente uuid,
+  uuid_azienda_ritiro_veicoli uuid,
+  progressivo_ddt integer generated always as identity,
+  data_ddt date,
+  cap_ddt_destinazione text,
+  provincia_ddt_destinazione text,
+  citta_ddt_destinazione text,
+  indrizzio_ddt_destinazione text,
+  telefono_ddt_destinazione text,
+  referente_ddt_destinazione text,
+  colli_ddt_destinazione numeric(3,0),
+  peso_ddt_destinazione text,
+  trasporto_ddt_destinazione text,
+  annotazioni_ddt_destinazione text,
+  created_at_documento_ddt timestamp with time zone default now()
+);
+
+create table if not exists CLIENTE (
+  uuid_cliente uuid primary key default gen_random_uuid(),
+  tipologia_cliente text,
+  cf_cliente text check (length(cf_cliente) = 16),
+  partita_iva_cliente text check (length(partita_iva_cliente) = 11),
+  ragione_sociale_cliente text,
+  provincia_sede_legale_cliente text,
+  citta_sede_legale_cliente text,
+  cap_sede_legale_cliente text,
+  indirizzo_sede_legale_cliente text,
+  nome_cliente text,
+  cognome_cliente text,
+  email_cliente text,
+  mobile_cliente text,
+  telefono_cliente text,
+  pec_cliente text,
+  sdi_cliente text,
+  created_at_cliente timestamp with time zone default now()
+);
+
+
+
+
+create table if not exists RICHIESTA_RITIRO_VEICOLO_ONLINE (
+  uuid_richiesta_rv uuid primary key default gen_random_uuid(),
+  uuid_modello_veicolo uuid,
+  nome_rv text,
+  cognome_rv text,
+  provincia_rv text,
+  citta_rv text,
+  cap_rv text,
+  indirizzo_rv text,
+  email_rv text,
+  mobile_rv text,
+  telefono_rv text,
+  targa_rv text,
+  anno_rv text,
+  stato_usura_rv text,
+  km_rv text,
+  accettazione_rv boolean,
+  created_at_rvo timestamp with time zone default now()
+);
+
+
+
+create table if not exists RITIRO_VEICOLO_ONLINE (
+  uuid_ritiro_vo uuid primary key default gen_random_uuid(),
+  uuid_richiesta_rv uuid,
+  uuid_azienda_ritiro_veicoli uuid,
+  targa_rv text,
+  foto_documento_veicolo_f_vo text,
+  foto_documento_veicolo_r_vo text,
+  foto_documento_cliente_f_vo text,
+  foto_documento_cliente_r_vo text,
+  cf_cliente_vo text,
+  created_at_cliente timestamp with time zone default now()
+);
+
+
+create table if not exists STATO_AVANZAMENTO_RITIRO (
+  uuid_ritiro_vo uuid,
+  uuid_richiesta_rv uuid,
+  targa_rv text,
+  alias_stato_avanzamento_rv text,
+  created_at_stato_avanzamento_rv timestamp with time zone default now()
+);
+
+
+-----------------------------CODICE PER LE FK
+
+ALTER TABLE public.dati_veicolo_ritirato
+ADD CONSTRAINT dvr_arv_fk
+FOREIGN KEY (uuid_azienda_ritiro_veicoli)
+
+REFERENCES public.azienda_ritiro_veicoli(uuid_azienda_ritiro_veicoli)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+--
+
+ALTER TABLE public.dati_veicolo_ritirato
+ADD CONSTRAINT dvr_md_fk
+FOREIGN KEY (uuid_modello_veicolo)
+
+REFERENCES public.modello_veicolo(uuid_modello_veicolo)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+--
+
+ALTER TABLE public.azienda_ritiro_veicoli
+ADD CONSTRAINT arv_ru_fk
+FOREIGN KEY (uuid_rules)
+
+REFERENCES public.rules_user(uuid_rules)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.stato_avanzamento_demolizione
+ADD CONSTRAINT sad_dvr_fk
+FOREIGN KEY (uuid_veicolo_ritirato)
+
+REFERENCES public.dati_veicolo_ritirato(uuid_veicolo_ritirato)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+--
+
+ALTER TABLE public.certificato_demolizione
+ADD CONSTRAINT cd_dvr_fk
+FOREIGN KEY (uuid_veicolo_ritirato)
+
+REFERENCES public.dati_veicolo_ritirato(uuid_veicolo_ritirato)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.demolizione_totale
+ADD CONSTRAINT dt_cd_fk
+FOREIGN KEY (uuid_certificato_demolizione)
+
+REFERENCES public.certificato_demolizione(uuid_certificato_demolizione)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.demolizione_parziale
+ADD CONSTRAINT dp_cd_fk
+FOREIGN KEY (uuid_certificato_demolizione)
+
+REFERENCES public.certificato_demolizione(uuid_certificato_demolizione)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.magazzino_ricambio
+ADD CONSTRAINT mr_dp_fk
+FOREIGN KEY (uuid_certificato_demolizione)
+
+REFERENCES public.demolizione_parziale(uuid_certificato_demolizione)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.magazzino_ricambio
+ADD CONSTRAINT mr_tr_fk
+FOREIGN KEY (uuid_tipologia_ricambio)
+
+REFERENCES public.tipologia_ricambio(uuid_tipologia_ricambio)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.listino_ricambio
+ADD CONSTRAINT lr_mr_fk
+FOREIGN KEY (uuid_ricambio_mag)
+
+REFERENCES public.magazzino_ricambio(uuid_ricambio_mag)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.listino_ricambio
+ADD CONSTRAINT lr_sm_fk
+FOREIGN KEY (uuid_sede)
+
+REFERENCES public.sede_magazzino(uuid_sede)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.movimento_magazzino
+ADD CONSTRAINT mm_mr_fk
+FOREIGN KEY (uuid_ricambio_mag)
+
+REFERENCES public.magazzino_ricambio(uuid_ricambio_mag)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.movimento_magazzino
+ADD CONSTRAINT mm_smu_fk
+FOREIGN KEY (uuid_sede_uscita)
+
+REFERENCES public.sede_magazzino(uuid_sede)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.movimento_magazzino
+ADD CONSTRAINT mm_sme_fk
+FOREIGN KEY (uuid_sede_entrata)
+
+REFERENCES public.sede_magazzino(uuid_sede)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.movimento_magazzino
+ADD CONSTRAINT mm_cl_fk
+FOREIGN KEY (uuid_cliente)
+
+REFERENCES public.cliente(uuid_cliente)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.movimento_ddt
+ADD CONSTRAINT mdt_ddt_fk
+FOREIGN KEY (uuid_documento_ddt)
+
+REFERENCES public.documento_ddt(uuid_documento_ddt)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.movimento_ddt
+ADD CONSTRAINT mdt_mm_fk
+FOREIGN KEY (uuid_movimento_magazzino)
+
+REFERENCES public.movimento_magazzino(uuid_movimento_magazzino)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.documento_ddt
+ADD CONSTRAINT ddt_cl_fk
+FOREIGN KEY (uuid_cliente)
+
+REFERENCES public.cliente(uuid_cliente)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.documento_ddt
+ADD CONSTRAINT ddt_arv_fk
+FOREIGN KEY (uuid_azienda_ritiro_veicoli)
+
+REFERENCES public.azienda_ritiro_veicoli(uuid_azienda_ritiro_veicoli)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.richiesta_ritiro_veicolo_online
+ADD CONSTRAINT ddt_mv_fk
+FOREIGN KEY (uuid_modello_veicolo)
+
+REFERENCES public.modello_veicolo(uuid_modello_veicolo)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.stato_avanzamento_ritiro
+ADD CONSTRAINT sar_rrvo_fk
+FOREIGN KEY (uuid_richiesta_rv)
+
+REFERENCES public.richiesta_ritiro_veicolo_online(uuid_richiesta_rv)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.stato_avanzamento_ritiro
+ADD CONSTRAINT sar_rvo_fk
+FOREIGN KEY (uuid_ritiro_vo)
+
+REFERENCES public.ritiro_veicolo_online(uuid_ritiro_vo)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.ritiro_veicolo_online
+ADD CONSTRAINT rvo_rrvo_fk
+FOREIGN KEY (uuid_richiesta_rv)
+
+REFERENCES public.richiesta_ritiro_veicolo_online(uuid_richiesta_rv)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+ALTER TABLE public.ritiro_veicolo_online
+ADD CONSTRAINT rvo_arv_fk
+FOREIGN KEY (uuid_azienda_ritiro_veicoli)
+
+REFERENCES public.azienda_ritiro_veicoli(uuid_azienda_ritiro_veicoli)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+---
+
+
+
+
+
+
+
+
+
+--------REGOLA------------------------------------------
+
+
+--TABELLA FIGLIA
+ALTER TABLE public.dati_veicolo_ritirato
+
+-- NOME DEL VINCOLO
+ADD CONSTRAINT dvr_arv_fk
+
+-- COLONNA FIGLIA DOVE COLLEGARE I DATI
+FOREIGN KEY (uuid_azienda_ritiro_veicoli)
+
+-- TABELLA PADRE
+REFERENCES public.azienda_ritiro_veicoli(uuid_azienda_ritiro_veicoli)
+
+ON UPDATE CASCADE
+ON DELETE RESTRICT;
+
+
+------------------------------------------------------------
