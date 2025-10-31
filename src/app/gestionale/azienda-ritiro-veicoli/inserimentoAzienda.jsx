@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-import { FaFacebookSquare } from "react-icons/fa";
+import { FaPlusSquare } from "react-icons/fa";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 
@@ -26,7 +26,8 @@ export default function InserimentoAzienda({onDisplay, statusAziende, setStatusA
   const [cittaOperativa, setCittaOperativa] = useState([])
   const [capOperativa, setCapOperativa] = useState([])
   const [cittaSelezionataOperativa, setCittaSelezionataOperativa] = useState([])
-
+  const [uploadingByField, setUploadingByField] = useState({});
+  const anyUploading = Object.values(uploadingByField).some(Boolean);
   const [ruoliUtente, setRuoliUtente] = useState([])
   const [aziendaInserimento, setAziendaInserimento] = useState(true)
 
@@ -291,8 +292,14 @@ export default function InserimentoAzienda({onDisplay, statusAziende, setStatusA
     
       <div className={`${onDisplay === 'on' ? '' : 'hidden'} w-full flex-1 min-h-full flex flex-col`}>
           <form onSubmit={handleSubmit} className="grid h-full grid-cols-12 gap-4">
-            <div className="col-span-12">
-              <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DATI AZIENDA</h4>
+            <div className="col-span-12 flex flex-row justify-between">
+                <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DATI AZIENDA</h4>
+                <button
+                type="submit"
+                disabled={anyUploading}
+                className=' bg-brand px-3 py-2 w-fit rounded-xl h-full'>
+                  {anyUploading ? "Caricamento in corso..." : <FaPlusSquare className='font-bold text-dark dark:text-white'/>}
+                </button>
             </div>
             <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
               <FormField nome="ragioneSociale" label='Ragione Sociale' value={formData.ragioneSociale} colspan="col-span-12" mdcolspan="lg:col-span-4" onchange={handleChangeRagioneSociale} type='text'/>
@@ -331,7 +338,12 @@ export default function InserimentoAzienda({onDisplay, statusAziende, setStatusA
             </div>
             
             <div className="col-span-12 flex justify-end">
-              <button type="submit" className="border border-brand hover:bg-brand text-white px-6 py-1 text-xs rounded-xl font-semibold hover:opacity-90 transition disabled:opacity-60">Inserisci</button>
+              <button
+                type="submit"
+                disabled={anyUploading}
+                className="border border-brand hover:bg-brand text-white px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
+                {anyUploading ? "Caricamento in corso..." : "Inserisci"}
+              </button>
             </div>
           </form>
         </div>

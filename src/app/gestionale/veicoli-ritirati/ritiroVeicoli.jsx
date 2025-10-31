@@ -7,8 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
-import { FaFacebookSquare } from "react-icons/fa";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { FaFacebookSquare, FaPlusSquare } from "react-icons/fa";
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -380,8 +379,14 @@ function handleChangeUpload(e) {
     <>
       <div className={`${onDisplay === 'on' ? '' : 'hidden'} w-full flex-1 min-h-full flex flex-col`}>
           <form onSubmit={handleSubmit} className="grid h-full grid-cols-12 gap-4">
-            <div className="col-span-12">
+            <div className="col-span-12 flex flex-row justify-between">
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">AZIENDA RITIRO VEICOLO</h4>
+                <button
+                type="submit"
+                disabled={anyUploading}
+                className=' bg-brand px-3 py-2 w-fit rounded-xl h-full'>
+                  {anyUploading ? "Caricamento in corso..." : <FaPlusSquare className='font-bold text-dark dark:text-white'/>}
+                </button>
             </div>
             <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-brand/50'>
               <div className="col-span-12 lg:col-span-3 min-w-0">
@@ -532,8 +537,7 @@ function handleChangeUpload(e) {
               <button
                 type="submit"
                 disabled={anyUploading}
-                className="border border-brand hover:bg-brand text-white px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60"
-              >
+                className="border border-brand hover:bg-brand text-white px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
                 {anyUploading ? "Caricamento in corso..." : "Inserisci"}
               </button>
             </div>
