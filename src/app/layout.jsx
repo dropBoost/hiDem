@@ -20,7 +20,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="it" suppressHydrationWarning className="overflow-y-hidden">
-      <body className={`${geistSans.variable} ${geistMono.variable} h-screen w-screen border border-blue-600`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} h-screen w-screen`}>
         <ThemeProvider attribute='class' enableSystem defaultTheme='system'>
         {children}
         </ThemeProvider>

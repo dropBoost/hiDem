@@ -25,12 +25,12 @@ export default function Customer() {
 
   return (
     <>
-    <div className="flex flex-col h-full w-full justify-center items-center">
-      <div className="flex items-start md:justify-start justify-center w-full gap-3 py-3">
+    <div className="flex flex-col h-full w-full justify-start items-start overflow-auto">
+      <div className="flex items-start md:justify-start justify-center w-full gap-3 border-b border-brand py-4">
         <ButtonSection click={ClickSectionOne} nome="INSERIMENTO AZIENDA" section={onDisplaySectionOne}/>
         <ButtonSection click={ClickSectionTwo} nome="ELENCO AZIENDE" section={onDisplaySectionTwo}/>
       </div>
-      <div className="flex flex-1 justify-start items-start lg:p-5 p-4 pe-3 h-full w-full lg:border lg:rounded-s-2xl lg:rounded-e-sm border-t rounded-none border-brand dark:bg-neutral-800/50 overflow-auto">
+      <div className="flex flex-1 justify-start items-start w-full h-full py-4">
         <InserimentoAzienda statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionOne}/>
         <ElencoAziende statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionTwo}/>
       </div>

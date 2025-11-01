@@ -380,7 +380,7 @@ function handleChangeUpload(e) {
       <div className={`${onDisplay === 'on' ? '' : 'hidden'}
       w-full h-full
       flex-1 flex flex-col
-      lg:p-5 p-4 pe-3`}>
+      md:p-0 md:pe-3 px-4`}>
           <form onSubmit={handleSubmit} className="grid h-full grid-cols-12 gap-4">
             <div className="col-span-12 flex flex-row justify-between">
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">AZIENDA RITIRO VEICOLO</h4>
@@ -465,7 +465,7 @@ function handleChangeUpload(e) {
             <div className="col-span-12">
               <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">CONTATTI</h4>
             </div>
-            <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-700'>
+            <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
               <FormField nome="email" label='Email' value={formData.email} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='email'/>
               <FormField nome="mobile" label='Mobile' value={formData.mobile} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='tel'/>
             </div>
@@ -481,7 +481,7 @@ function handleChangeUpload(e) {
               <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">FOTO</h4>
             </div>
 
-            <div className={formData.targa.length === 7 ? 'grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 min-h-0 bg-white dark:bg-neutral-900' : `hidden`}>
+            <div className={formData.targa.length === 7 ? 'grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg bg-white dark:bg-neutral-900' : `hidden`}>
               <FormFileUpload
                 nome="fronteDOCveicolo"
                 label="Documento Veicolo - Fronte"

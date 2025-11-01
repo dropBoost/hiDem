@@ -22,7 +22,7 @@ export default function MenuSidebar () {
             href={`/gestionale`}
             title={`GESTIONALE`}
             className={`flex items-center justify-center rounded-full p-2 md:h-[40px] md:w-[40px] h-[30px] w-[30px] transition duration-700 ${
-                isActiveHome(`/gestionale`) ? 'bg-brand text-neutral-100' : 'bg-neutral-100 dark:bg-neutral-900 text-brand hover:bg-brand hover:text-neutral-200'
+                isActiveHome(`/gestionale`) ? 'bg-brand text-neutral-100' : 'bg-neutral-100 dark:bg-neutral-950 text-brand hover:bg-brand hover:text-neutral-200'
             }`}
             >
             <FaHome/>
@@ -36,7 +36,7 @@ export default function MenuSidebar () {
                 href={`${modulo.link}`}
                 title={modulo.linkActive}
                 className={`flex items-center justify-center rounded-full p-2 md:h-[40px] md:w-[40px] h-[30px] w-[30px] transition duration-700 ${
-                    isActive(`/gestionale/${modulo.linkActive}`) ? 'bg-brand text-neutral-100' : 'bg-neutral-100 dark:bg-neutral-900 text-brand hover:bg-brand dark:hover:bg-brand hover:text-neutral-200'
+                    isActive(`/gestionale/${modulo.linkActive}`) ? 'bg-brand text-neutral-100' : 'bg-neutral-100 dark:bg-neutral-950 text-brand hover:bg-brand dark:hover:bg-brand hover:text-neutral-200'
                 }`}
                 >
                 {modulo.icon}

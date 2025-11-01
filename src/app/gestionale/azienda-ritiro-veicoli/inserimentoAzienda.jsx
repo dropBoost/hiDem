@@ -290,7 +290,10 @@ export default function InserimentoAzienda({onDisplay, statusAziende, setStatusA
   return (
     <>
     
-      <div className={`${onDisplay === 'on' ? '' : 'hidden'} w-full flex-1 min-h-full flex flex-col`}>
+      <div className={`${onDisplay === 'on' ? '' : 'hidden'}
+      w-full h-full
+      flex-1 flex flex-col
+      md:p-0 md:pe-3 px-4 gap-4`}>
           <form onSubmit={handleSubmit} className="grid h-full grid-cols-12 gap-4">
             <div className="col-span-12 flex flex-row justify-between">
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DATI AZIENDA</h4>

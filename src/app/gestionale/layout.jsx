@@ -21,7 +21,7 @@ export default function LAYOUTGestionale({ children }) {
 
     return (
     <>
-    <div className="grid grid-cols-12 grid-rows-12 h-full w-full justify-start items-start bg-neutral-300 dark:bg-neutral-950 border border-red-500">
+    <div className="grid grid-cols-12 grid-rows-12 h-full w-full justify-start items-start bg-neutral-300 dark:bg-neutral-950">
         <div className="
         col-span-12 row-span-1 col-start-1 row-start-1
         h-[100%] 
@@ -52,9 +52,9 @@ export default function LAYOUTGestionale({ children }) {
         col-start-1 row-start-2 md:col-span-1 md:row-span-11 col-span-12 row-span-1
         flex lg:items-end lg:justify-end md:items-start md:justify-center items-center justify-center
         h-full w-full 
-        bg-neutral-900 dark:bg-neutral-800
+        bg-neutral-900 dark:bg-neutral-900
         p-5"><MenuSidebar/></div>
-        <div className="flex overflow-auto md:col-span-11 col-span-12 md:row-span-11 row-span-10 md:col-start-2 col-start-1 md:row-start-2 row-start-3 h-full bg-neutral-100 dark:bg-neutral-900 md:p-7 p-1">{children}</div>
+        <div className="flex overflow-auto md:col-span-11 col-span-12 md:row-span-11 row-span-10 md:col-start-2 col-start-1 md:row-start-2 row-start-3 h-full bg-neutral-100 dark:bg-neutral-950 md:p-7 p-1">{children}</div>
     </div>
     </>    
     )

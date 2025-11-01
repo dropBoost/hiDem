@@ -114,7 +114,10 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
   const iconaCestino = <FaUserSlash/>
 
   return (
-    <div className={`${onDisplay === 'on' ? '' : 'hidden'} w-full h-full flex flex-col justify-between gap-3 p-3`}>
+    <div className={`${onDisplay === 'on' ? '' : 'hidden'}
+      w-full h-full
+      flex-1 flex flex-col
+      md:p-0 md:pe-3 px-4 gap-4`}>
       {/* Barra ricerca */}
       <div className="flex w-full items-center gap-2">
         <Input
