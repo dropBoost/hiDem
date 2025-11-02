@@ -23,8 +23,8 @@ export default function MENUhomepage () {
                 : 'bg-white dark:bg-neutral-800 text-brand hover:bg-brand dark:hover:bg-brand hover:text-neutral-200 shadow-lg'
             }`}
         >
-            <span className='text-[60px]'>{modulo.icon}</span>
-            <span className='mt-3 text-sm uppercase text-center break-words'>{modulo.label}</span>
+            <span className='lg:text-[60px] text-4xl'>{modulo.icon}</span>
+            <span className='mt-3 lg:text-sm text-[0.6rem] uppercase text-center break-words'>{modulo.label}</span>
         </Link>
     ))}
     </div>
