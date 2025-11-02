@@ -12,7 +12,7 @@ export default function Home() {
           nam obcaecati suscipit?
         </p>
         <div className="space-x-2">
-          <Button>Button 1</Button>
+          <Button href="/gestionale">GESTIONALE</Button>
           <Button variant='secondary'>Button 2</Button>
           <ThemeToggle/>
         </div>
