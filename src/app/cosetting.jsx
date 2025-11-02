@@ -67,7 +67,7 @@ export const moduliGestionale = [
     {name:'dashboard', link:'/gestionale/dashboard', linkActive:'dashboard', icon: ICONone, label:'dashboard', attivo:'true'},
     {name:'azienda ritiro veicoli', link:'/gestionale/azienda-ritiro-veicoli', linkActive:'azienda-ritiro-veicoli', icon: ICONtwo, label:'Azienda Ritiro Veicoli', attivo:'true'},
     {name:'veicoli ritirati', link:'/gestionale/veicoli-ritirati', linkActive:'veicoli-ritirati', icon: ICONthree, label:'Veicoli Ritirati', attivo:'true'},
-    {name:'certificati demolizione', link:'/redazione/certificati-demolizione', linkActive:'certificati-demolizione', icon: ICONfour, label:'Certificati Demolizione', attivo:'true'},
+    {name:'certificati demolizione', link:'/gestionale/certificati-demolizione', linkActive:'certificati-demolizione', icon: ICONfour, label:'Certificati Demolizione', attivo:'true'},
     {name:'magazzino', link:'/gestionale/magazzino', linkActive:'magazzino', icon: ICONfive, label:'Magazzino', attivo:'true'},
     {name:'veicoli', link:'/gestionale/modelli-veicoli', linkActive:'modelli-veicoli', icon: ICONsix, label:'Veicoli', attivo:'true'},
     {name:'clienti', link:'/gestionale/clienti', linkActive:'clienti', icon: ICONseven, label:'Clienti', attivo:'true'},

@@ -41,6 +41,8 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
   const [uploadingByField, setUploadingByField] = useState({});
   const anyUploading = Object.values(uploadingByField).some(Boolean);
   const [resetUploadsTick, setResetUploadsTick] = useState(0);
+  const [targaCaricare, setTargaCaricare] = useState(false)
+  const [telaioCaricare, setTelaioCaricare] = useState(false)
 
   const [twoStep, setTwoStep] = useState(false)
   const [threeStep, setThreeStep] = useState(false)
@@ -159,6 +161,88 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
       setModelliAuto(modelliAutoData ?? [])
     })()
   }, [marchioSelect])
+
+  // VERIFICA TARGA GIÀ INSERITA
+  useEffect(() => {
+    const raw = formData?.targa ?? "";
+    const targa = raw.toUpperCase().replace(/\s+/g, ""); // normalizza
+
+    if (targa.length !== 7) {
+      setTargaCaricare(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    (async () => {
+      // conta senza scaricare dati
+      const [{ count: c1, error: e1 }, { count: c2, error: e2 }] = await Promise.all([
+        supabase
+          .from("dati_veicolo_ritirato")
+          .select("targa_veicolo_ritirato", { count: "exact", head: true })
+          .eq("targa_veicolo_ritirato", targa),
+        supabase
+          .from("richiesta_ritiro_veicolo_online")
+          .select("targa_rv", { count: "exact", head: true })
+          .eq("targa_rv", targa),
+      ]);
+
+      if (e1 || e2) {
+        console.error(e1 || e2);
+        toast.error("Errore nel controllo targa");
+        return;
+      }
+
+      if (!cancelled) {
+        setTargaCaricare((c1 ?? 0) > 0 || (c2 ?? 0) > 0);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [formData.targa, supabase, toast, setTargaCaricare]);
+
+  // VERIFICA TELAIO
+  useEffect(() => {
+    const raw = formData?.vin ?? "";
+    const telaio = raw.toUpperCase().replace(/\s+/g, ""); // normalizza
+
+    if (telaio.length !== 17) {
+      setTelaioCaricare(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    (async () => {
+      // conta senza scaricare dati
+      const [{ count: c1, error: e1 }, { count: c2, error: e2 }] = await Promise.all([
+        supabase
+          .from("dati_veicolo_ritirato")
+          .select("vin_veicolo_ritirato", { count: "exact", head: true })
+          .eq("vin_veicolo_ritirato", telaio),
+        supabase
+          .from("ritiro_veicolo_online")
+          .select("telaio_vo", { count: "exact", head: true })
+          .eq("telaio_vo", telaio),
+      ]);
+
+      if (e1 || e2) {
+        console.error(e1 || e2);
+        toast.error("Errore nel controllo telaio");
+        return;
+      }
+
+      if (!cancelled) {
+        setTelaioCaricare((c1 ?? 0) > 0 || (c2 ?? 0) > 0);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [formData.vin, supabase, toast, setTelaioCaricare]);
 
   const optionsModelliMarchio = modelliAuto.sort((a, b) => a.modello.localeCompare(b.modello, 'it', { sensitivity: 'base' })).map(m => ({
     value: `${m.uuid_modello_veicolo}`,
@@ -290,13 +374,11 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
       ritiro_completato: formData.completato,
     }
 
-    if (formData.email === "" ){
-      alert("Campi Vuoti")
-    } 
-    // else if (formData.piva.length !== 11) {
-    //   alert("Partita IVA Non corretta")
-    // } 
-    else {
+    if (targaCaricare === true){
+      alert("Targa Già inserita")
+    } else if (telaioCaricare === true){
+      alert("Telaio Già inserito")
+    } else {
       const { data, error } = await supabase.from("dati_veicolo_ritirato").insert(payload).select().single()
       if (error) {
         console.error(error)
@@ -336,6 +418,9 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
         setResetUploadsTick(t => t + 1)
         setUploadingByField({});
         setStatusAziende(prev => !prev)
+        setModelloSelect("")
+        setMarchioSelect("")
+        setAziendaScelta("")
       }
       console.log("Inserito:", data)
       alert("Pratica Inserita con successo!")
@@ -400,8 +485,6 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
     setFiveStep(fiveOk);
     setSixStep(sixOk);
   }, [formData, setTwoStep, setThreeStep, setFourStep, setFiveStep, setSixStep]);
-
-  console.log("formData", formData)
 
   return (
     <>
@@ -608,6 +691,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
                   onchange={handleChangeUpload}
                   onBusyChange={handleBusyChange}
                   resetToken={resetUploadsTick}
+                  pathPrefix={`public/${aziendaScelta}/${formData?.targa}`}
                 />
                 <FormFileUpload
                   nome="retroDOCveicolo"
@@ -622,6 +706,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
                   onchange={handleChangeUpload}
                   onBusyChange={handleBusyChange}
                   resetToken={resetUploadsTick}
+                  pathPrefix={`public/${aziendaScelta}/${formData?.targa}`}
                 />
                 <FormFileUpload
                   nome="fronteDOCdetentore"
@@ -636,6 +721,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
                   onchange={handleChangeUpload}
                   onBusyChange={handleBusyChange}
                   resetToken={resetUploadsTick}
+                  pathPrefix={`public/${aziendaScelta}/${formData?.targa}`}
                 />
                 <FormFileUpload
                   nome="retroDOCdetentore"
@@ -650,6 +736,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
                   onchange={handleChangeUpload}
                   onBusyChange={handleBusyChange}
                   resetToken={resetUploadsTick}
+                  pathPrefix={`public/${aziendaScelta}/${formData?.targa}`}
                 />
               </div>
             </div>  
@@ -788,22 +875,35 @@ export function FormFileUpload({
   const slugify = (s) =>
     String(s).normalize('NFKD').replace(/[^\w.\-]+/g, '-').replace(/-+/g, '-').toLowerCase();
 
+  // --- NEW: normalizzazione sicura del pathPrefix (solo questa parte è nuova) ---
+  const sanitizePathPrefix = (pp) => {
+    if (!pp) return '';
+    return String(pp)
+      .split('/')                  // supporta "azienda/targa" o più livelli
+      .map(seg => String(seg || '').trim())
+      .filter(seg => seg.length > 0)       // niente vuoti / "undefined"
+      .map(seg =>
+        seg.normalize('NFKD')
+           .replace(/[^\w.\-]+/g, '-')     // solo lettere/numeri/_ . -
+           .replace(/-+/g, '-')
+           .toLowerCase()
+      )
+      .join('/');                  // ricompone con uno slash singolo tra i segmenti
+  };
+  // ------------------------------------------------------------------------------
+
   useEffect(() => {
     return () => previews.forEach(p => URL.revokeObjectURL(p.url));
   }, [previews]);
 
   useEffect(() => {
     // quando il parent incrementa resetToken:
-    // 1) revoca le preview
     previews.forEach(p => URL.revokeObjectURL(p.url));
-    // 2) svuota stati locali
     setQueue([]);
     setPreviews([]);
-    // 3) svuota il valore dell'input file
     if (inputRef.current) inputRef.current.value = "";
-    // 4) opzionale: notifica il parent per azzerare il campo (se vuoi)
     onchange?.({ target: { name: nome, files: [] } });
-  }, [resetToken]); // <-- dipendenza
+  }, [resetToken]);
 
   async function bucketExists(name) {
     const { error } = await supabase.storage.from(name).list('', { limit: 1 });
@@ -816,7 +916,6 @@ export function FormFileUpload({
 
   async function uploadOne(file, idx, finalPath) {
     try {
-      // segna “uploading” per UI
       setQueue(q => q.map((it, i) => (i === idx ? { ...it, status: 'uploading' } : it)));
 
       const { error: upErr } = await supabase
@@ -844,7 +943,7 @@ export function FormFileUpload({
       } else {
         const { data: signed, error: sErr } =
           await supabase.storage.from(bucket).createSignedUrl(finalPath, parseInt(signedUrlSeconds, 10));
-        if (s_err) {
+        if (sErr) {
           console.error('[uploadOne] createSignedUrl error:', sErr?.message || sErr);
         } else {
           url = signed?.signedUrl || '';
@@ -867,7 +966,6 @@ export function FormFileUpload({
 
     onBusyChange?.(nome, true);
 
-    // pre-check bucket
     const ok = await bucketExists(bucket);
     if (!ok) {
       onBusyChange?.(nome, false);
@@ -881,7 +979,6 @@ export function FormFileUpload({
       status: f.size > maxBytes ? 'error' : 'pending',
     }));
 
-    // preview
     setPreviews(prev => {
       prev.forEach(p => URL.revokeObjectURL(p.url));
       return files
@@ -890,14 +987,17 @@ export function FormFileUpload({
     });
     setQueue(initial);
 
-    // genera nomi finali e carica
     const today = new Date();
     const date = `${String(today.getDate()).padStart(2,'0')}${String(
       today.getMonth() + 1
     ).padStart(2,'0')}${today.getFullYear()}`;
     const safeTarga = slugify(targa || 'no-targa');
     const safeCampo = slugify(campo || 'file');
-    const base = pathPrefix ? `${String(pathPrefix).replace(/\/+$/, '')}/` : '';
+
+    // --- NEW: usa il pathPrefix SANITIZZATO, senza slash iniziale/finale ---
+    const prefix = sanitizePathPrefix(pathPrefix);          // <--- nuovo
+    const base = prefix ? `${prefix}/` : '';                // <--- nuovo
+    // -----------------------------------------------------------------------
 
     const uploadedResults = [];
     for (let i = 0; i < initial.length; i++) {
@@ -907,7 +1007,7 @@ export function FormFileUpload({
         continue;
       }
       const ext = (it.file.name.split('.').pop() || 'jpg').toLowerCase();
-      const finalPath = `${base}${safeTarga}-${date}-${safeCampo}${multiple ? `-${i+1}` : ''}.${ext}`;
+      const finalPath = `${base}${safeTarga}-${safeCampo}.${ext}`;
       console.log(`📤 Upload → bucket=${bucket}, path=${finalPath}`);
 
       const res = await uploadOne(it.file, i, finalPath);
@@ -915,7 +1015,6 @@ export function FormFileUpload({
     }
 
     console.log('[FormFileUpload] uploaded ->', { nome, uploaded: uploadedResults });
-    // Notifica il parent (abbiamo i path reali)
     onchange?.({ target: { name: nome, files: uploadedResults } });
 
     onBusyChange?.(nome, false);
@@ -1000,3 +1099,4 @@ export function FormFileUpload({
     </div>
   );
 }
+

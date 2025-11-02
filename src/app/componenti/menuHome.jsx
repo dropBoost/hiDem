@@ -10,7 +10,7 @@ export default function MENUhomepage () {
     const isActive = (path) => pathname?.startsWith(path);
 
     return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 p-5 overflow-auto h-full auto-rows-[200px]">
+    <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-5 overflow-auto h-full">
     {moduliGestionale
         .filter(moduli => moduli.attivo === "true")
         .map((modulo, index) => (
