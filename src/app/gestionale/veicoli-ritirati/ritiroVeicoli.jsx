@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import comuni from "@/app/componenti/comuni.json"
 import { supabase } from "@/lib/supabaseClient"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup} from "@/components/ui/select"
@@ -25,20 +25,13 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
   const [capLegale, setCapLegale] = useState([])
   const [cittaSelezionataLegale, setCittaSelezionataLegale] = useState([])
 
-  // VARIABILI GESTIONE INSERIMENTO INDIRIZZO OPERATIVO
-  const [provinciaOperativa, setProvinciaOperativa] = useState([])
-  const [cittaOperativa, setCittaOperativa] = useState([])
-  const [capOperativa, setCapOperativa] = useState([])
-  const [cittaSelezionataOperativa, setCittaSelezionataOperativa] = useState([])
-
   const [aziendeRitiro, setAziendeRitiro] = useState([])
   const [ruoliUtente, setRuoliUtente] = useState([])
   const [aziendaInserimento, setAziendaInserimento] = useState(true)
 
-  const [sottoscrizioni, setSottoscrizioni] = useState([])
-  const [datasetAllenamenti, setDatasetAllenamenti] = useState([])
-  const [loadingSchedaAllenamento, setLoadingSchedaAllenamento] = useState(false)
   const [open, setOpen] = useState(false)
+  const [openMarchio, setOpenMarchio] = useState(false)
+  const [openModello, setOpenModello] = useState(false)
   const [statusSend, setStatusSend] = useState(false)
   const [aziendaScelta, setAziendaScelta] = useState("")
   const [modelliAuto, setModelliAuto] = useState([])
@@ -47,6 +40,13 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
   const [marchioSelect, setMarchioSelect] = useState("")
   const [uploadingByField, setUploadingByField] = useState({});
   const anyUploading = Object.values(uploadingByField).some(Boolean);
+  const [resetUploadsTick, setResetUploadsTick] = useState(0);
+
+  const [twoStep, setTwoStep] = useState(false)
+  const [threeStep, setThreeStep] = useState(false)
+  const [fourStep, setFourStep] = useState(false)
+  const [fiveStep, setFiveStep] = useState(false)
+  const [sixStep, setSixStep] = useState(false)
   
   const [formData, setFormData] = useState({
     uuid_modello:"",
@@ -78,9 +78,6 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
     retroDOCdetentore:"",
     completato: false,
   })
-
-  const targa = formData.targa
-  console.log(formData.targa)
 
   const province = comuni.flatMap(c => c.sigla)
   const provinceSet = [...new Set(province)].sort()
@@ -128,9 +125,9 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
   useEffect(() => {
     ;(async () => {
       const { data: marchiAutoData, error } = await supabase
-        .from("modello_veicolo")
-        .select("marca_veicolo")
-        .order("marca_veicolo", { ascending: false })
+        .from("vw_marche_uniche")
+        .select("marca")
+        .order("marca", { ascending: true })
 
       if (error) {
         console.error(error)
@@ -141,9 +138,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
     })()
   }, [])
 
-  const optionsMarcaVeicolo = [
-    ...new Set(marchiAuto.map(ma => ma?.marca_veicolo).filter(Boolean))
-  ].sort((a, b) => a.localeCompare(b, 'it', { sensitivity: 'base' })).map(marca => ({ value: marca, label: marca }))
+  const optionsMarcaVeicolo = marchiAuto.map(m => ({ value: `${m.marca}`, label: `${m.marca}` }))
 
   // CARICAMENTO MODELLO VEICOLI
   useEffect(() => {
@@ -153,8 +148,8 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
     ;(async () => {
       const { data: modelliAutoData, error } = await supabase
         .from("modello_veicolo")
-        .select("marca_veicolo,modello_veicolo,uuid_modello_veicolo")
-        .eq("marca_veicolo", marchioSelect)
+        .select("marca,modello,uuid_modello_veicolo")
+        .eq("marca", marchioSelect)
 
       if (error) {
         console.error(error)
@@ -165,12 +160,11 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
     })()
   }, [marchioSelect])
 
-  const optionsModelliMarchio = modelliAuto.sort((a, b) => a.modello_veicolo.localeCompare(b.modello_veicolo, 'it', { sensitivity: 'base' })).map(m => ({
+  const optionsModelliMarchio = modelliAuto.sort((a, b) => a.modello.localeCompare(b.modello, 'it', { sensitivity: 'base' })).map(m => ({
     value: `${m.uuid_modello_veicolo}`,
-    label: `${m.modello_veicolo}`
+    label: `${m.modello}`
   }))
 
-  console.log("formdata",formData)
   // SELECT OPTION
   const tipologiaDetentoreOption = [
     { label:'Proprietario', value:'proprietario' },
@@ -228,23 +222,6 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
     setCapLegale([value])
   }
 
-  // DATI SEDE OPERATIVA
-  useEffect(() => {
-    const cittaFiltrata = comuni
-      .filter(c => c.sigla === provinciaOperativa)
-      .map(c => c.nome)
-      .sort((a, b) => a.localeCompare(b))
-    setCittaOperativa(cittaFiltrata)
-  }, [provinciaOperativa])
-
-  useEffect(() => {
-    const capFiltrati = comuni
-      .filter(c => c.nome === cittaSelezionataOperativa)
-      .flatMap(c => c.cap)
-      .sort((a, b) => a.localeCompare(b))
-    setCapOperativa(capFiltrati)
-  }, [cittaSelezionataOperativa])
-
   function handleChange(e) {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
@@ -263,27 +240,17 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value.toUpperCase() })
   }
-  function handleChangeMarcaVeicolo(e) {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
-    setMarchioSelect(value)
+  function handleChangeUpload(e) {
+    const { name, files } = e.target || {};
+    const first = Array.isArray(files) ? files[0] : undefined;
+    if (!name) return;
+    if (!first) {
+      console.warn(`[handleChangeUpload] nessun file caricato per ${name}`);
+      return;
+    }
+    // salva il path nel campo giusto (es. fronteDOCveicolo, retroDOCdetentore, …)
+    setFormData(prev => ({ ...prev, [name]: first.url || '' }));
   }
-  function handleChangeModelloVeicolo(e) {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
-    setModelloSelect(value)
-  }
-function handleChangeUpload(e) {
-  const { name, files } = e.target || {};
-  const first = Array.isArray(files) ? files[0] : undefined;
-  if (!name) return;
-  if (!first) {
-    console.warn(`[handleChangeUpload] nessun file caricato per ${name}`);
-    return;
-  }
-  // salva il path nel campo giusto (es. fronteDOCveicolo, retroDOCdetentore, …)
-  setFormData(prev => ({ ...prev, [name]: first.url || '' }));
-}
   function handleBusyChange(nomeCampo, isBusy) {
     setUploadingByField(prev => ({ ...prev, [nomeCampo]: isBusy }));
   }
@@ -366,12 +333,73 @@ function handleChangeUpload(e) {
           retroDOCdetentore:"",
           completato: false,
         })
+        setResetUploadsTick(t => t + 1)
+        setUploadingByField({});
         setStatusAziende(prev => !prev)
       }
       console.log("Inserito:", data)
-      alert("Azienda Inserita con successo!")
+      alert("Pratica Inserita con successo!")
     }
   }
+
+  useEffect(() => {
+
+    const data = new Date("2025-11-02");
+    const annoCorrente = data.getFullYear();
+
+    const fd = formData ?? {};
+
+    const compilato = (v) =>
+      typeof v === "string" ? v?.trim() !== "" : v !== null && v !== undefined;
+
+    // STEP 2: tutti presenti
+    const twoOk =
+      (compilato(fd.targa) && fd.targa.length == 7) &&
+      (compilato(fd.vin) && fd.vin.length == 17) &&
+      (compilato(fd.anno) && (fd.anno > 1900 && fd.anno <= annoCorrente)) &&
+      (compilato(fd.cilindrata) && ((fd.cilindrata >= 599 && fd.cilindrata <= 7000) || fd.cilindrata == 50 || fd.cilindrata == 125 || fd.cilindrata == 150 || fd.cilindrata == 250 || fd.cilindrata == 300 || fd.cilindrata == 350 || fd.cilindrata == 400 || fd.cilindrata == 500)) &&
+      (compilato(fd.km));
+
+    // Documento/identificazione: o CF, oppure (ragioneSociale && piva)
+    const idOk =
+      (fd.cf?.trim() !== "") ||
+      (fd.ragioneSociale?.trim() !== "" && fd.piva?.trim() !== "");
+
+    // STEP 3: tutti presenti
+    const threeOk =
+      compilato(fd.tipologiaDetentore) &&
+      compilato(fd.formaLegale) &&
+      idOk &&
+      compilato(fd.nome) &&
+      compilato(fd.cognome) &&
+      compilato(fd.tipologiaDocumentoD) &&
+      compilato(fd.numeroDocumento) &&
+      compilato(fd.nazionalita) &&
+      compilato(fd.provincia) &&
+      compilato(fd.citta) &&
+      compilato(fd.cap) &&
+      compilato(fd.indirizzo);
+
+    const fourOk =
+      compilato(fd.email) &&
+      compilato(fd.mobile);  
+
+    const fiveOk =
+      compilato(fd.documentoVeicolo)
+    
+    const sixOk =
+      compilato(fd.fronteDOCveicolo) &&
+      compilato(fd.retroDOCveicolo) &&
+      compilato(fd.fronteDOCdetentore) &&
+      compilato(fd.retroDOCdetentore)
+
+    // Imposta in base alla validità (no toggle!)
+    setTwoStep(twoOk);
+    setThreeStep(threeOk);
+    setFourStep(fourOk);
+    setFiveStep(fiveOk);
+    setSixStep(sixOk);
+  }, [formData, setTwoStep, setThreeStep, setFourStep, setFiveStep, setSixStep]);
 
   console.log("formData", formData)
 
@@ -382,161 +410,251 @@ function handleChangeUpload(e) {
       flex-1 flex flex-col
       md:p-0 md:pe-3 px-4`}>
           <form onSubmit={handleSubmit} className="grid h-full grid-cols-12 gap-4">
-            <div className="col-span-12 flex flex-row justify-between">
-                <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">AZIENDA RITIRO VEICOLO</h4>
-                <button
-                type="submit"
-                disabled={anyUploading}
-                className=' bg-brand px-3 py-2 w-fit rounded-xl h-full'>
-                  {anyUploading ? "Caricamento in corso..." : <FaPlusSquare className='font-bold text-dark dark:text-white'/>}
-                </button>
-            </div>
-            <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-brand/50'>
-              <div className="col-span-12 lg:col-span-3 min-w-0">
-                <label className="block text-sm font-semibold mb-1">Azienda Ritiro</label>
-                <Popover open={open} onOpenChange={setOpen} className="w-full">
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      className="w-full min-w-0 justify-between outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background data-[state=open]:ring-2 data-[state=open]:ring-ring data-[state=open]:ring-offset-2">
-                      {aziendaScelta ? optionsAziendeRitiro.find((ar) => ar.value === aziendaScelta)?.label  : "seleziona un azienda..."}
-                      <ChevronsUpDown className="opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent align="start" sideOffset={4} className="p-0 w-[var(--radix-popover-trigger-width)]">
-                    <Command className="p-1">
-                      <CommandInput placeholder="Cerca..." className="h-8 focus:ring-1 focus:ring-brand focus:border-brand outline-none focus:outline-none my-2" />
-                      <CommandList className="my-1">
-                        <CommandEmpty>Nessun risultato</CommandEmpty>
-                        <CommandGroup>
-                          {optionsAziendeRitiro.map((opt) => (
-                            <CommandItem
-                              key={opt.value}
-                              value={`${opt.value}`}
-                              onSelect={() => { setAziendaScelta(opt.value); setOpen(false) }}
-                            >
-                              {opt.label}
-                              <Check className={cn("ml-auto", optionsAziendeRitiro === opt.value ? "opacity-100" : "opacity-0")} />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+
+            <div id="oneStep" className='flex flex-col col-span-12 h-fit gap-3'>  
+              <div className="col-span-12 flex flex-row justify-between">
+                  <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">AZIENDA RITIRO VEICOLO</h4>
+                  <button
+                  type="submit"
+                  disabled={anyUploading}
+                  className={`${sixStep ? "" : "hidden"} bg-brand px-3 py-2 w-fit rounded-xl h-full`}>
+                    {anyUploading ? "Caricamento in corso..." : <FaPlusSquare className='font-bold text-dark dark:text-white'/>}
+                  </button>
               </div>
-              <FormSelectRuoli nome="marca" label='Marca' value={formData.marca} colspan="col-span-10" mdcolspan="lg:col-span-2" onchange={handleChangeMarcaVeicolo} options={optionsMarcaVeicolo}/>
-              <FormSelectRuoli nome="uuid_modello" label='Modello' value={formData.uuid_modello} colspan="col-span-10" mdcolspan="lg:col-span-2" onchange={handleChangeModelloVeicolo} options={optionsModelliMarchio}/>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-brand/50'>
+                {/* SELECT DI RICERCA AZIENDE */}
+                <div className="col-span-12 lg:col-span-3 min-w-0">
+                  <label className="block text-sm font-semibold mb-1">Azienda Ritiro</label>
+                  <Popover open={open} onOpenChange={setOpen} className="w-full">
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        className="w-full min-w-0 justify-between outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background data-[state=open]:ring-2 data-[state=open]:ring-ring data-[state=open]:ring-offset-2">
+                        {aziendaScelta ? optionsAziendeRitiro.find((ar) => ar.value === aziendaScelta)?.label  : "seleziona un azienda..."}
+                        <ChevronsUpDown className="opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent align="start" sideOffset={4} className="p-0 w-[var(--radix-popover-trigger-width)]">
+                      <Command className="p-1">
+                        <CommandInput placeholder="Cerca..." className="h-8 focus:ring-1 focus:ring-brand focus:border-brand outline-none focus:outline-none my-2" />
+                        <CommandList className="my-1">
+                          <CommandEmpty>Nessun risultato</CommandEmpty>
+                          <CommandGroup>
+                            {optionsAziendeRitiro.map((opt) => (
+                              <CommandItem
+                                key={opt.value}
+                                value={`${opt.value}`}
+                                onSelect={() => { setAziendaScelta(opt.value); setOpen(false) }}
+                              >
+                                {opt.label}
+                                <Check className={cn("ml-auto", optionsAziendeRitiro === opt.value ? "opacity-100" : "opacity-0")} />
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                {/* SELECT DI RICERCA MARCHIO */}
+                <div className={`${aziendaScelta ? "" : "hidden"} col-span-12 lg:col-span-3 min-w-0`}>
+                  <label className="block text-sm font-semibold mb-1">Marchio Veicolo</label>
+                  <Popover open={openMarchio} onOpenChange={setOpenMarchio} className="w-full">
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={openMarchio}
+                        className="w-full min-w-0 justify-between outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background data-[state=open]:ring-2 data-[state=open]:ring-ring data-[state=open]:ring-offset-2">
+                        {marchioSelect ? optionsMarcaVeicolo.find((ar) => ar.value === marchioSelect)?.label  : "seleziona un marchio..."}
+                        <ChevronsUpDown className="opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent align="start" sideOffset={4} className="p-0 w-[var(--radix-popover-trigger-width)]">
+                      <Command className="p-1">
+                        <CommandInput placeholder="Cerca..." className="h-8 focus:ring-1 focus:ring-brand focus:border-brand outline-none focus:outline-none my-2" />
+                        <CommandList className="my-1">
+                          <CommandEmpty>Nessun risultato</CommandEmpty>
+                          <CommandGroup>
+                            {optionsMarcaVeicolo.map((opt,index) => (
+                              <CommandItem
+                                key={index}
+                                value={`${opt.value}`}
+                                onSelect={() => { setMarchioSelect(opt.value); setOpenMarchio(false) }}
+                              >
+                                {opt.label}
+                                <Check className={cn("ml-auto", optionsMarcaVeicolo === opt.value ? "opacity-100" : "opacity-0")} />
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                {/* SELECT DI RICERCA MODELLO */}
+                <div className={`${marchioSelect ? "" : "hidden"} col-span-12 lg:col-span-3 min-w-0`}>
+                  <label className="block text-sm font-semibold mb-1">Modello Veicolo</label>
+                  <Popover open={openModello} onOpenChange={setOpenModello} className="w-full">
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={openModello}
+                        className="w-full min-w-0 justify-between outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background data-[state=open]:ring-2 data-[state=open]:ring-ring data-[state=open]:ring-offset-2">
+                        {modelloSelect ? optionsModelliMarchio.find((ar) => ar.value === modelloSelect)?.label  : "seleziona un modello..."}
+                        <ChevronsUpDown className="opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent align="start" sideOffset={4} className="p-0 w-[var(--radix-popover-trigger-width)]">
+                      <Command className="p-1">
+                        <CommandInput placeholder="Cerca..." className="h-8 focus:ring-1 focus:ring-brand focus:border-brand outline-none focus:outline-none my-2" />
+                        <CommandList className="my-1">
+                          <CommandEmpty>Nessun risultato</CommandEmpty>
+                          <CommandGroup>
+                            {optionsModelliMarchio.map((opt,index) => (
+                              <CommandItem
+                                key={index}
+                                value={`${opt.value}`}
+                                onSelect={() => { setModelloSelect(opt.value); setOpenModello(false) }}
+                              >
+                                {opt.label}
+                                <Check className={cn("ml-auto", optionsModelliMarchio === opt.value ? "opacity-100" : "opacity-0")} />
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
             </div>
 
-            <div className="col-span-12">
-              <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">SPECIFICHE VEICOLO</h4>
-            </div>
-            <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
-              <FormField nome="targa" label='Targa' value={formData.targa} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
-              <FormField nome="vin" label='VIN' value={formData.vin} colspan="col-span-6" mdcolspan="lg:col-span-4" onchange={handleChange} type='text'/>
-              <FormField nome="anno" label='Anno' value={formData.anno} colspan="col-span-12" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
-              <FormField nome="cilindrata" label='Cilindrata' value={formData.cilindrata} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
-              <FormField nome="km" label='KM' value={formData.km} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
-            </div>
-
-            <div className="col-span-12">
-              <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DETENTORE</h4>
-            </div>
-            <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
-              <FormSelectRuoli nome="tipologiaDetentore" label='Tipologia Detentore' value={formData.tipologiaDetentore} colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={tipologiaDetentoreOption}/>
-              <FormSelectRuoli nome="formaLegale" label='Forma Legale' value={formData.formaLegale} colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={formaLegaleOption}/>
-              <FormField nome="ragioneSociale" label='Ragione Sociale' value={formData.ragioneSociale} colspan="col-span-6" mdcolspan="lg:col-span-6" onchange={handleChangeRagioneSociale} type='text'/>
-              <FormField nome="nome" label='Nome' value={formData.nome} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='text'/>
-              <FormField nome="cognome" label='Cognome' value={formData.cognome} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='text'/>
-              <FormField nome="cf" label='Codice Fiscale' value={formData.cf} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='text'/>
-              <FormField nome="piva" label='Partita IVA' value={formData.piva} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChangePiva} type='text'/>
-              <FormSelectRuoli nome="tipologiaDocumentoD" label='Tipologia Documento' value={formData.tipologiaDocumentoD}  colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={tipologiaDocumentoOption}/>
-              <FormField nome="numeroDocumento" label='Numero Documento' value={formData.numeroDocumento} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
-              <FormSelectRuoli nome="nazionalita" label='Nazionalità' value={formData.nazionalita} colspan="col-span-10" mdcolspan="lg:col-span-2" onchange={handleChange} options={nazionalitaDetentoreOption}/>
-              <FormSelect nome="provincia" label='Provincia' value={formData.provincia} colspan="col-span-3" mdcolspan="lg:col-span-2" onchange={handleChangeProvinciaLegale} options={provinceSet}/>
-              <FormSelect nome="citta" label='Città' value={formData.citta} colspan="col-span-5" mdcolspan="lg:col-span-2" onchange={handleChangeCittaLegale} options={cittaLegale}/>
-              <FormSelect nome="cap" label='Cap' value={formData.cap} colspan="col-span-4" mdcolspan="lg:col-span-1" onchange={handleChangeCapLegale} options={capLegale}/>
-              <FormField nome="indirizzo" label='Indirizzo' value={formData.indirizzo} colspan="col-span-12" mdcolspan="lg:col-span-12" onchange={handleChange} type='text'/>
+            <div id="twoStep" className={`${modelloSelect ? "" : "hidden"} flex flex-col col-span-12 h-fit gap-3`}>             
+              <div className="col-span-12">
+                <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">SPECIFICHE VEICOLO</h4>
+              </div>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+                <FormField nome="targa" label='Targa' value={formData.targa} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
+                <FormField nome="vin" label='VIN' value={formData.vin} colspan="col-span-6" mdcolspan="lg:col-span-4" onchange={handleChange} type='text'/>
+                <FormField nome="anno" label='Anno' value={formData.anno} colspan="col-span-12" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
+                <FormField nome="cilindrata" label='Cilindrata' value={formData.cilindrata} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='number'/>
+                <FormField nome="km" label='KM' value={formData.km} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
+              </div>
             </div>
 
-            <div className="col-span-12">
-              <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">CONTATTI</h4>
-            </div>
-            <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
-              <FormField nome="email" label='Email' value={formData.email} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='email'/>
-              <FormField nome="mobile" label='Mobile' value={formData.mobile} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='tel'/>
-            </div>
-
-            <div className="col-span-12">
-              <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DOCUMENTI</h4>
-            </div>
-            <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
-              <FormSelectRuoli nome="documentoVeicolo" label='Documento Veicolo' value={formData.documentoVeicolo} colspan="col-span-10" mdcolspan="lg:col-span-12" onchange={handleChange} options={tipologiaDocumentoVeicoloOption}/>
-            </div>
-
-            <div className={formData.targa.length === 7 ? "col-span-12" : "hidden"}>
-              <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">FOTO</h4>
-            </div>
-
-            <div className={formData.targa.length === 7 ? 'grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg bg-white dark:bg-neutral-900' : `hidden`}>
-              <FormFileUpload
-                nome="fronteDOCveicolo"
-                label="Documento Veicolo - Fronte"
-                bucket="documentiveicoli"
-                accept="image/*"
-                campo="DOCVEICFronte"
-                colspan="col-span-12"
-                mdcolspan="lg:col-span-3"
-                targa={formData.targa}
-                makePublic={true}
-                onchange={handleChangeUpload}
-                onBusyChange={handleBusyChange}
-              />
-              <FormFileUpload
-                nome="retroDOCveicolo"
-                label="Documento Veicolo - Retro"
-                bucket="documentiveicoli"
-                accept="image/*"
-                campo="DOCVEICRetro"
-                colspan="col-span-12"
-                mdcolspan="lg:col-span-3"
-                targa={formData.targa}
-                makePublic={true}
-                onchange={handleChangeUpload}
-                onBusyChange={handleBusyChange}
-              />
-              <FormFileUpload
-                nome="fronteDOCdetentore"
-                label="Documento Detentore - Fronte"
-                bucket="documentidetentori"
-                accept="image/*"
-                campo="DOCDETENTFronte"
-                colspan="col-span-12"
-                mdcolspan="lg:col-span-3"
-                targa={formData.targa}
-                makePublic={true}
-                onchange={handleChangeUpload}
-                onBusyChange={handleBusyChange}
-              />
-              <FormFileUpload
-                nome="retroDOCdetentore"
-                label="Documento Detentore - Retro"
-                bucket="documentidetentori"
-                accept="image/*"
-                campo="DOCDETENTFronte"
-                colspan="col-span-12"
-                mdcolspan="lg:col-span-3"
-                targa={formData.targa}
-                makePublic={true}
-                onchange={handleChangeUpload}
-                onBusyChange={handleBusyChange}
-              />
+            <div id="threeStep" className={`${twoStep ? "" : "hidden"} flex flex-col col-span-12 h-fit gap-3`}>                
+              <div className="col-span-12">
+                <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DETENTORE</h4>
+              </div>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+                <FormSelectRuoli nome="tipologiaDetentore" label='Tipologia Detentore' value={formData.tipologiaDetentore} colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={tipologiaDetentoreOption}/>
+                <FormSelectRuoli nome="formaLegale" label='Forma Legale' value={formData.formaLegale} colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={formaLegaleOption}/>
+                <FormField nome="ragioneSociale" label='Ragione Sociale' value={formData.ragioneSociale} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChangeRagioneSociale} type='text' status={`${formData.formaLegale == 'azienda' ? '' : 'hidden'}`}/>
+                <FormField nome="piva" label='Partita IVA' value={formData.piva} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChangePiva} type='text' status={`${formData.formaLegale == 'azienda' ? '' : 'hidden'}`}/>
+                <FormField nome="cf" label='Codice Fiscale' value={formData.cf} colspan="col-span-6" mdcolspan="lg:col-span-6" onchange={handleChange} type='text' status={`${formData.formaLegale == 'privato' ? '' : 'hidden'}`}/>
+                
+              </div> 
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+                <FormField nome="nome" label='Nome' value={formData.nome} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='text'/>
+                <FormField nome="cognome" label='Cognome' value={formData.cognome} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='text'/>
+                <FormSelectRuoli nome="tipologiaDocumentoD" label='Tipologia Documento' value={formData.tipologiaDocumentoD}  colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={tipologiaDocumentoOption}/>
+                <FormField nome="numeroDocumento" label='Numero Documento' value={formData.numeroDocumento} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
+                <FormSelectRuoli nome="nazionalita" label='Nazionalità' value={formData.nazionalita} colspan="col-span-10" mdcolspan="lg:col-span-2" onchange={handleChange} options={nazionalitaDetentoreOption}/>
+                <FormSelect nome="provincia" label='Provincia' value={formData.provincia} colspan="col-span-3" mdcolspan="lg:col-span-2" onchange={handleChangeProvinciaLegale} options={provinceSet}/>
+                <FormSelect nome="citta" label='Città' value={formData.citta} colspan="col-span-5" mdcolspan="lg:col-span-2" onchange={handleChangeCittaLegale} options={cittaLegale}/>
+                <FormSelect nome="cap" label='Cap' value={formData.cap} colspan="col-span-4" mdcolspan="lg:col-span-1" onchange={handleChangeCapLegale} options={capLegale}/>
+                <FormField nome="indirizzo" label='Indirizzo' value={formData.indirizzo} colspan="col-span-12" mdcolspan="lg:col-span-12" onchange={handleChange} type='text'/>
+              </div>
             </div>
 
-            <div className="col-span-12 flex justify-end">
+            <div id="fourStep" className={`${threeStep ? "" : "hidden"} flex flex-col col-span-12 h-fit gap-3`}>              
+              <div className="col-span-12">
+                <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">CONTATTI</h4>
+              </div>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+                <FormField nome="email" label='Email' value={formData.email} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='email'/>
+                <FormField nome="mobile" label='Mobile' value={formData.mobile} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='tel'/>
+              </div>
+            </div>  
+
+            <div id="fiveStep" className={`${fourStep ? "" : "hidden"} flex flex-col col-span-12 h-fit gap-3`}>               
+              <div className="col-span-12">
+                <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DOCUMENTI</h4>
+              </div>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+                <FormSelectRuoli nome="documentoVeicolo" label='Documento Veicolo' value={formData.documentoVeicolo} colspan="col-span-10" mdcolspan="lg:col-span-12" onchange={handleChange} options={tipologiaDocumentoVeicoloOption}/>
+              </div>
+            </div> 
+
+            <div id="sixStep" className={`${fiveStep ? "" : "hidden"} flex flex-col col-span-12 h-fit gap-3`}>              
+              <div className={"col-span-12"}>
+                <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">FOTO</h4>
+              </div>
+              <div className={'grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg bg-white dark:bg-neutral-900'}>
+                <FormFileUpload
+                  nome="fronteDOCveicolo"
+                  label="Documento Veicolo - Fronte"
+                  bucket="documentiveicoli"
+                  accept="image/*"
+                  campo="DOCVEICFronte"
+                  colspan="col-span-12"
+                  mdcolspan="lg:col-span-3"
+                  targa={formData.targa}
+                  makePublic={true}
+                  onchange={handleChangeUpload}
+                  onBusyChange={handleBusyChange}
+                  resetToken={resetUploadsTick}
+                />
+                <FormFileUpload
+                  nome="retroDOCveicolo"
+                  label="Documento Veicolo - Retro"
+                  bucket="documentiveicoli"
+                  accept="image/*"
+                  campo="DOCVEICRetro"
+                  colspan="col-span-12"
+                  mdcolspan="lg:col-span-3"
+                  targa={formData.targa}
+                  makePublic={true}
+                  onchange={handleChangeUpload}
+                  onBusyChange={handleBusyChange}
+                  resetToken={resetUploadsTick}
+                />
+                <FormFileUpload
+                  nome="fronteDOCdetentore"
+                  label="Documento Detentore - Fronte"
+                  bucket="documentidetentori"
+                  accept="image/*"
+                  campo="DOCDETENTFronte"
+                  colspan="col-span-12"
+                  mdcolspan="lg:col-span-3"
+                  targa={formData.targa}
+                  makePublic={true}
+                  onchange={handleChangeUpload}
+                  onBusyChange={handleBusyChange}
+                  resetToken={resetUploadsTick}
+                />
+                <FormFileUpload
+                  nome="retroDOCdetentore"
+                  label="Documento Detentore - Retro"
+                  bucket="documentidetentori"
+                  accept="image/*"
+                  campo="DOCDETENTRetro"
+                  colspan="col-span-12"
+                  mdcolspan="lg:col-span-3"
+                  targa={formData.targa}
+                  makePublic={true}
+                  onchange={handleChangeUpload}
+                  onBusyChange={handleBusyChange}
+                  resetToken={resetUploadsTick}
+                />
+              </div>
+            </div>  
+
+            <div id="sevenStep" className={`${sixStep ? "" : "hidden"} col-span-12 flex justify-end`}>
               <button
                 type="submit"
                 disabled={anyUploading}
@@ -544,15 +662,16 @@ function handleChangeUpload(e) {
                 {anyUploading ? "Caricamento in corso..." : "Inserisci"}
               </button>
             </div>
+            <div className="h-3"></div>
           </form>
       </div>
     </>
   )
 }
 
-export function FormField ({colspan, mdcolspan, nome,label, value, onchange, type}) {
+export function FormField ({colspan, mdcolspan, nome,label, value, onchange, type, status}) {
   return (
-    <div className={`${colspan} ${mdcolspan} min-w-0`}>
+    <div className={`${colspan} ${mdcolspan} min-w-0 ${status} `}>
       <Label htmlFor={nome}>{label}</Label>
       <Input
         type={type}
@@ -561,7 +680,8 @@ export function FormField ({colspan, mdcolspan, nome,label, value, onchange, typ
         name={nome}
         value={value}
         onChange={onchange}
-        className="w-full min-w-0 appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:border-brand"
+        
+        className={`w-full min-w-0 appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:border-brand`}
       />
     </div>
   )
@@ -656,10 +776,12 @@ export function FormFileUpload({
   onchange,
   onBusyChange,
   helpText = '',
+  resetToken,
 }) {
   const [queue, setQueue] = useState([]);      // solo per UI: [{file, status, path?, url?, err?, tooBig?}]
   const [previews, setPreviews] = useState([]); // preview locali
-
+  const inputRef = useRef(null);   // <-- ref all'input
+  
   if (!bucket) console.error('FormFileUpload: prop "bucket" è obbligatoria.');
 
   const bytesToMB = (b) => (b / (1024 * 1024)).toFixed(2);
@@ -669,6 +791,19 @@ export function FormFileUpload({
   useEffect(() => {
     return () => previews.forEach(p => URL.revokeObjectURL(p.url));
   }, [previews]);
+
+  useEffect(() => {
+    // quando il parent incrementa resetToken:
+    // 1) revoca le preview
+    previews.forEach(p => URL.revokeObjectURL(p.url));
+    // 2) svuota stati locali
+    setQueue([]);
+    setPreviews([]);
+    // 3) svuota il valore dell'input file
+    if (inputRef.current) inputRef.current.value = "";
+    // 4) opzionale: notifica il parent per azzerare il campo (se vuoi)
+    onchange?.({ target: { name: nome, files: [] } });
+  }, [resetToken]); // <-- dipendenza
 
   async function bucketExists(name) {
     const { error } = await supabase.storage.from(name).list('', { limit: 1 });
@@ -791,6 +926,7 @@ export function FormFileUpload({
       <Label htmlFor={nome}>{label}</Label>
 
       <Input
+        ref={inputRef}
         id={nome}
         name={nome}
         type="file"

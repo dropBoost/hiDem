@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabaseClient"
 import Image from "next/image"
-import MenuSidebar from "@/app/componenti/menuGestionaleSidebar"
+import MenuSidebar from "@/app/componenti/menuSidebar"
 import { companyName } from "../cosetting"
 import { ThemeToggle } from "@/app/componenti/theme-toggle"
 

@@ -348,6 +348,7 @@ export default function InserimentoAzienda({onDisplay, statusAziende, setStatusA
                 {anyUploading ? "Caricamento in corso..." : "Inserisci"}
               </button>
             </div>
+            <div className="h-3"></div>
           </form>
         </div>
     </>
