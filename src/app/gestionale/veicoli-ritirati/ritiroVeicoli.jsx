@@ -488,11 +488,8 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
 
   return (
     <>
-      <div className={`${onDisplay === 'on' ? '' : 'hidden'}
-      w-full h-full
-      flex-1 flex flex-col
-      md:p-0 md:pe-3 px-4`}>
-          <form onSubmit={handleSubmit} className="grid h-full grid-cols-12 gap-4">
+      <div className={`${onDisplay === 'on' ? '' : 'hidden'} w-full flex-1 min-h-0 flex flex-col md:p-0 md:pe-3 px-4`}>
+          <form onSubmit={handleSubmit} className="grid min-h-0 grid-cols-12 gap-4">
 
             <div id="oneStep" className='flex flex-col col-span-12 h-fit gap-3'>  
               <div className="col-span-12 flex flex-row justify-between">
@@ -620,7 +617,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
               <div className="col-span-12">
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">SPECIFICHE VEICOLO</h4>
               </div>
-              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 bg-white dark:bg-neutral-900'>
                 <FormField nome="targa" label='Targa' value={formData.targa} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
                 <FormField nome="vin" label='VIN' value={formData.vin} colspan="col-span-6" mdcolspan="lg:col-span-4" onchange={handleChange} type='text'/>
                 <FormField nome="anno" label='Anno' value={formData.anno} colspan="col-span-12" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
@@ -633,7 +630,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
               <div className="col-span-12">
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DETENTORE</h4>
               </div>
-              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 bg-white dark:bg-neutral-900'>
                 <FormSelectRuoli nome="tipologiaDetentore" label='Tipologia Detentore' value={formData.tipologiaDetentore} colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={tipologiaDetentoreOption}/>
                 <FormSelectRuoli nome="formaLegale" label='Forma Legale' value={formData.formaLegale} colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={formaLegaleOption}/>
                 <FormField nome="ragioneSociale" label='Ragione Sociale' value={formData.ragioneSociale} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChangeRagioneSociale} type='text' status={`${formData.formaLegale == 'azienda' ? '' : 'hidden'}`}/>
@@ -641,7 +638,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
                 <FormField nome="cf" label='Codice Fiscale' value={formData.cf} colspan="col-span-6" mdcolspan="lg:col-span-6" onchange={handleChange} type='text' status={`${formData.formaLegale == 'privato' ? '' : 'hidden'}`}/>
                 
               </div> 
-              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 bg-white dark:bg-neutral-900'>
                 <FormField nome="nome" label='Nome' value={formData.nome} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='text'/>
                 <FormField nome="cognome" label='Cognome' value={formData.cognome} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='text'/>
                 <FormSelectRuoli nome="tipologiaDocumentoD" label='Tipologia Documento' value={formData.tipologiaDocumentoD}  colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={tipologiaDocumentoOption}/>
@@ -658,7 +655,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
               <div className="col-span-12">
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">CONTATTI</h4>
               </div>
-              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 bg-white dark:bg-neutral-900'>
                 <FormField nome="email" label='Email' value={formData.email} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='email'/>
                 <FormField nome="mobile" label='Mobile' value={formData.mobile} colspan="col-span-6" mdcolspan="lg:col-span-3" onchange={handleChange} type='tel'/>
               </div>
@@ -668,7 +665,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
               <div className="col-span-12">
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DOCUMENTI</h4>
               </div>
-              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 bg-white dark:bg-neutral-900'>
                 <FormSelectRuoli nome="documentoVeicolo" label='Documento Veicolo' value={formData.documentoVeicolo} colspan="col-span-10" mdcolspan="lg:col-span-12" onchange={handleChange} options={tipologiaDocumentoVeicoloOption}/>
               </div>
             </div> 
@@ -749,7 +746,6 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
                 {anyUploading ? "Caricamento in corso..." : "Inserisci"}
               </button>
             </div>
-            <div className="h-3"></div>
           </form>
       </div>
     </>

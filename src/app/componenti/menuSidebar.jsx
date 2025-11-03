@@ -16,8 +16,8 @@ export default function MenuSidebar () {
     const isActiveHome = (path) => pathname == path;
 
     return (
-        <ul className="flex flex-row md:flex-col gap-2">
-        <li>
+        <div className="flex flex-row lg:flex-col gap-2">
+        <div>
             <Link
             href={`/gestionale`}
             title={`GESTIONALE`}
@@ -27,11 +27,11 @@ export default function MenuSidebar () {
             >
             <FaHome/>
             </Link>
-        </li>
+        </div>
         {moduliGestionale
             .filter(moduli => moduli.attivo === "true")
             .map(modulo => (
-            <li key={modulo.name}>
+            <div key={modulo.name}>
                 <Link
                 href={`${modulo.link}`}
                 title={modulo.linkActive}
@@ -41,9 +41,9 @@ export default function MenuSidebar () {
                 >
                 {modulo.icon}
                 </Link>
-            </li>
+            </div>
             ))
         }
-        </ul>
+        </div>
     );
 }

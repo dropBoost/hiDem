@@ -10,21 +10,19 @@ export default function MENUhomepage () {
     const isActive = (path) => pathname?.startsWith(path);
 
     return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-5 overflow-auto h-full">
+    <div className="flex flex-wrap lg:justify-start flex-row gap-4">
     {moduliGestionale
         .filter(moduli => moduli.attivo === "true")
         .map((modulo, index) => (
-        <Link
-            key={index}
-            href={`${modulo.link}`}
-            className={`flex flex-col items-center justify-center rounded-[1.5rem] p-4 w-full aspect-square h-full transition duration-700 ${
-            isActive(`/gestionale/${modulo.linkActive}`)
-                ? 'bg-brand'
-                : 'bg-white dark:bg-neutral-800 text-brand hover:bg-brand dark:hover:bg-brand hover:text-neutral-200 shadow-lg'
-            }`}
-        >
-            <span className='lg:text-[60px] text-4xl'>{modulo.icon}</span>
-            <span className='mt-3 lg:text-sm text-[0.6rem] uppercase text-center break-words'>{modulo.label}</span>
+        <Link key={index} href={`${modulo.link}`} >
+            <div className={`flex flex-col items-center justify-center rounded-2xl p-4 w-[140px] aspect-square transition duration-700 ${
+                isActive(`/gestionale/${modulo.linkActive}`)
+                    ? 'bg-brand'
+                    : 'bg-white dark:bg-neutral-800 text-brand hover:bg-brand dark:hover:bg-brand hover:text-neutral-200 shadow-lg'
+                }`}>
+                <span className='lg:text-[40px] text-4xl'>{modulo.icon}</span>
+                <span className='mt-3 lg:text-[0.5rem] text-[0.6rem] uppercase text-center break-words'>{modulo.label}</span>
+            </div>
         </Link>
     ))}
     </div>
