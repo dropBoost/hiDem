@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { moduliGestionale } from '../../cosetting'
+import { moduliInfo } from '../../cosetting'
 import { ThemeToggle } from '../../componenti/theme-toggle'
 
 const NAV = [
@@ -62,7 +62,7 @@ export default function LayoutGestionale({ children }) {
 
       {/* Main scrollabile */}
       <main className="bg-white dark:bg-neutral-900 col-start-1 md:col-start-2 row-start-2 min-w-0 min-h-0 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]">
-        <div className="lg:p-5 p-1">
+        <div className="p-5">
           {children}
         </div>
       </main>
@@ -91,7 +91,7 @@ function Sidebar({ pathname, onNavigate }) {
 
       <div className="flex-1 overflow-y-auto py-3 bg-neutral-100 dark:bg-neutral-900 border-r">
         <ul className="space-y-1 px-2">
-          {moduliGestionale.map((item, index) => {
+          {moduliInfo.map((item, index) => {
             const active =
               pathname === item.link ||
               (item.link !== '/gestionale' && pathname?.startsWith(item.link))

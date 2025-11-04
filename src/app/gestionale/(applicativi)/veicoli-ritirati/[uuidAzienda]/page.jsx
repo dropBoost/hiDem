@@ -102,7 +102,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 
   return (
   <>
-      <div className={`${listPraticheAzienda ? '' : 'hidden'} w-full h-full flex-1 flex flex-col md:p-0 md:pe-3 px-4 gap-4`}>
+      <div className={`${listPraticheAzienda ? '' : 'hidden'} w-full min-h-0 flex-1 flex flex-col gap-4`}>
       <h1 className="text-white">{datiAzienda[0]?.ragione_sociale_arv} / {datiAzienda[0]?.piva_arv}</h1>
       {/* Barra ricerca */}
       <div className="flex w-full items-center gap-2">

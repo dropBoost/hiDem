@@ -103,7 +103,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 
   return (
   <>
-    <div className={`${praticaAuto ? '' : 'hidden'} w-full h-full flex flex-1 flex-col md:p-0 md:pe-3 px-4 py-2 gap-4`}>
+    <div className={`${praticaAuto ? '' : 'hidden'} w-full h-full flex flex-1 flex-col gap-4`}>
       {/* AZIENDA RITIRO */}
       <div className="">
         <h4 className="text-[0.6rem] font-bold text-dark dark:text-neutral-400 border border-neutral-400 px-3 py-2 w-fit rounded-xl">{praticaAuto[0]?.azienda.ragione_sociale_arv} / {praticaAuto[0]?.azienda.piva_arv}</h4>
@@ -326,7 +326,6 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
           
         </div>
       </div>
-      <div className="min-h-2"></div>  
     </div>
   </>
   )

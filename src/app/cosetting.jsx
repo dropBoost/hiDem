@@ -67,12 +67,18 @@ export const moduliGestionale = [
     {name:'dashboard', link:'/gestionale/dashboard', linkActive:'dashboard', icon: ICONone, label:'dashboard', attivo:'true'},
     {name:'azienda ritiro veicoli', link:'/gestionale/azienda-ritiro-veicoli', linkActive:'azienda-ritiro-veicoli', icon: ICONtwo, label:'Azienda Ritiro Veicoli', attivo:'true'},
     {name:'veicoli ritirati', link:'/gestionale/veicoli-ritirati', linkActive:'veicoli-ritirati', icon: ICONthree, label:'Veicoli Ritirati', attivo:'true'},
-    {name:'certificati demolizione', link:'/gestionale/certificati-demolizione', linkActive:'certificati-demolizione', icon: ICONfour, label:'Certificati Demolizione', attivo:'true'},
+    {name:'demolizioni', link:'/gestionale/certificati-demolizione', linkActive:'demolizioni', icon: ICONfour, label:'Certificati Demolizione', attivo:'true'},
     {name:'magazzino', link:'/gestionale/magazzino', linkActive:'magazzino', icon: ICONfive, label:'Magazzino', attivo:'true'},
     {name:'veicoli', link:'/gestionale/modelli-veicoli', linkActive:'modelli-veicoli', icon: ICONsix, label:'Veicoli', attivo:'true'},
     {name:'clienti', link:'/gestionale/clienti', linkActive:'clienti', icon: ICONseven, label:'Clienti', attivo:'true'},
     {name:'documenti', link:'/gestionale/documenti', linkActive:'documenti', icon: ICONeight, label:'Documenti', attivo:'true'},
     {name:'pos', link:'/gestionale/pos', linkActive:'pos', icon: ICONnine, label:'Pos', attivo:'true'},
-    {name:'richieste-ritiro-online', link:'/gestionale/richieste-ritiro-online', linkActive:'richieste-ritiro-online', icon: ICONten, label:'Richieste Ritiri', attivo:'true'},
+    {name:'ritiro-online', link:'/gestionale/richieste-ritiro-online', linkActive:'ritiro-online', icon: ICONten, label:'Ritiri Online', attivo:'true'},
+  ]
+
+export const moduliInfo = [
+    {name:'Info', link:'/gestionale/info', linkActive:'info', icon: ICONone, label:'Info', attivo:'true'},
+    {name:'Aiuto', link:'/gestionale/aiuto', linkActive:'aiuto', icon: ICONtwo, label:'Aiuto', attivo:'true'},
+    {name:'Test', link:'/gestionale/test', linkActive:'test', icon: ICONthree, label:'Test', attivo:'true'},
   ]
 

@@ -135,8 +135,8 @@ export default function ElencoAziende({ onDisplay, statusAziende, setStatusAzien
       </div>
 
       {/* Tabella */}
-      <div className="flex flex-col flex-1 justify-between border border-brand rounded-xl p-5 max-h-full overflow-auto bg-neutral-900">
-        <Table>
+      <div className="flex flex-col flex-1 justify-between border border-brand rounded-xl p-5 min-h-0 overflow-auto bg-neutral-900">
+        <Table className="">
           <TableCaption>
             {totalCount > 0
               ? `Trovati ${totalCount} clienti • Pagina ${page} di ${totalPages}`
