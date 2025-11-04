@@ -76,7 +76,7 @@ function Timeline({ items = [], className = "" }) {
           {/* DOT */}
           <span
             className={cx(
-              "absolute -left-2 mt-1 h-3 w-3 rounded-full ring-2 ring-white dark:ring-neutral-950 bg-brand",
+              "absolute -left-2 mt-1 h-3 w-3 rounded-full bg-brand",
               it.dotClassName
             )}
             aria-hidden="true"

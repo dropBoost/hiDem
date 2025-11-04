@@ -18,7 +18,7 @@ export default function MENUhomepage () {
             <div className={`flex flex-col items-center justify-center rounded-2xl p-4 lg:w-[140px] w-[100px] aspect-square transition duration-700 ${
                 isActive(`/gestionale/${modulo.linkActive}`)
                     ? 'bg-brand'
-                    : 'bg-white dark:bg-neutral-800 text-brand hover:bg-brand dark:hover:bg-brand hover:text-neutral-200 shadow-lg'
+                    : 'bg-white dark:bg-neutral-800 text-brand hover:bg-brand dark:hover:bg-brand hover:text-neutral-200'
                 }`}>
                 <span className='lg:text-[40px] text-4xl'>{modulo.icon}</span>
                 <span className='mt-3 lg:text-[0.5rem] text-[0.6rem] w-full uppercase text-center break-words truncate'>{modulo.label}</span>
