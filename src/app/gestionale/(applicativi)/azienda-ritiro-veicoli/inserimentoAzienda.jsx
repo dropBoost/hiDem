@@ -289,68 +289,61 @@ export default function InserimentoAzienda({onDisplay, statusAziende, setStatusA
 
   return (
     <>
-    
-      <div className={`${onDisplay === 'on' ? '' : 'hidden'}
-      w-full h-full
-      flex-1 flex flex-col
-      md:p-0 md:pe-3 px-4 gap-4`}>
-          <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 flex flex-row justify-between">
-                <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DATI AZIENDA</h4>
-                <button
-                type="submit"
-                disabled={anyUploading}
-                className=' bg-brand px-3 py-2 w-fit rounded-xl h-full'>
-                  {anyUploading ? "Caricamento in corso..." : <FaPlusSquare className='font-bold text-dark dark:text-white'/>}
-                </button>
-            </div>
-            <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
-              <FormField nome="ragioneSociale" label='Ragione Sociale' value={formData.ragioneSociale} colspan="col-span-12" mdcolspan="lg:col-span-4" onchange={handleChangeRagioneSociale} type='text'/>
-              <FormField nome="piva" label='Partita Iva' value={formData.piva} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChangePiva} type='text'/>
-              <FormField nome="sdi" label='SDI' value={formData.sdiArv} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
-              <FormSelectRuoli nome="rules" label='Ruolo' value={formData.rules} colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={optionsRuoliUtente}/>
-              <FormCheckBox nome="attiva" label='Attiva' value={formData.attiva} colspan="col-span-2" mdcolspan="md:col-span-1 lg:col-span-1" onchange={handleChangeCheckbox} type='checkbox'/>
-            </div>
-
-            <div className="col-span-12">
-              <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">SEDE LEGALE</h4>
-            </div>
-            <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
-              <FormSelect nome="provinciaLegale" label='Provincia' value={formData.provinciaLegale} colspan="col-span-3" mdcolspan="lg:col-span-2" onchange={handleChangeProvinciaLegale} options={provinceSet}/>
-              <FormSelect nome="cittaLegale" label='Città' value={formData.cittaLegale} colspan="col-span-5" mdcolspan="lg:col-span-2" onchange={handleChangeCittaLegale} options={cittaLegale}/>
-              <FormSelect nome="capLegale" label='Cap' value={formData.capLegale} colspan="col-span-4" mdcolspan="lg:col-span-2" onchange={handleChangeCapLegale} options={capLegale}/>
-              <FormField nome="indirizzoLegale" label='Indirizzo' value={formData.indirizzoLegale} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChange} type='text'/>
-            </div>
-            <div className="col-span-12">
-              <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">SEDE OPERATIVA</h4>
-            </div>
-            <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
-            <FormSelect nome="provinciaOperativa" label='Provincia' value={formData.provinciaOperativa} colspan="col-span-3" mdcolspan="lg:col-span-2" onchange={handleChangeProvinciaOperativa} options={provinceSet}/>
-            <FormSelect nome="cittaOperativa" label='Città' value={formData.cittaOperativa} colspan="col-span-5" mdcolspan="lg:col-span-2" onchange={handleChangeCittaOperativa} options={cittaOperativa}/>
-            <FormSelect nome="capOperativa" label='Cap' value={formData.capOperativa} colspan="col-span-4" mdcolspan="lg:col-span-2" onchange={handleChangeCapOperativa} options={capOperativa}/>
-            <FormField nome="indirizzoOperativa" label='Indirizzo' value={formData.indirizzoOperativa} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChange} type='text'/>
-            </div>
-            <div className="col-span-12">
-              <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">CONTATTI</h4>
-            </div>
-            <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
-            <FormField nome="email" label='Email' value={formData.email} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChange} type='email'/>
-            <FormField nome="telefono" label='Telefono' value={formData.telefono} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChangeNumerico} type='tel'/>
-            <FormField nome="mobile" label='Mobile' value={formData.mobile} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChangeNumerico} type='tel'/>
-            <FormField nome="mobileAutista" label='Mobile Autista' value={formData.mobileAutista} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChangeNumerico} type='tel'/>
-            </div>
-            
-            <div className="col-span-12 flex justify-end">
-              <button
-                type="submit"
-                disabled={anyUploading}
-                className="border border-brand hover:bg-brand text-white px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
-                {anyUploading ? "Caricamento in corso..." : "Inserisci"}
-              </button>
-            </div>
-            <div className="h-3"></div>
-          </form>
+    <div className={`${onDisplay === 'on' ? '' : 'hidden'} w-full h-full`}>
+      <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
+        <div className="col-span-12 flex flex-row justify-between">
+            <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DATI AZIENDA</h4>
+            <button
+            type="submit"
+            disabled={anyUploading}
+            className=' bg-brand px-3 py-2 w-fit rounded-xl h-full'>
+              {anyUploading ? "Caricamento in corso..." : <FaPlusSquare className='font-bold text-dark dark:text-white'/>}
+            </button>
         </div>
+        <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+          <FormField nome="ragioneSociale" label='Ragione Sociale' value={formData.ragioneSociale} colspan="col-span-12" mdcolspan="lg:col-span-4" onchange={handleChangeRagioneSociale} type='text'/>
+          <FormField nome="piva" label='Partita Iva' value={formData.piva} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChangePiva} type='text'/>
+          <FormField nome="sdi" label='SDI' value={formData.sdiArv} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
+          <FormSelectRuoli nome="rules" label='Ruolo' value={formData.rules} colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={optionsRuoliUtente}/>
+          <FormCheckBox nome="attiva" label='Attiva' value={formData.attiva} colspan="col-span-2" mdcolspan="md:col-span-1 lg:col-span-1" onchange={handleChangeCheckbox} type='checkbox'/>
+        </div>
+        <div className="col-span-12">
+          <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">SEDE LEGALE</h4>
+        </div>
+        <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+          <FormSelect nome="provinciaLegale" label='Provincia' value={formData.provinciaLegale} colspan="col-span-3" mdcolspan="lg:col-span-2" onchange={handleChangeProvinciaLegale} options={provinceSet}/>
+          <FormSelect nome="cittaLegale" label='Città' value={formData.cittaLegale} colspan="col-span-5" mdcolspan="lg:col-span-2" onchange={handleChangeCittaLegale} options={cittaLegale}/>
+          <FormSelect nome="capLegale" label='Cap' value={formData.capLegale} colspan="col-span-4" mdcolspan="lg:col-span-2" onchange={handleChangeCapLegale} options={capLegale}/>
+          <FormField nome="indirizzoLegale" label='Indirizzo' value={formData.indirizzoLegale} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChange} type='text'/>
+        </div>
+        <div className="col-span-12">
+          <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">SEDE OPERATIVA</h4>
+        </div>
+        <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+        <FormSelect nome="provinciaOperativa" label='Provincia' value={formData.provinciaOperativa} colspan="col-span-3" mdcolspan="lg:col-span-2" onchange={handleChangeProvinciaOperativa} options={provinceSet}/>
+        <FormSelect nome="cittaOperativa" label='Città' value={formData.cittaOperativa} colspan="col-span-5" mdcolspan="lg:col-span-2" onchange={handleChangeCittaOperativa} options={cittaOperativa}/>
+        <FormSelect nome="capOperativa" label='Cap' value={formData.capOperativa} colspan="col-span-4" mdcolspan="lg:col-span-2" onchange={handleChangeCapOperativa} options={capOperativa}/>
+        <FormField nome="indirizzoOperativa" label='Indirizzo' value={formData.indirizzoOperativa} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChange} type='text'/>
+        </div>
+        <div className="col-span-12">
+          <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">CONTATTI</h4>
+        </div>
+        <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+        <FormField nome="email" label='Email' value={formData.email} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChange} type='email'/>
+        <FormField nome="telefono" label='Telefono' value={formData.telefono} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChangeNumerico} type='tel'/>
+        <FormField nome="mobile" label='Mobile' value={formData.mobile} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChangeNumerico} type='tel'/>
+        <FormField nome="mobileAutista" label='Mobile Autista' value={formData.mobileAutista} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChangeNumerico} type='tel'/>
+        </div>
+        <div className="col-span-12 flex justify-end">
+          <button
+            type="submit"
+            disabled={anyUploading}
+            className="border border-brand hover:bg-brand text-white px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
+            {anyUploading ? "Caricamento in corso..." : "Inserisci"}
+          </button>
+        </div>
+      </form>
+    </div>
     </>
   )
 }

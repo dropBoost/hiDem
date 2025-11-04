@@ -19,8 +19,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="it" suppressHydrationWarning className="h-full min-h-0">
-      <body className={`${geistSans.variable} ${geistMono.variable} h-dvh min-h-0 overflow-hidden bg-background text-foreground`}>
+    <html lang="it" suppressHydrationWarning className="h-full min-h-0 ">
+      <body className={`${geistSans.variable} ${geistMono.variable} h-dvh min-h-0 overflow-hidden bg-background text-foreground `}>
         <ThemeProvider attribute='class' enableSystem defaultTheme='system'>
         {children}
         </ThemeProvider>
