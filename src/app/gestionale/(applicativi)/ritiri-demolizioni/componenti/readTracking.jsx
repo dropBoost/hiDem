@@ -44,10 +44,6 @@ export default function ReadTracking({ uuidRitiroVeicolo, updateTracking }) {
     })()
   }, [uuidRitiroVeicolo, updateTracking])
 
-  console.log("log",logAvanzamento)
-  console.log("veicolo",uuidRitiroVeicolo)
-
-
   if (!uuidRitiroVeicolo) return <p className="text-sm text-neutral-500">Nessun veicolo selezionato.</p>
   if (loading) return <p className="text-sm text-neutral-500">Caricamento timeline…</p>
   if (!logAvanzamento.length) return <p className="text-sm text-neutral-500">Nessun evento registrato.</p>

@@ -85,7 +85,9 @@ import ReadTracking from "../../componenti/readTracking";
     (async () => {
       const { data, error } = await supabase
         .from("certificato_demolizione")
-        .select("*")
+        .select(`*,
+          datiVeicolo:dati_veicolo_ritirato(
+          targa_veicolo_ritirato)`)
         .eq("uuid_veicolo_ritirato", uuidRitiroVeicolo)
         .maybeSingle(); // o .single() se sei certo che esista
 
@@ -102,6 +104,9 @@ import ReadTracking from "../../componenti/readTracking";
 
       return () => { cancelled = true; };
     }, [uuidRitiroVeicolo]);
+
+    console.log("dati",datiDemolizione)
+    console.log("pratica", praticaAuto)
 
   return (
   <>
@@ -210,7 +215,7 @@ import ReadTracking from "../../componenti/readTracking";
       <div className="">
         <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DOCUMENTI</h4>
       </div>
-      <div className="w-full border rounded-xl p-5">
+      <div className="w-full border border-neutral-600 rounded-xl p-5">
         <div id="mainImagecontainergridtwo" className="flex flex-row">
             {praticaAuto.length ? praticaAuto.map((pa, index) => {
               return (
@@ -265,7 +270,7 @@ import ReadTracking from "../../componenti/readTracking";
                         <Image src={pa.foto_documento_veicolo_ritirato_r} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover object-center rounded"/>
                         </div>
                         <button asChild className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg">
-                          <Link href={`${pa.foto_documento_veicolo_ritirato_r}?download=${pa.targa_veicolo_ritirato}-doc-veicolo-fronte.jpg`} target="_blank">
+                          <Link href={`${pa.foto_documento_veicolo_ritirato_r}?download=${pa.targa_veicolo_ritirato}-doc-veicolo-retro.jpg`} target="_blank">
                             VEICOLO RETRO
                           </Link>
                         </button>
@@ -298,8 +303,8 @@ import ReadTracking from "../../componenti/readTracking";
                       <Image src="/pdf_placeholder.webp" fill alt={`${dem.uuid_veicolo_ritirato}`} className="object-cover object-center rounded"/>
                       </div>
                       <button asChild className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg">
-                        <Link href={`${dem.documento_demolizione}?download=${dem.tipologia_demolizione}-doc-detentore-fronte.jpg`} target="_blank">
-                          scarica
+                        <Link href={`${dem.documento_demolizione}?download=${dem.datiVeicolo.targa_veicolo_ritirato}-${dem.tipologia_demolizione}-demolizione.jpg`} target="_blank">
+                          DOCUMENTO DEMOLIZIONE
                         </Link>
                       </button>
                     </div>
@@ -312,8 +317,8 @@ import ReadTracking from "../../componenti/readTracking";
                       <Image src={dem.altro_documento_demolizione} fill alt={`${dem.uuid_veicolo_ritirato}`} className="object-cover rounded"/>
                       </div>
                       <button asChild className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg">
-                        <Link href={`${dem.altro_documento_demolizione}?download=${dem.tipologia_demolizione}-doc-detentore-retro.jpg`} target="_blank">
-                          scarica
+                        <Link href={`${dem.altro_documento_demolizione}?download=${dem.datiVeicolo.targa_veicolo_ritirato}-${dem.tipologia_demolizione}-altro.jpg`} target="_blank">
+                          ALTRO DOCUMENTO
                         </Link>
                       </button>
                     </div>
