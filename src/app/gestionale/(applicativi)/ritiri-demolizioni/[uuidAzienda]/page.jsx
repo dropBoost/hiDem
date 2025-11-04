@@ -98,8 +98,6 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
         setPage(1)
     }
 
-  console.log("elenco",listPraticheAzienda)
-
   return (
   <>
       <div className={`${listPraticheAzienda ? '' : 'hidden'} w-full min-h-0 flex-1 flex flex-col gap-4`}>

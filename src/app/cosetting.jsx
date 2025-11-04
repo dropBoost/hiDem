@@ -2,7 +2,7 @@
 // import { faFacebook, faInstagram, faTiktok, faWhatsapp } from "@fortawesome/free-brands-svg-icons"
 // import { faEnvelope, faSquarePhone, faGauge, faPhotoFilm, faCalendar, faKeyboard, faFolderOpen } from '@fortawesome/free-solid-svg-icons'
 
-import { FaCarCrash, FaFacebookSquare, FaWhatsappSquare, FaInstagramSquare, FaPhoneSquareAlt, FaEnvelope, FaUser, FaFileInvoiceDollar, FaUsers, FaArchive } from "react-icons/fa";
+import { FaCarCrash, FaFacebookSquare, FaWhatsappSquare, FaInstagramSquare, FaPhoneSquareAlt, FaEnvelope, FaUser, FaFileInvoiceDollar, FaUsers, FaArchive, FaHome } from "react-icons/fa";
 import { AiFillTikTok } from "react-icons/ai";
 import { MdDashboard, MdOutlinePointOfSale } from "react-icons/md";
 import { IoFitnessSharp, IoAnalyticsSharp  } from "react-icons/io5";
@@ -20,6 +20,7 @@ const ICONinstagram = <FaInstagramSquare/>
 const ICONtel = <FaPhoneSquareAlt/>
 const ICONemail = <FaEnvelope/>
 
+const ICONzero = <FaHome/>
 const ICONone = <MdDashboard/>
 const ICONtwo = <GiTowTruck/>
 const ICONthree = <FaCarCrash />
@@ -64,9 +65,10 @@ export const socialLink = [
 // MODULI GESTIONALE
 
 export const moduliGestionale = [
+    {name:'home', link:'/gestionale', linkActive:'home', icon: ICONzero, label:'home', attivo:'true'},
     {name:'dashboard', link:'/gestionale/dashboard', linkActive:'dashboard', icon: ICONone, label:'dashboard', attivo:'true'},
     {name:'azienda ritiro veicoli', link:'/gestionale/azienda-ritiro-veicoli', linkActive:'azienda-ritiro-veicoli', icon: ICONtwo, label:'Azienda Ritiro Veicoli', attivo:'true'},
-    {name:'veicoli ritirati', link:'/gestionale/veicoli-ritirati', linkActive:'veicoli-ritirati', icon: ICONthree, label:'Veicoli Ritirati', attivo:'true'},
+    {name:'ritiri-demolizioni', link:'/gestionale/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICONthree, label:'Ritiri Demolizioni', attivo:'true'},
     {name:'demolizioni', link:'/gestionale/certificati-demolizione', linkActive:'demolizioni', icon: ICONfour, label:'Certificati Demolizione', attivo:'true'},
     {name:'magazzino', link:'/gestionale/magazzino', linkActive:'magazzino', icon: ICONfive, label:'Magazzino', attivo:'true'},
     {name:'veicoli', link:'/gestionale/modelli-veicoli', linkActive:'modelli-veicoli', icon: ICONsix, label:'Veicoli', attivo:'true'},

@@ -7,18 +7,24 @@ import { supabase } from "@/lib/supabaseClient"
 import { Button } from "@/components/ui/button"
 import { FaFileDownload } from "react-icons/fa";
 import { FaUserSlash } from "react-icons/fa";
+
 import { FaCircle, FaDotCircle } from "react-icons/fa";
-import { Input } from "@/components/ui/input"
 import Link from "next/link";
 import ButtonDeleteRow from "@/app/componenti/buttonDeleteSup";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+
+
+import StatusTracking from "../../componenti/statusTracking";
+import ReadTracking from "../../componenti/readTracking";
 
   export default function SchedaVeicoli() {
 
     const params = useParams();
     const uuidRitiroVeicolo = params?.uuidRitiroVeicolo;
     const [praticaAuto, setPraticaAuto] = useState([])  
-    const [datiDemolizione, setDatiDemolizione] = useState([])  
+    const [datiDemolizione, setDatiDemolizione] = useState([])
+    const [updateTracking, setUpdateTracking] = useState(false)
+
     // ricerca
     const [dataSearch, setDataSearch] = useState("")        // testo digitato
     const [dataSearchSubmit, setDataSearchSubmit] = useState("") // testo applicato
@@ -97,13 +103,9 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
       return () => { cancelled = true; };
     }, [uuidRitiroVeicolo]);
 
-  console.log("pratiche", praticaAuto)
-  console.log("elenco",datiDemolizione)
-  console.log(uuidRitiroVeicolo)
-
   return (
   <>
-    <div className={`${praticaAuto ? '' : 'hidden'} w-full h-full flex flex-1 flex-col gap-4`}>
+    <div className={`${praticaAuto ? '' : 'hidden'} w-full h-full flex flex-1 flex-col gap-4 p-3`}>
       {/* AZIENDA RITIRO */}
       <div className="">
         <h4 className="text-[0.6rem] font-bold text-dark dark:text-neutral-400 border border-neutral-400 px-3 py-2 w-fit rounded-xl">{praticaAuto[0]?.azienda.ragione_sociale_arv} / {praticaAuto[0]?.azienda.piva_arv}</h4>
@@ -204,11 +206,11 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
             )}
         </div>
       </div>
+      {/* DOCUMENTI */}
       <div className="">
         <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DOCUMENTI</h4>
       </div>
-      {/* DOCUMENTI */}
-      <div className="w-full border border-neutral-600 rounded-xl p-5">
+      <div className="w-full border rounded-xl p-5">
         <div id="mainImagecontainergridtwo" className="flex flex-row">
             {praticaAuto.length ? praticaAuto.map((pa, index) => {
               return (
@@ -220,7 +222,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
                         <div className="relative w-full h-[200px] overflow-hidden rounded">
                         <Image src={pa.foto_documento_detentore_f} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover object-center rounded"/>
                         </div>
-                        <button asChild className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg">
+                        <button className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg">
                           <Link href={`${pa.foto_documento_detentore_f}?download=${pa.targa_veicolo_ritirato}-doc-detentore-fronte.jpg`} target="_blank">
                             DETENTORE FRONTE
                           </Link>
@@ -326,7 +328,17 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
           
         </div>
       </div>
+      {/* STATUS PRATICA */}
+      <div className="flex flex-row gap-2">
+        <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">TRACKING</h4>
+        <StatusTracking uuidRitiroVeicolo={uuidRitiroVeicolo} setUpdateTracking={setUpdateTracking}/>
+      </div>
+      <div className='p-6 rounded-2xl shadow-lg min-w-0 min-h-0 bg-white dark:bg-neutral-900 border'>
+        <ReadTracking uuidRitiroVeicolo={uuidRitiroVeicolo} updateTracking={updateTracking}/>
+      </div>
     </div>
   </>
   )
 }
+
+

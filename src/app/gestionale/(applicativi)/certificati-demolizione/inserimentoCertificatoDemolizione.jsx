@@ -72,7 +72,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
   // OPTION PRATICHE DI RITIRO
   const optionsPraticheRitiro = praticheRitiroVeicoli.map(prv => ({
     value:`${prv.uuid_veicolo_ritirato}`,
-    label: `${prv.targa_veicolo_ritirato} / ${prv.aziendaRitiro.ragione_sociale_arv} - ${prv.aziendaRitiro.provincia_legale_arv}`,
+    label: `${prv.targa_veicolo_ritirato} / ${prv.aziendaRitiro.ragione_sociale_arv} - ${prv.aziendaRitiro?.provincia_legale_arv}`,
   }))
 
   // SELECT OPTION DEMOLIZIONE
@@ -192,7 +192,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
               </div>
               <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-brand/50'>
                 {/* SELECT DI RICERCA PRATICA */}
-                <div className="col-span-12 lg:col-span-3 min-w-0">
+                <div className="col-span-12 lg:col-span-12 min-w-0">
                   <label className="block text-sm font-semibold mb-1">Seleziona una pratica</label>
                   <Popover open={open} onOpenChange={setOpen} className="w-full">
                     <PopoverTrigger asChild>
@@ -236,7 +236,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
               <div className="col-span-12">
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">SPECIFICHE VEICOLO</h4>
               </div>
-              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-white dark:bg-neutral-900'>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 min-h-0 bg-white dark:bg-neutral-900 border'>
                 <FormSelectRuoli nome="tipologiaDemolizione" label='Tipologia Demolizione' value={formData.tipologiaDemolizione} colspan="col-span-10" mdcolspan="lg:col-span-6" onchange={handleChange} options={tipologiaDemolizione}/>
                 <FormTextarea nome="noteDemolizione" label='Note' value={formData.noteDemolizione} colspan="col-span-6" mdcolspan="lg:col-span-12" onchange={handleChange} type="textarea" as="textarea"/>
                 
@@ -247,7 +247,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
               <div className={"col-span-12"}>
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">FOTO</h4>
               </div>
-              <div className={'grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg bg-white dark:bg-neutral-900'}>
+              <div className={'grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg bg-white dark:bg-neutral-900 border'}>
                 <FormFileUpload
                   nome="documentoDemolizione"
                   label="Certificato Demolizione"

@@ -155,7 +155,7 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
                   </TableCell>
                   <TableCell className="hover:bg-brand/50 text-brand/70 hover:text-neutral-200">
                     <div className=" flex flex-col justify-center items-center w-full h-full">
-                    <Link href={`veicoli-ritirati/${a.uuid_azienda_ritiro_veicoli ?? index}`} >
+                    <Link href={`ritiri-demolizioni/${a.uuid_azienda_ritiro_veicoli ?? index}`} >
                       CLICK
                     </Link>
                     </div>
