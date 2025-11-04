@@ -55,7 +55,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
         }
         setDatiAzienda(aziendaData ?? [])
         })()
-    }, [uuidAzienda])  
+    }, [uuidAzienda])   
 
     // CARICAMENTO PRATICHE AZIENDA
     useEffect(() => {
