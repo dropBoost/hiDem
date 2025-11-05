@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import ButtonDeleteRow from "@/app/componenti/buttonDeleteSup";
+import CalcoloPraticheAperte from "./componenti/calcoloPraticheAperte";
 
 export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setStatusAziende }) {
   const [aziendaRitiroVeicoli, setAziendaRitiroVeicoli] = useState([])
@@ -126,7 +127,7 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
 
           <TableHeader>
             <TableRow>
-              <TableHead className="border-e border-brand text-center truncate">Stato</TableHead>
+              <TableHead className="border-e border-brand text-left truncate">Pratiche Aperte</TableHead>
               <TableHead className="text-left truncate">Ragione Sociale</TableHead>
               <TableHead className="truncate">P.Iva</TableHead>
               <TableHead className="border-e border-brand truncate"></TableHead>
@@ -138,12 +139,17 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
 
           <TableBody>
             {aziendaRitiroVeicoli.length ? aziendaRitiroVeicoli.map((a, index) => {
+
+              // const numberPratiche = <CalcoloPraticheAperte uuidAzienda={a?.uuid_azienda_ritiro_veicoli}/>
+              
+
               return (
                 <TableRow key={`${a.uuid_azienda_ritiro_veicoli ?? index}`}>
                   <TableCell className="text-center border-e border-brand ">
-                    <div className=" flex flex-col justify-center items-center w-full h-full">
-                      {a.attiva_arv ? <FaCircle className="text-brand"/> : <FaDotCircle className="text-red-700"/>}
-                    </div>
+                    <CalcoloPraticheAperte uuidAzienda={a.uuid_azienda_ritiro_veicoli}/>
+                    {/* <div className=" flex flex-col justify-center items-center w-full h-full">
+                      {numberPratiche == 0 ? <FaCircle className="text-brand"/> : <div><FaDotCircle className="text-red-700"/>{numberPratiche}</div>}
+                    </div> */}
                   </TableCell>
                   <TableCell className="font-medium text-left truncate">{a.ragione_sociale_arv}</TableCell>
                   <TableCell className="truncate">{a?.piva_arv}</TableCell>
