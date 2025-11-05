@@ -160,7 +160,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
                 <TableRow key={`${lpa.targa_veicolo_ritirato ?? index}`}>
                   <TableCell className="text-center border-e border-brand ">
                     <div className=" flex flex-col justify-center items-center w-full h-full">
-                      {lpa.ritiro_completato ? <FaCircle className="text-brand"/> : <FaDotCircle className="text-red-700"/>}
+                      {lpa.pratica_completata ? <FaCircle className="text-brand"/> : <FaDotCircle className="text-red-700"/>}
                     </div>
                   </TableCell>
                   <TableCell className="font-medium text-left truncate">{lpa.targa_veicolo_ritirato}</TableCell>

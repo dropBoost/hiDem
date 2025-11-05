@@ -14,6 +14,7 @@ import CalcoloPraticheAperte from "./componenti/calcoloPraticheAperte";
 
 export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setStatusAziende }) {
   const [aziendaRitiroVeicoli, setAziendaRitiroVeicoli] = useState([])
+  const [countByUuid, setCountByUuid] = useState({});
 
   // ricerca
   const [dataSearch, setDataSearch] = useState("")        // testo digitato
@@ -54,6 +55,10 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
     setPage(1)
   }
 
+  const handleCount = (uuid, count) => {
+    setCountByUuid(prev => ({ ...prev, [uuid]: count }));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       let query = supabase
@@ -69,8 +74,7 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
       if (dataSearchSubmit) {
         const q = escapeLike(dataSearchSubmit)
         query = query.or(
-          `ragione_sociale_arv.ilike.*${q}*,` +
-          `piva_arv.ilike.*${q}*,`
+          `ragione_sociale_arv.ilike.%${q}%,piva_arv.ilike.%${q}%`
         );
       }
 
@@ -94,7 +98,7 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
   }, [dataSearchSubmit, page, pageSize, from, to, statusAziende])
 
   const iconaCestino = <FaUserSlash/>
-
+    
   return (
     <div className={`${onDisplay === 'on' ? '' : 'hidden'}
       w-full h-full
@@ -127,67 +131,53 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
 
           <TableHeader>
             <TableRow>
-              <TableHead className="border-e border-brand text-left truncate">Pratiche Aperte</TableHead>
+              <TableHead className="border-e border-brand text-left truncate">PA</TableHead>
               <TableHead className="text-left truncate">Ragione Sociale</TableHead>
               <TableHead className="truncate">P.Iva</TableHead>
               <TableHead className="border-e border-brand truncate"></TableHead>
               <TableHead className="text-center truncate">R</TableHead>
               <TableHead className="text-center truncate">M</TableHead>
-              <TableHead className="text-center truncate">E</TableHead>
             </TableRow>
           </TableHeader>
 
-          <TableBody>
-            {aziendaRitiroVeicoli.length ? aziendaRitiroVeicoli.map((a, index) => {
+<TableBody>
+  {aziendaRitiroVeicoli.length ? aziendaRitiroVeicoli.map((a, index) => {
+    const uuid = a?.uuid_azienda_ritiro_veicoli ?? String(index);
+    const n = countByUuid[uuid] ?? 0; // <-- fallback
 
-              // const numberPratiche = <CalcoloPraticheAperte uuidAzienda={a?.uuid_azienda_ritiro_veicoli}/>
-              
+    return (
+      <TableRow key={uuid}>
+        <TableCell className="border-e border-brand w-10">
+          <CalcoloPraticheAperte uuidAzienda={uuid} onChange={handleCount} />
+          <div className="flex flex-col justify-center items-center w-fit h-fit">
+            {n === 0
+              ? <div className="flex flex-row items-center justify-center gap-2"><span className="flex items-center justify-center border border-brand rounded-full w-5 h-5 text-[0.6rem]">{n}</span></div>
+              : <div className="flex flex-row items-center justify-center gap-2"><span className="flex items-center justify-center border border-red-600 rounded-full w-5 h-5 text-[0.6rem]">{n}</span></div>
+            }
+          </div>
+        </TableCell>
 
-              return (
-                <TableRow key={`${a.uuid_azienda_ritiro_veicoli ?? index}`}>
-                  <TableCell className="text-center border-e border-brand ">
-                    <CalcoloPraticheAperte uuidAzienda={a.uuid_azienda_ritiro_veicoli}/>
-                    {/* <div className=" flex flex-col justify-center items-center w-full h-full">
-                      {numberPratiche == 0 ? <FaCircle className="text-brand"/> : <div><FaDotCircle className="text-red-700"/>{numberPratiche}</div>}
-                    </div> */}
-                  </TableCell>
-                  <TableCell className="font-medium text-left truncate">{a.ragione_sociale_arv}</TableCell>
-                  <TableCell className="truncate">{a?.piva_arv}</TableCell>
-                  <TableCell className="border-e border-brand"></TableCell>
-                  <TableCell className="hover:bg-green-700 text-green-700 hover:text-neutral-200">
-                    <div className=" flex flex-col justify-center items-center w-full h-full">
-                    <FaFileDownload />
-                    </div>
-                  </TableCell>
-                  <TableCell className="hover:bg-brand/50 text-brand/70 hover:text-neutral-200">
-                    <div className=" flex flex-col justify-center items-center w-full h-full">
-                    <Link href={`ritiri-demolizioni/${a.uuid_azienda_ritiro_veicoli ?? index}`} >
-                      CLICK
-                    </Link>
-                    </div>
-                  </TableCell>
-                  <TableCell className="hover:bg-red-700 text-red-700 hover:text-neutral-200">
-                    <div className=" flex flex-col justify-center items-center w-full h-full">
-                    <ButtonDeleteRow
-                      uuid={a.uuid_azienda_ritiro_veicoli}
-                      tabella="clienti"
-                      nomeAttributo="uuid_cliente"
-                      icona={<FaUserSlash/>}
-                      confirmMessage="Sei sicuro di eliminare questo cliente?"
-                      onDeleted={(id) =>
-                        setAziendaRitiroVeicoli(prev => prev.filter(c => c.uuid_azienda_ritiro_veicoli !== id))
-                      }
-                    />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )
-            }) : (
-              <TableRow>
-                <TableCell colSpan={8} className="h-24 text-center">Nessun risultato.</TableCell>
-              </TableRow>
-            )}
-          </TableBody>
+        <TableCell className="font-medium text-left truncate">{a.ragione_sociale_arv}</TableCell>
+        <TableCell className="truncate">{a?.piva_arv}</TableCell>
+        <TableCell className="border-e border-brand"></TableCell>
+        <TableCell className="hover:bg-green-700 text-green-700 hover:text-neutral-200">
+          <div className="flex flex-col justify-center items-center w-full h-full">
+            <FaFileDownload />
+          </div>
+        </TableCell>
+        <TableCell className="hover:bg-brand/50 text-brand/70 hover:text-neutral-200">
+          <div className="flex flex-col justify-center items-center w-full h-full">
+            <Link href={`ritiri-demolizioni/${uuid}`}>CLICK</Link>
+          </div>
+        </TableCell>
+      </TableRow>
+    );
+  }) : (
+    <TableRow>
+      <TableCell colSpan={8} className="h-24 text-center">Nessun risultato.</TableCell>
+    </TableRow>
+  )}
+</TableBody>
         </Table>
 
         {/* Pagination controls */}

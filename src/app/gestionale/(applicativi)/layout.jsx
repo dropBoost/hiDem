@@ -62,7 +62,7 @@ export default function LayoutGestionale({ children }) {
 
       {/* Main scrollabile */}
       <main className="bg-white dark:bg-neutral-900 col-start-1 md:col-start-2 row-start-2 min-w-0 min-h-0 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]">
-        <div className="lg:p-5 p-1">
+        <div className="lg:p-5 p-3">
           {children}
         </div>
       </main>

@@ -134,7 +134,7 @@ import ReadTracking from "../../componenti/readTracking";
                 } 
               return (
                 <div id="rowContainer" className="flex flex-col gap-2 items-start" key={`${pa.targa_veicolo_ritirato ?? index}`}>
-                    {pa.ritiro_completato ?
+                    {pa.pratica_completata ?
                       <div className="flex flex-row items-center gap-2 border border-neutral-800 px-3 py-2 rounded-xl h-fit text-xs">
                         <FaCircle className="text-brand"/>
                         <span>STATO: COMPLETATO</span>

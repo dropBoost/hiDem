@@ -1,32 +1,36 @@
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabaseClient"
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
-export default function CalcoloPraticheAperte ({uuidAzienda}) {
+export default function CalcoloPraticheAperte({ uuidAzienda, onChange }) {
+  const [count, setCount] = useState(0);
 
-    const [uuidRitiroVeicolo, setUuidRitiroVeicolo] = useState([])
-    const [praticheAperte, setPraticheAperte] = useState([])
+  useEffect(() => {
+    if (!uuidAzienda) return;
+    let cancelled = false;
 
-    useEffect(() => {
-        // if (!uuidRitiroVeicolo) return
-        ;(async () => {
-
-        const { data, count, error } = await supabase
+    (async () => {
+      const { data, error } = await supabase
         .from("v_pratiche_aperte_per_azienda")
-        .select("*")
+        .select("pratiche_aperte")
+        .eq("uuid_azienda_ritiro_veicoli", uuidAzienda)
+        .maybeSingle(); // una riga o null
 
-        if (error) {
-            console.error(error)
-            toast.error("Errore nel caricamento timeline")
-            setLoading(false)
-            return
-        }
+      if (cancelled) return;
 
-        const countMap = new Map(count.map(c => [c.uuid_azienda_ritiro_veicoli, c.pratiche_aperte]));
+      if (error) {
+        console.error(error);
+        setCount(0);
+        onChange?.(uuidAzienda, 0);
+        return;
+      }
 
-        setPraticheAperte(countMap ?? [])
-        
-        })()
-    }, [])
-console.log("count",praticheAperte)
-    return (<span>{praticheAperte}</span>)
+      const c = data?.pratiche_aperte ?? 0;
+      setCount(c);
+      onChange?.(uuidAzienda, c); // <-- passa al parent
+    })();
+
+    return () => { cancelled = true; };
+  }, [uuidAzienda, onChange]);
+
+//   return <span>{count}</span>;
 }
