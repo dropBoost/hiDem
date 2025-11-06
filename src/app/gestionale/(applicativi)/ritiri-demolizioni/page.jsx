@@ -7,8 +7,8 @@ import ElencoVeicoliRitirati from "./elencoVeicoliRitirati";
 
 export default function Customer() {
 
-  const [onDisplaySectionOne, setOnDisplaySectionOne] = useState("on")
-  const [onDisplaySectionTwo, setOnDisplaySectionTwo] = useState("off")
+  const [onDisplaySectionOne, setOnDisplaySectionOne] = useState("off")
+  const [onDisplaySectionTwo, setOnDisplaySectionTwo] = useState("on")
   const [statusAziende, setStatusAziende] = useState(false)
 
   function ClickSectionOne () {

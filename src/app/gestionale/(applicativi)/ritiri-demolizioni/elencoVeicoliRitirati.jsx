@@ -10,12 +10,12 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import ButtonDeleteRow from "@/app/componenti/buttonDeleteSup";
-import CalcoloPraticheAperte from "./componenti/calcoloPraticheAperte";
+import { RiEyeCloseLine } from "react-icons/ri";
 
 export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setStatusAziende }) {
   const [aziendaRitiroVeicoli, setAziendaRitiroVeicoli] = useState([])
   const [countByUuid, setCountByUuid] = useState({});
-
+  const [praticheAperte, setPraticheAperte] = useState([])
   // ricerca
   const [dataSearch, setDataSearch] = useState("")        // testo digitato
   const [dataSearchSubmit, setDataSearchSubmit] = useState("") // testo applicato
@@ -54,11 +54,9 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
     setDataSearchSubmit("")
     setPage(1)
   }
-
   const handleCount = (uuid, count) => {
     setCountByUuid(prev => ({ ...prev, [uuid]: count }));
   };
-
   useEffect(() => {
     const fetchData = async () => {
       let query = supabase
@@ -97,6 +95,26 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
     fetchData()
   }, [dataSearchSubmit, page, pageSize, from, to, statusAziende])
 
+  //PRATICHE APERTE
+  useEffect(() => {
+    if (!aziendaRitiroVeicoli) return;
+
+    (async () => {
+      const { data, error } = await supabase
+        .from("v_pratiche_aperte_per_azienda")
+        .select("*")
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setPraticheAperte(data);
+
+    })();
+
+  }, []);
+
   const iconaCestino = <FaUserSlash/>
     
   return (
@@ -133,41 +151,39 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
             <TableRow>
               <TableHead className="border-e border-brand text-left truncate">PA</TableHead>
               <TableHead className="text-left truncate">Ragione Sociale</TableHead>
-              <TableHead className="truncate">P.Iva</TableHead>
-              <TableHead className="border-e border-brand truncate"></TableHead>
-              <TableHead className="text-center truncate">R</TableHead>
-              <TableHead className="text-center truncate">M</TableHead>
+              <TableHead className="truncate text-right w-32 border-e border-brand">P.Iva</TableHead>
+              <TableHead className="truncate text-right">Pratiche</TableHead>
+              <TableHead className="text-center truncate">View</TableHead>
             </TableRow>
           </TableHeader>
 
 <TableBody>
   {aziendaRitiroVeicoli.length ? aziendaRitiroVeicoli.map((a, index) => {
+
+    const n = praticheAperte?.filter(ua => ua.uuid_azienda_ritiro_veicoli == a?.uuid_azienda_ritiro_veicoli).map(pa => (pa.pratiche_aperte))
     const uuid = a?.uuid_azienda_ritiro_veicoli ?? String(index);
-    const n = countByUuid[uuid] ?? 0; // <-- fallback
 
     return (
       <TableRow key={uuid}>
         <TableCell className="border-e border-brand w-10">
-          <CalcoloPraticheAperte uuidAzienda={uuid} onChange={handleCount} />
           <div className="flex flex-col justify-center items-center w-fit h-fit">
-            {n === 0
-              ? <div className="flex flex-row items-center justify-center gap-2"><span className="flex items-center justify-center border border-brand rounded-full w-5 h-5 text-[0.6rem]">{n}</span></div>
+            {n == 0
+              ? <div className="flex flex-row items-center justify-center gap-2"><span className="flex items-center justify-center border border-brand rounded-full w-5 h-5 text-[0.6rem]">0</span></div>
               : <div className="flex flex-row items-center justify-center gap-2"><span className="flex items-center justify-center border border-red-600 rounded-full w-5 h-5 text-[0.6rem]">{n}</span></div>
             }
           </div>
         </TableCell>
 
-        <TableCell className="font-medium text-left truncate">{a.ragione_sociale_arv}</TableCell>
-        <TableCell className="truncate">{a?.piva_arv}</TableCell>
-        <TableCell className="border-e border-brand"></TableCell>
-        <TableCell className="hover:bg-green-700 text-green-700 hover:text-neutral-200">
+        <TableCell className="font-medium text-left truncate w-50">{a.ragione_sociale_arv}</TableCell>
+        <TableCell className="truncate text-right border-e border-brand">{a?.piva_arv}</TableCell>
+        <TableCell className="hover:bg-brand text-brand hover:text-neutral-200 text-right border w-16">
           <div className="flex flex-col justify-center items-center w-full h-full">
-            <FaFileDownload />
+            <Link href={`ritiri-demolizioni/${uuid}`}><FaFileDownload /></Link>
           </div>
         </TableCell>
-        <TableCell className="hover:bg-brand/50 text-brand/70 hover:text-neutral-200">
+        <TableCell className="hover:bg-brand/50 text-brand hover:text-neutral-200 w-16">
           <div className="flex flex-col justify-center items-center w-full h-full">
-            <Link href={`ritiri-demolizioni/${uuid}`}>CLICK</Link>
+            <Link href={`ritiri-demolizioni/${uuid}`}><RiEyeCloseLine/></Link>
           </div>
         </TableCell>
       </TableRow>
