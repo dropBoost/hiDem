@@ -371,7 +371,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
       foto_documento_veicolo_ritirato_r: formData.retroDOCveicolo || null,
       foto_documento_detentore_f: formData.fronteDOCdetentore || null,
       foto_documento_detentore_r: formData.retroDOCdetentore || null,
-      ritiro_completato: formData.completato,
+      pratica_completata: formData.completato,
     }
 
     if (targaCaricare === true){

@@ -105,7 +105,7 @@ import ReadTracking from "../../componenti/readTracking";
       return () => { cancelled = true; };
     }, [uuidRitiroVeicolo]);
 
-    console.log("dati",datiDemolizione)
+    console.log("dati", datiDemolizione)
     console.log("pratica", praticaAuto)
 
   return (

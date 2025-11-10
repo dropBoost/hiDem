@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { moduliGestionale } from '../../cosetting'
 import { ThemeToggle } from '../../componenti/theme-toggle'
+import LogoutButton from '@/app/componenti/buttonLogout'
 
 const NAV = [
   { href: '/gestionale', label: 'Dashboard', icon: '🏠' },
@@ -56,7 +57,7 @@ export default function LayoutGestionale({ children }) {
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle/>
-          {/* Qui puoi aggiungere ThemeToggle, user menu, search, ecc. */}
+          <LogoutButton/>
         </div>
       </header>
 

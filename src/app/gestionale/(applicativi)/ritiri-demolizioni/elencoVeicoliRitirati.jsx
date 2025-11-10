@@ -9,7 +9,6 @@ import { FaCircle, FaDotCircle } from "react-icons/fa";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import ButtonDeleteRow from "@/app/componenti/buttonDeleteSup";
 import { RiEyeCloseLine } from "react-icons/ri";
 
 export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setStatusAziende }) {
@@ -179,6 +178,11 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
         <TableCell className="hover:bg-brand text-brand hover:text-neutral-200 text-right border w-16">
           <div className="flex flex-col justify-center items-center w-full h-full">
             <Link href={`ritiri-demolizioni/${uuid}`}><FaFileDownload /></Link>
+          </div>
+        </TableCell>
+        <TableCell className="hover:bg-brand/50 text-brand hover:text-neutral-200 w-16">
+          <div className="flex flex-col justify-center items-center w-full h-full">
+            <Link href={`ritiri-demolizioni/${uuid}`}><RiEyeCloseLine/></Link>
           </div>
         </TableCell>
         <TableCell className="hover:bg-brand/50 text-brand hover:text-neutral-200 w-16">

@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link";
 import ButtonDeleteRow from "@/app/componenti/buttonDeleteSup";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { RiEyeCloseLine } from "react-icons/ri";
+import ButtonDeletePratica from "@/app/componenti/buttonDeletePratica";
 
   export default function PraticheAzienda() {
 
@@ -135,14 +137,14 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
               <TableHead className="truncate">Cognome</TableHead>
               <TableHead className="truncate">Data Inserimento</TableHead>
               <TableHead className="border-e border-brand truncate"></TableHead>
-              <TableHead className="text-center truncate">R</TableHead>
-              <TableHead className="text-center truncate">M</TableHead>
-              <TableHead className="text-center truncate">E</TableHead>
+              <TableHead className="place-items-center truncate"><FaFileDownload /></TableHead>
+              <TableHead className="place-items-center text-center truncate"><RiEyeCloseLine/></TableHead>
+              <TableHead className="place-items-center text-center truncate">Elimina</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {listPraticheAzienda.length ? listPraticheAzienda.map((lpa, index) => {
+            {listPraticheAzienda?.length ? listPraticheAzienda?.map((lpa, index) => {
                 function DataFormat(value) {
                     if (!value) return '—'
                     const d = new Date(value)
@@ -157,43 +159,43 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
                     })
                 } 
               return (
-                <TableRow key={`${lpa.targa_veicolo_ritirato ?? index}`}>
+                <TableRow key={`${lpa?.targa_veicolo_ritirato ?? index}`}>
                   <TableCell className="text-center border-e border-brand ">
                     <div className=" flex flex-col justify-center items-center w-full h-full">
-                      {lpa.pratica_completata ? <FaCircle className="text-brand"/> : <FaDotCircle className="text-red-700"/>}
+                      {lpa?.pratica_completata ?
+                      <div className="flex flex-row items-center justify-center gap-2"><span className="flex items-center justify-center border border-brand bg-brand rounded-full w-3 h-3 text-[0.6rem]"></span></div> :
+                      <div className="flex flex-row items-center justify-center gap-2"><span className="flex items-center justify-center border border-red-700 bg-red-700 rounded-full w-3 h-3 text-[0.6rem]"></span></div>}
                     </div>
                   </TableCell>
-                  <TableCell className="font-medium text-left truncate">{lpa.targa_veicolo_ritirato}</TableCell>
+                  <TableCell className="font-medium text-left truncate">{lpa?.targa_veicolo_ritirato}</TableCell>
                   <TableCell className="truncate">{lpa?.nome_detentore}</TableCell>
                   <TableCell className="truncate">{lpa?.cognome_detentore}</TableCell>
                   <TableCell className="truncate">{DataFormat(lpa?.created_at_veicolo_ritirato)} </TableCell>
                   <TableCell className="border-e border-brand"></TableCell>
-                  <TableCell className="hover:bg-green-700 text-green-700 hover:text-neutral-200">
-                    <div className=" flex flex-col justify-center items-center w-full h-full">
-                    <FaFileDownload />
-                    </div>
+                  <TableCell className="hover:bg-brand/50 text-brand hover:text-neutral-200 w-16 h-full">
+                    <a href={`./${lpa?.uuid_azienda_ritiro_veicoli ?? index}/${lpa?.uuid_veicolo_ritirato}`} className="flex flex-col justify-center items-center w-full h-full p-2">
+                      <FaFileDownload/>
+                    </a>
                   </TableCell>
-                  <TableCell className="hover:bg-brand/50 text-brand/70 hover:text-neutral-200">
-                    <div className=" flex flex-col justify-center items-center w-full h-full">
-                    <Link href={`./${lpa.uuid_azienda_ritiro_veicoli ?? index}/${lpa.uuid_veicolo_ritirato}`} >
-                      VEICOLO RITIRATO
-                    </Link>
-                    </div>
+                  <TableCell className="hover:bg-brand/50 text-brand hover:text-neutral-200 w-16">
+                    <a href={`./${lpa?.uuid_azienda_ritiro_veicoli ?? index}/${lpa?.uuid_veicolo_ritirato}`} className="flex flex-col justify-center items-center w-full h-full p-2">
+                      <RiEyeCloseLine/>
+                    </a>
                   </TableCell>
-                  <TableCell className="hover:bg-red-700 text-red-700 hover:text-neutral-200">
-                    <div className=" flex flex-col justify-center items-center w-full h-full">
-                    <ButtonDeleteRow
-                      uuid={lpa.uuid_azienda_ritiro_veicoli}
-                      tabella="clienti"
-                      nomeAttributo="uuid_cliente"
-                      icona={<FaUserSlash/>}
-                      confirmMessage="Sei sicuro di eliminare questo cliente?"
-                      onDeleted={(id) =>
-                        setAziendaRitiroVeicoli(prev => prev.filter(c => c.uuid_azienda_ritiro_veicoli !== id))
-                      }
+                  <TableCell className="hover:bg-brand/50 text-brand hover:text-neutral-200 w-16">
+                    <ButtonDeletePratica
+                      uuid={lpa?.uuid_veicolo_ritirato}
+                      tabella="dati_veicolo_ritirato"
+                      nomeAttributo="uuid_veicolo_ritirato"
+                      className="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 disabled:opacity-50"
+                      confirmMessage="Sei sicuro di voler eliminare questa pratica?"
+                      onDeleted={(id) => { setPratiche(prev => prev.filter(p => p.uuid_pratica !== id)) }}
                     />
-                    </div>
+                    <a href={`./${lpa?.uuid_azienda_ritiro_veicoli ?? index}/${lpa?.uuid_veicolo_ritirato}`} className="flex flex-col justify-center items-center w-full h-full p-2">
+                      
+                    </a>
                   </TableCell>
+                              
                 </TableRow>
               )
             }) : (

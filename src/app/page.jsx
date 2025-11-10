@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/app/componenti/theme-toggle";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -12,7 +13,7 @@ export default function Home() {
           nam obcaecati suscipit?
         </p>
         <div className="space-x-2">
-          <button href="./gestionale">GESTIONALE</button>
+          <Link href="./gestionale"><Button>GESTIONALE</Button></Link>
           <Button variant='secondary'>Button 2</Button>
           <ThemeToggle/>
         </div>
