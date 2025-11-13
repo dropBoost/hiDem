@@ -6,18 +6,13 @@ import Link from 'next/link'
 import { moduliGestionale } from '../../cosetting'
 import { ThemeToggle } from '../../componenti/theme-toggle'
 import LogoutButton from '@/app/componenti/buttonLogout'
-
-const NAV = [
-  { href: '/gestionale', label: 'Dashboard', icon: '🏠' },
-  { href: '/gestionale/azienda-ritiro-veicoli', label: 'Inserimento Azienda', icon: '🏢' },
-  { href: '/gestionale/pratiche', label: 'Pratiche', icon: '📄' },
-  { href: '/gestionale/bozze', label: 'Bozze', icon: '📝' },
-  { href: '/gestionale/impostazioni', label: 'Impostazioni', icon: '⚙️' },
-]
+import { useAuthUser } from "@/app/admin/components/AuthUserContext";
 
 export default function LayoutGestionale({ children }) {
+
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const utente = useAuthUser()
 
   return (
     <div className="
@@ -28,7 +23,7 @@ export default function LayoutGestionale({ children }) {
     ">
       {/* Sidebar desktop */}
       <aside className="hidden md:block md:row-span-3 border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
-        <Sidebar pathname={pathname} />
+        <Sidebar pathname={pathname} u={utente}/>
       </aside>
 
       {/* Drawer mobile */}
@@ -83,7 +78,7 @@ export default function LayoutGestionale({ children }) {
   )
 }
 
-function Sidebar({ pathname, onNavigate }) {
+function Sidebar({ pathname, onNavigate, u }) {
   return (
     <nav className="flex h-full flex-col">
       <div className="h-[64px] flex items-center px-4 bg-brand">
@@ -118,7 +113,7 @@ function Sidebar({ pathname, onNavigate }) {
       </div>
 
       <div className="h-[48px] border-t border-neutral-200 dark:border-neutral-800 px-3 flex items-center text-xs text-neutral-500">
-        Utente: admin@example.com
+          {u?.email}
       </div>
     </nav>
   )

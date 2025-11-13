@@ -6,12 +6,14 @@ import InserimentoUtenti from "./inserimentoAzienda";
 import ElencoUtenti from "./elencoAziende";
 import InserimentoAzienda from "./inserimentoAzienda";
 import ElencoAziende from "./elencoAziende";
+import { useAuthUser } from "@/app/admin/components/AuthUserContext";
 
 export default function Customer() {
 
   const [onDisplaySectionOne, setOnDisplaySectionOne] = useState("on")
   const [onDisplaySectionTwo, setOnDisplaySectionTwo] = useState("off")
   const [statusAziende, setStatusAziende] = useState(false)
+  const utente = useAuthUser()
 
   function ClickSectionOne () {
     setOnDisplaySectionOne("on")
@@ -30,7 +32,7 @@ export default function Customer() {
         <ButtonSection click={ClickSectionOne} nome="INSERIMENTO AZIENDA" section={onDisplaySectionOne}/>
         <ButtonSection click={ClickSectionTwo} nome="ELENCO AZIENDE" section={onDisplaySectionTwo}/>
       </div>
-      <div class="h-[1px] w-full bg-gradient-to-r from-brand to-brandDark"/>
+      <div className="h-[1px] w-full bg-gradient-to-r from-brand to-brandDark"/>
       <div className="flex flex-1 justify-start items-start w-full min-h-0">
         <InserimentoAzienda statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionOne}/>
         <ElencoAziende statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionTwo}/>

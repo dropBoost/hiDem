@@ -1,3 +1,9 @@
+import DatiUtenteLoggato from "@/app/(admin)/components/datiUtenteLoggato";
+
 export default function ModelliVeicoliPAGE () {
-    <h1>CIAO</h1>
+    return(
+        <>
+        <DatiUtenteLoggato/>
+        </>
+    )
 }

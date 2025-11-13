@@ -82,5 +82,6 @@ export const moduliInfo = [
     {name:'Info', link:'/gestionale/info', linkActive:'info', icon: ICONone, label:'Info', attivo:'true'},
     {name:'Aiuto', link:'/gestionale/aiuto', linkActive:'aiuto', icon: ICONtwo, label:'Aiuto', attivo:'true'},
     {name:'Test', link:'/gestionale/test', linkActive:'test', icon: ICONthree, label:'Test', attivo:'true'},
+    {name:'Account', link:'/admin/account', linkActive:'account', icon: ICONfour, label:'Account', attivo:'true'},
   ]
 

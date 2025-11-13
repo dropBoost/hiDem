@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
-import { AuthUserProvider } from '../admin/components/AuthUserContext'
+import { AuthUserProvider } from './components/AuthUserContext'
 
 export default function LayoutGestionale({ children }) {
   const router = useRouter()

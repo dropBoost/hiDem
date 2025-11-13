@@ -1,20 +1,22 @@
-// src/app/componenti/buttonLogout.jsx
 'use client'
 
-import { useTransition } from 'react'
-import { signOut } from '@/app/actions/auth'
+import { supabase } from '@/lib/supabaseClient'
+import { useRouter } from 'next/navigation'
 
-export default function LogoutButton({ className = '' }) {
-  const [pending, start] = useTransition()
+export default function LogoutButton() {
+  const router = useRouter()
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    router.push('/login')
+  }
+
   return (
     <button
-      type="button"
-      onClick={() => start(() => signOut())}
-      disabled={pending}
-      aria-busy={pending}
-      className={`rounded px-3 py-2 border disabled:opacity-60 ${className}`}
+      onClick={handleLogout}
+      className="px-3 py-1 rounded-md bg-red-500 hover:bg-red-600 text-neutral-50 text-sm"
     >
-      {pending ? 'Uscita…' : 'Esci'}
+      Logout
     </button>
   )
 }

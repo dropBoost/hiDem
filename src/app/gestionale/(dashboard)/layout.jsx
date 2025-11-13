@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { moduliInfo } from '../../cosetting'
 import { ThemeToggle } from '../../componenti/theme-toggle'
-import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { useAuthUser } from '@/app/admin/components/AuthUserContext'
 
 const NAV = [
   { href: '/gestionale', label: 'Dashboard', icon: '🏠' },
@@ -20,8 +20,7 @@ export default function LayoutGestionale({ children }) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [userData, setUserData] = useState([])
-
-  console.log("user",userData)
+  const utente = useAuthUser()
 
   return (
     <div className="
@@ -32,7 +31,7 @@ export default function LayoutGestionale({ children }) {
     ">
       {/* Sidebar desktop */}
       <aside className="hidden md:block md:row-span-3 border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
-        <Sidebar pathname={pathname} />
+        <Sidebar pathname={pathname} u={utente}/>
       </aside>
 
       {/* Drawer mobile */}
@@ -87,7 +86,7 @@ export default function LayoutGestionale({ children }) {
   )
 }
 
-function Sidebar({ pathname, onNavigate }) {
+function Sidebar({ pathname, onNavigate, u }) {
   return (
     <nav className="flex h-full flex-col">
       <div className="h-[64px] flex items-center px-4 bg-brand">
@@ -122,7 +121,7 @@ function Sidebar({ pathname, onNavigate }) {
       </div>
 
       <div className="h-[48px] border-t border-neutral-200 dark:border-neutral-800 px-3 flex items-center text-xs text-neutral-500">
-        vincellidavide@gmail.com
+        {u?.email}
       </div>
     </nav>
   )
