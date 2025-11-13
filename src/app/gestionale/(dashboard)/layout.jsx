@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { moduliInfo } from '../../cosetting'
 import { ThemeToggle } from '../../componenti/theme-toggle'
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 
 const NAV = [
   { href: '/gestionale', label: 'Dashboard', icon: '🏠' },
@@ -15,8 +16,12 @@ const NAV = [
 ]
 
 export default function LayoutGestionale({ children }) {
+
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const [userData, setUserData] = useState([])
+
+  console.log("user",userData)
 
   return (
     <div className="
@@ -75,7 +80,7 @@ export default function LayoutGestionale({ children }) {
         border-t border-neutral-200 dark:border-neutral-800
         dark:bg-neutral-900
       ">
-        <span>© {new Date().getFullYear()} – Azienda Demolizioni</span>
+        <span>© {new Date().getFullYear()} – Azienda Demolizioni {userData.mail}</span>
         <span className="text-neutral-500">v1.0.0</span>
       </footer>
     </div>
@@ -117,7 +122,7 @@ function Sidebar({ pathname, onNavigate }) {
       </div>
 
       <div className="h-[48px] border-t border-neutral-200 dark:border-neutral-800 px-3 flex items-center text-xs text-neutral-500">
-        Utente: admin@example.com
+        vincellidavide@gmail.com
       </div>
     </nav>
   )

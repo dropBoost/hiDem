@@ -11,8 +11,10 @@ export async function loginFormSubmit(formData) {
   const password = formData.get('password')
 
   if (username && password){
-    console.log(username,password,"complimenti")
-  } else(console.log("coglione"))
+    console.log("complimenti")
+  } else (
+    console.log("coglione")
+  )
   
 }
 
