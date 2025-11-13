@@ -3,12 +3,12 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
-import { AuthUserProvider } from '../admin/components/AuthUserContext'
+import { AuthUserProvider } from '@/app/admin/components/AuthUserContext'
 
 export default function LayoutGestionale({ children }) {
+
   const router = useRouter()
   const [checking, setChecking] = useState(true)
-
   const [utente, setUtente] = useState(null)
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function LayoutGestionale({ children }) {
       }
 
       if (!data.session) {
-        router.push('/login')
+        router.push('admin/login')
       } else {
         setUtente(data.session.user)   // 👈 salvo l'utente
         setChecking(false)

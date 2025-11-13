@@ -8,10 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { FaPlusSquare } from "react-icons/fa";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
-
-export default function InserimentoAzienda({onDisplay, statusAziende, setStatusAziende}) {
+export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
 
   const dataOggi = new Date().toISOString().split("T")[0]
 
