@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { RiEyeCloseLine } from "react-icons/ri";
+import DisplayInfoPratiche from "./componenti/displayInfoPratiche";
 
 export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setStatusAziende }) {
   const [aziendaRitiroVeicoli, setAziendaRitiroVeicoli] = useState([])
@@ -137,102 +138,19 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
         <Button type="button" variant="outline" onClick={handleReset}>Reset</Button>
       </div>
 
-      {/* Tabella */}
-      <div className="flex flex-col flex-1 justify-between border border-brand rounded-xl p-5 max-h-full overflow-auto">
-        <Table>
-          <TableCaption>
-            {totalCount > 0
-              ? `Trovati ${totalCount} clienti • Pagina ${page} di ${totalPages}`
-              : "Nessun risultato"}
-          </TableCaption>
+      <div className="flex flex-col gap-3">
+        {aziendaRitiroVeicoli.length ? aziendaRitiroVeicoli.map((a, index) => {
+          
+          const n = praticheAperte?.filter(ua => ua.uuid_azienda_ritiro_veicoli == a?.uuid_azienda_ritiro_veicoli).map(pa => (pa.pratiche_aperte))
+          const uuid = a?.uuid_azienda_ritiro_veicoli ?? String(index);
 
-          <TableHeader>
-            <TableRow>
-              <TableHead className="border-e border-brand text-left truncate">PA</TableHead>
-              <TableHead className="text-left truncate">Ragione Sociale</TableHead>
-              <TableHead className="truncate text-right w-32 border-e border-brand">P.Iva</TableHead>
-              <TableHead className="truncate text-right">Pratiche</TableHead>
-              <TableHead className="text-center truncate">View</TableHead>
-            </TableRow>
-          </TableHeader>
-
-<TableBody>
-  {aziendaRitiroVeicoli.length ? aziendaRitiroVeicoli.map((a, index) => {
-
-    const n = praticheAperte?.filter(ua => ua.uuid_azienda_ritiro_veicoli == a?.uuid_azienda_ritiro_veicoli).map(pa => (pa.pratiche_aperte))
-    const uuid = a?.uuid_azienda_ritiro_veicoli ?? String(index);
-
-    return (
-      <TableRow key={uuid}>
-        <TableCell className="border-e border-brand w-10">
-          <div className="flex flex-col justify-center items-center w-fit h-fit">
-            {n == 0
-              ? <div className="flex flex-row items-center justify-center gap-2"><span className="flex items-center justify-center border border-brand rounded-full w-5 h-5 text-[0.6rem]">0</span></div>
-              : <div className="flex flex-row items-center justify-center gap-2"><span className="flex items-center justify-center border border-red-600 rounded-full w-5 h-5 text-[0.6rem]">{n}</span></div>
-            }
-          </div>
-        </TableCell>
-
-        <TableCell className="font-medium text-left truncate w-50">{a.ragione_sociale_arv}</TableCell>
-        <TableCell className="truncate text-right border-e border-brand">{a?.piva_arv}</TableCell>
-        <TableCell className="hover:bg-brand text-brand hover:text-neutral-200 text-right border w-16">
-          <div className="flex flex-col justify-center items-center w-full h-full">
-            <Link href={`ritiri-demolizioni/${uuid}`}><FaFileDownload /></Link>
-          </div>
-        </TableCell>
-        <TableCell className="hover:bg-brand/50 text-brand hover:text-neutral-200 w-16">
-          <div className="flex flex-col justify-center items-center w-full h-full">
-            <Link href={`ritiri-demolizioni/${uuid}`}><RiEyeCloseLine/></Link>
-          </div>
-        </TableCell>
-        <TableCell className="hover:bg-brand/50 text-brand hover:text-neutral-200 w-16">
-          <div className="flex flex-col justify-center items-center w-full h-full">
-            <Link href={`ritiri-demolizioni/${uuid}`}><RiEyeCloseLine/></Link>
-          </div>
-        </TableCell>
-      </TableRow>
-    );
-  }) : (
-    <TableRow>
-      <TableCell colSpan={8} className="h-24 text-center">Nessun risultato.</TableCell>
-    </TableRow>
-  )}
-</TableBody>
-        </Table>
-
-        {/* Pagination controls */}
-        <div className="mt-4 flex items-center justify-between gap-3">
-          <div className="text-sm opacity-80">
-            {totalCount > 0 && (
-              <>
-                Mostrati{" "}
-                <strong>
-                  {Math.min(totalCount, from + 1)}–{Math.min(totalCount, to + 1)}
-                </strong>{" "}
-                di <strong>{totalCount}</strong>
-              </>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
-            >
-              Prev
-            </Button>
-            <span className="text-sm tabular-nums">Pag. {page} / {totalPages}</span>
-            <Button
-              variant="outline"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page >= totalPages || totalCount === 0}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
-      </div>
+          return (
+            <DisplayInfoPratiche key={uuid} ragioneSociale={a?.ragione_sociale_arv} piva={a?.piva_arv} uuid={uuid} n={n}/>
+          );
+        }) : (
+            <span colSpan={8} className="h-24 text-center">Nessun risultato.</span>
+        )}
+      </div>      
     </div>
   )
 }
