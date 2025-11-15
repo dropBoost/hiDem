@@ -8,6 +8,7 @@ import { FaCircle, FaDotCircle } from "react-icons/fa";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import DisplayAziendeRitiro from "./componenti/displayAziendeRitiro";
 
 import ButtonDeleteRow from "@/app/componenti/buttonDeleteSup";
 
@@ -123,130 +124,37 @@ export default function ElencoAziende({ onDisplay, statusAziende, setStatusAzien
         <Input
           type="text"
           id="cerca"
-          placeholder="Cerca nome, cognome, email o telefono…"
+          placeholder="Cerca azienda, partita iva o email"
           value={dataSearch}
           onChange={handleChangeSearchBar}
           onKeyDown={handleSearchKeyDown}
           className="appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand
-                     focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:border-brand"
+                     focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:border-brand placeholder:text-xs placeholder:text-neutral-500 placeholder:italic"
         />
         <Button type="button" onClick={handleSearchClick}>Cerca</Button>
         <Button type="button" variant="outline" onClick={handleReset}>Reset</Button>
       </div>
-
-      {/* Tabella */}
-      <div className="flex flex-col flex-1 justify-between border border-brand rounded-xl p-5 min-h-0 overflow-auto bg-neutral-900">
-        <Table className="">
-          <TableCaption>
-            {totalCount > 0
-              ? `Trovati ${totalCount} clienti • Pagina ${page} di ${totalPages}`
-              : "Nessun risultato"}
-          </TableCaption>
-
-          <TableHeader>
-            <TableRow>
-              <TableHead className="border-e border-brand text-center truncate">Stato</TableHead>
-              <TableHead className="text-left truncate">Ragione Sociale</TableHead>
-              <TableHead className="truncate">P.Iva</TableHead>
-              <TableHead className="truncate">SDI</TableHead>
-              <TableHead className="truncate">Email</TableHead>
-              <TableHead className="truncate">Telefono</TableHead>
-              <TableHead className="truncate">Mobile</TableHead>
-              <TableHead className="truncate">Autista</TableHead>
-              <TableHead className="truncate">Sede Legale</TableHead>
-              <TableHead className="border-e border-brand truncate">Rules</TableHead>
-              <TableHead className="text-center truncate">R</TableHead>
-              <TableHead className="text-center truncate">M</TableHead>
-              <TableHead className="text-center truncate">E</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {aziendaRitiroVeicoli.length ? aziendaRitiroVeicoli.map((a, index) => {
-              return (
-                <TableRow key={`${a.uuid_azienda_ritiro_veicoli ?? index}`}>
-                  <TableCell className="text-center border-e border-brand ">
-                    <div className=" flex flex-col justify-center items-center w-full h-full">
-                      {a.attiva_arv ? <FaCircle className="text-brand"/> : <FaDotCircle className="text-red-700"/>}
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium text-left truncate">{a.ragione_sociale_arv}</TableCell>
-                  <TableCell className="truncate">{a.piva_arv}</TableCell>
-                  <TableCell className="truncate">{a.sdi_arv}</TableCell>
-                  <TableCell className="truncate">{a.email_arv}</TableCell>
-                  <TableCell className="truncate">{a.telefono_arv}</TableCell>
-                  <TableCell className="truncate">{a.mobile_arv}</TableCell>
-                  <TableCell className="truncate">{a.mobile_autista_arv}</TableCell>
-                  <TableCell className="truncate">{a.indirizzo_legale_arv} - {a.cap_legale_arv} {a.citta_legale_arv} {a.provincia_legale_arv}</TableCell>
-                  <TableCell className="border-e border-brand">{a.ruolo.alias_rules}</TableCell>
-                  <TableCell className="hover:bg-green-700 text-green-700 hover:text-neutral-200">
-                    <div className=" flex flex-col justify-center items-center w-full h-full">
-                    <FaFileDownload />
-                    </div>
-                  </TableCell>
-                  <TableCell className="hover:bg-brand/50 text-brand/70 hover:text-neutral-200">
-                    <div className=" flex flex-col justify-center items-center w-full h-full">
-                    <HiPencilAlt />
-                    </div>
-                  </TableCell>
-                  <TableCell className="hover:bg-red-700 text-red-700 hover:text-neutral-200">
-                    <div className=" flex flex-col justify-center items-center w-full h-full">
-                    <ButtonDeleteRow
-                      uuid={a.uuid_azienda_ritiro_veicoli}
-                      tabella="clienti"
-                      nomeAttributo="uuid_cliente"
-                      icona={<FaUserSlash/>}
-                      confirmMessage="Sei sicuro di eliminare questo cliente?"
-                      onDeleted={(id) =>
-                        setAziendaRitiroVeicoli(prev => prev.filter(c => c.uuid_azienda_ritiro_veicoli !== id))
-                      }
-                    />
-                    </div>
-                  </TableCell>
-
-                </TableRow>
-              )
-            }) : (
-              <TableRow>
-                <TableCell colSpan={8} className="h-24 text-center">Nessun risultato.</TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-
-        {/* Pagination controls */}
-        <div className="mt-4 flex items-center justify-between gap-3">
-          <div className="text-sm opacity-80">
-            {totalCount > 0 && (
-              <>
-                Mostrati{" "}
-                <strong>
-                  {Math.min(totalCount, from + 1)}–{Math.min(totalCount, to + 1)}
-                </strong>{" "}
-                di <strong>{totalCount}</strong>
-              </>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
-            >
-              Prev
-            </Button>
-            <span className="text-sm tabular-nums">Pag. {page} / {totalPages}</span>
-            <Button
-              variant="outline"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page >= totalPages || totalCount === 0}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
+      <div className="flex items-center p-2 border rounded-lg">
+        <span className="text-xs text-neutral-400">Aziende Attive: <font>{`${aziendaRitiroVeicoli?.filter(a => a.attiva_arv == true).length}`}</font> / <font>{`${aziendaRitiroVeicoli?.length}`}</font></span>
       </div>
-    </div>
+      <div className="flex flex-col gap-3">
+        {aziendaRitiroVeicoli?.length ? aziendaRitiroVeicoli.map((a, index) => {
+          
+          const uuid = a?.uuid_azienda_ritiro_veicoli ?? String(index);
+
+          return (
+            <DisplayAziendeRitiro key={uuid}
+            ragioneSociale={a?.ragione_sociale_arv} piva={a?.piva_arv} sdi={a?.sdi_arv} uuid={uuid}
+            sedeLegale={`${a?.indirizzo_legale_arv} - ${a?.cap_legale_arv} ${a?.citta_legale_arv} ${a?.provincia_legale_arv}`}
+            tel={a?.telefono_arv} mobile={a?.mobile_arv} autista={a?.mobile_autista_arv} email={a?.email_arv}
+            rules={a.ruolo.alias_rules} stato={a?.attiva_arv}
+            />
+          );
+        }) : (
+            <span colSpan={8} className="h-24 text-center">Nessun risultato.</span>
+        )}
+      </div>
+
+      </div>
   )
 }

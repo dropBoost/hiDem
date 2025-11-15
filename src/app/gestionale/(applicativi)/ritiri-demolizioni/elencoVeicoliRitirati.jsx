@@ -1,20 +1,14 @@
 'use client'
 import { useEffect, useMemo, useState } from "react"
-import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient"
 import { FaUserSlash } from "react-icons/fa";
-import { HiPencilAlt } from "react-icons/hi";
-import { FaFileDownload } from "react-icons/fa";
-import { FaCircle, FaDotCircle } from "react-icons/fa";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { RiEyeCloseLine } from "react-icons/ri";
-import DisplayInfoPratiche from "./componenti/displayInfoPratiche";
+
+import DisplayAziendeRitiriDemolizioni from "./componenti/displayAziendeRitiriDemolizioni";
 
 export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setStatusAziende }) {
   const [aziendaRitiroVeicoli, setAziendaRitiroVeicoli] = useState([])
-  const [countByUuid, setCountByUuid] = useState({});
   const [praticheAperte, setPraticheAperte] = useState([])
   // ricerca
   const [dataSearch, setDataSearch] = useState("")        // testo digitato
@@ -23,15 +17,12 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
   // paginazione
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
-  const [totalCount, setTotalCount] = useState(0)
 
   // calcolo indici per Supabase range (inclusivo)
   const { from, to } = useMemo(() => {
     const start = (page - 1) * pageSize
     return { from: start, to: start + pageSize - 1 }
   }, [page, pageSize])
-
-  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize))
 
   const escapeLike = (s) => s.replace(/([%_\\])/g, "\\$1")
 
@@ -41,7 +32,7 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
   }
   function handleSearchClick() {
     setDataSearchSubmit(dataSearch.trim())
-    setPage(1) // 🔑 reset pagina quando applichi filtro
+    setPage(1)
   }
   function handleSearchKeyDown(e) {
     if (e.key === "Enter") {
@@ -54,9 +45,7 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
     setDataSearchSubmit("")
     setPage(1)
   }
-  const handleCount = (uuid, count) => {
-    setCountByUuid(prev => ({ ...prev, [uuid]: count }));
-  };
+
   useEffect(() => {
     const fetchData = async () => {
       let query = supabase
@@ -80,16 +69,10 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
       if (error) {
         console.error("Errore:", error)
         setAziendaRitiroVeicoli([])
-        setTotalCount(0)
         return
       }
       setAziendaRitiroVeicoli(data ?? [])
-      setTotalCount(count ?? 0)
 
-      // se filtro/pagina porta fuori range, riporta a ultima pagina valida
-      if ((count ?? 0) > 0 && page > Math.ceil((count ?? 0) / pageSize)) {
-        setPage(1)
-      }
     }
 
     fetchData()
@@ -127,12 +110,12 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
         <Input
           type="text"
           id="cerca"
-          placeholder="Cerca nome, cognome, email o telefono…"
+          placeholder="Cerca ragione sociale o partita iva…"
           value={dataSearch}
           onChange={handleChangeSearchBar}
           onKeyDown={handleSearchKeyDown}
           className="appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand
-                     focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:border-brand"
+                     focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:border-brand placeholder:text-xs placeholder:text-neutral-500 placeholder:italic"
         />
         <Button type="button" onClick={handleSearchClick}>Cerca</Button>
         <Button type="button" variant="outline" onClick={handleReset}>Reset</Button>
@@ -145,7 +128,7 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
           const uuid = a?.uuid_azienda_ritiro_veicoli ?? String(index);
 
           return (
-            <DisplayInfoPratiche key={uuid} ragioneSociale={a?.ragione_sociale_arv} piva={a?.piva_arv} uuid={uuid} n={n}/>
+            <DisplayAziendeRitiriDemolizioni key={uuid} ragioneSociale={a?.ragione_sociale_arv} piva={a?.piva_arv} uuid={uuid} n={n}/>
           );
         }) : (
             <span colSpan={8} className="h-24 text-center">Nessun risultato.</span>
