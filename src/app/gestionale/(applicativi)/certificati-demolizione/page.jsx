@@ -28,7 +28,7 @@ export default function CertificatiDemolizione() {
         <ButtonSection click={ClickSectionOne} nome="INSERIMENTO DEMOLIZIONE" section={onDisplaySectionOne}/>
         <ButtonSection click={ClickSectionTwo} nome="ELENCO DEMOLIZIONI" section={onDisplaySectionTwo}/>
       </div>
-      <div class="h-[1px] w-full bg-gradient-to-r from-brand to-brandDark"/>
+      <div className="h-[1px] w-full bg-gradient-to-r from-brand to-brandDark"/>
       <div className="flex flex-1 justify-start items-start w-full min-h-0">
         <InserimentoCertificatiDemolizione statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionOne}/>
         <ElencoCertificatiDemolizione statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionTwo}/>

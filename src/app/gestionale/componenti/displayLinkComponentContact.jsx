@@ -1,0 +1,14 @@
+export function LinkComponentContact ({label, info, icon,linkHref}) {
+    return (
+        <>
+        <a href={`${linkHref}${info}`} target="_blank" rel="noopener noreferrer">
+        <button
+        className="flex flex-row items-center text-xs font-light gap-2 border p-1 px-2 rounded-lg hover:bg-brand"
+        alt={label}
+        >
+            {icon} <font className="font-semibold">{info}</font>
+        </button>
+        </a>
+        </>
+    )
+}

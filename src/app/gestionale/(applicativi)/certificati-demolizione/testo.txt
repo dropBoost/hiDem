@@ -1,0 +1,34 @@
+    //CERTIFICATI DEMOLIZIONE
+    useEffect(() => {
+      if (!uuidRitiroVeicolo) return;
+  
+      (async () => {
+        const { data, error } = await supabase
+          .from("certificato_demolizione")
+          .eq("uuid_certificato_demolizione", )
+          .select(`*,
+            veicolo:dati_veicolo_ritirato(
+            uuid_veicolo_ritirato,
+            targa_veicolo_ritirato,
+            created_at_veicolo_ritirato,
+            pratica_completata,
+            uuid_azienda_ritiro_veicoli,
+            aziendaRitiro:azienda_ritiro_veicoli(
+            uuid_azienda_ritiro_veicoli,
+            ragione_sociale_arv,
+            piva_arv,
+            citta_operativa_arv,
+            provincia_operativa_arv,
+            attiva_arv
+            ))`)
+            
+        if (error) {
+          console.error(error);
+          return;
+        }
+  
+        setCertificatiDemolizione(data);
+  
+      })();
+  
+    }, []);

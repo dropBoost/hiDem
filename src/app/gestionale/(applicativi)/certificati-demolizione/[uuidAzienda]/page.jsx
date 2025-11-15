@@ -4,16 +4,8 @@ import { useParams } from "next/navigation";
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/lib/supabaseClient"
 import { Button } from "@/components/ui/button"
-import { FaFileDownload } from "react-icons/fa";
-import { FaUserSlash } from "react-icons/fa";
-import { FaCircle, FaDotCircle } from "react-icons/fa";
 import { Input } from "@/components/ui/input"
-import Link from "next/link";
-import ButtonDeleteRow from "@/app/componenti/buttonDeleteSup";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { RiEyeCloseLine } from "react-icons/ri";
-import ButtonDeletePratica from "@/app/componenti/buttonDeletePratica";
-import DisplayVeicoliRitirati from "../componenti/displayVeicoliRitirati";
+import DisplayCertificatiDemolizioni from "../componenti/displayCertificatiDemolizioni";
 
   export default function PraticheAzienda() {
 
@@ -21,6 +13,8 @@ import DisplayVeicoliRitirati from "../componenti/displayVeicoliRitirati";
     const uuidAzienda = params?.uuidAzienda;
     const [listPraticheAzienda, setListPraticheAzienda] = useState([])  
     const [datiAzienda, setDatiAzienda] = useState([])  
+    const [certificatiDemolizione, setCertificatiDemolizione] = useState([])
+
     // ricerca
     const [dataSearch, setDataSearch] = useState("")        // testo digitato
     const [dataSearchSubmit, setDataSearchSubmit] = useState("") // testo applicato
@@ -60,32 +54,45 @@ import DisplayVeicoliRitirati from "../componenti/displayVeicoliRitirati";
         })()
     }, [uuidAzienda])   
 
-    // CARICAMENTO PRATICHE AZIENDA
+    //CERTIFICATI DEMOLIZIONE
     useEffect(() => {
-        if (!params.uuidAzienda){
-        return
-        }
-        ;(async () => {
-        const { data: praticheData, error } = await supabase
-            .from("dati_veicolo_ritirato")
-            .select(`
-              *,
-              modello:modello_veicolo(
-              marca,
-              modello
+
+    if (!uuidAzienda) return;
+
+      (async () => {
+        const { data, error } = await supabase
+          .from("certificato_demolizione")
+          .select(`
+            *,
+            dati_veicolo_ritirato!inner(
+              uuid_veicolo_ritirato,
+              targa_veicolo_ritirato,
+              vin_veicolo_ritirato,
+              mobile_detentore,
+              email_detentore,
+              created_at_veicolo_ritirato,
+              pratica_completata,
+              uuid_azienda_ritiro_veicoli,
+              azienda_ritiro_veicoli(
+                uuid_azienda_ritiro_veicoli,
+                ragione_sociale_arv,
+                piva_arv,
+                citta_operativa_arv,
+                provincia_operativa_arv,
+                attiva_arv
               )
-              `)
-            .eq("uuid_azienda_ritiro_veicoli", uuidAzienda)
-            .order("created_at_veicolo_ritirato", {ascending: false})
+            )
+          `)
+          .eq("dati_veicolo_ritirato.uuid_azienda_ritiro_veicoli", uuidAzienda)
 
         if (error) {
-            console.error(error)
-            toast.error("Errore nel caricamento Modelli Marchio Auto")
-            return
+          console.error("ERRORE CERTIFICATI DEMOLIZIONE:", error)
+          return
         }
-        setListPraticheAzienda(praticheData ?? [])
-        })()
-    }, [uuidAzienda])  
+
+        setCertificatiDemolizione(data ?? [])
+      })()
+    }, [uuidAzienda])
 
     // handlers ricerca
     function handleChangeSearchBar(e) {
@@ -107,7 +114,7 @@ import DisplayVeicoliRitirati from "../componenti/displayVeicoliRitirati";
         setPage(1)
     }
 
-  console.log("lista",listPraticheAzienda)
+    console.log(certificatiDemolizione)
 
   return (
   <>
@@ -133,7 +140,7 @@ import DisplayVeicoliRitirati from "../componenti/displayVeicoliRitirati";
 
 
       <div className="flex flex-col gap-3">
-        {listPraticheAzienda?.length ? listPraticheAzienda?.map((lpa, index) => {
+        {certificatiDemolizione?.length ? certificatiDemolizione?.map((cd, index) => {
           
           function DataFormat(value) {
             if (!value) return '—'
@@ -150,17 +157,21 @@ import DisplayVeicoliRitirati from "../componenti/displayVeicoliRitirati";
         } 
 
           return (
-            <DisplayVeicoliRitirati
-            key={lpa?.uuid_veicolo_ritirato} uuid={lpa?.uuid_veicolo_ritirato} data={DataFormat(lpa?.created_at_veicolo_ritirato)}
-            completata={lpa?.pratica_completata} targa={lpa?.targa_veicolo_ritirato} telaio={lpa?.vin_veicolo_ritirato}
-            tipologiaD={lpa?.forma_legale_detentore} ragioneSociale={lpa?.ragione_sociale_detentore} nome={lpa?.nome_detentore} cognome={lpa?.cognome_detentore} piva={lpa?.piva_detentore}
-            cf={lpa?.cf_detentore} modelloVeicolo={`${lpa?.modello.marca} ${lpa?.modello.modello}`} documento={lpa?.tipologia_documento_veicolo_ritirato}
-            mobileDetentore={lpa?.mobile_detentore} email={lpa?.email_detentore}
+            <DisplayCertificatiDemolizioni
+            key={cd?.uuid_veicolo_ritirato} uuid={cd?.uuid_veicolo_ritirato} data={DataFormat(cd?.created_at_certificato_demolizione)}
+            targa={cd?.dati_veicolo_ritirato.targa_veicolo_ritirato} telaio={cd?.dati_veicolo_ritirato.vin_veicolo_ritirato}
+            docDemolizione={cd?.documento_demolizione} altroDocDemolizione={cd?.altro_documento_demolizione} tipologiaDemolizione={cd?.tipologia_demolizione}
+            note={cd?.note_demolizione} mobile={cd?.dati_veicolo_ritirato.mobile_detentore} email={cd?.dati_veicolo_ritirato.email_detentore}
+
+            completata={cd?.pratica_completata} 
+            tipologiaD={cd?.forma_legale_detentore} ragioneSociale={cd?.ragione_sociale_detentore} nome={cd?.nome_detentore} cognome={cd?.cognome_detentore} piva={cd?.piva_detentore}
+            cf={cd?.cf_detentore} modelloVeicolo={``} documento={cd?.tipologia_documento_veicolo_ritirato}
+            
             />
           );
           
         }) : (
-            <span colSpan={8} className="h-24 text-center">Nessun veicolo ritirato.</span>
+            <span colSpan={8} className="h-24 text-center">Nessun certificato presente.</span>
         )}
       </div> 
     </div>

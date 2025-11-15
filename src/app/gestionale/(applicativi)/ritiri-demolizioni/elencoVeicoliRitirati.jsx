@@ -133,7 +133,7 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
         }) : (
             <span colSpan={8} className="h-24 text-center">Nessun risultato.</span>
         )}
-      </div>      
+      </div>
     </div>
   )
 }
