@@ -5,7 +5,7 @@ import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/lib/supabaseClient"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import DisplayCertificatiDemolizioni from "../componenti/displayCertificatiDemolizioni";
+import DisplayCertificatiDemolizioniAzienda from "../componenti/displayElencoCertificatiDemolizioniAzienda";
 
   export default function PraticheAzienda() {
 
@@ -114,8 +114,6 @@ import DisplayCertificatiDemolizioni from "../componenti/displayCertificatiDemol
         setPage(1)
     }
 
-    console.log(certificatiDemolizione)
-
   return (
   <>
       <div className={`${listPraticheAzienda ? '' : 'hidden'} w-full min-h-0 flex-1 flex flex-col gap-4`}>
@@ -157,12 +155,13 @@ import DisplayCertificatiDemolizioni from "../componenti/displayCertificatiDemol
         } 
 
           return (
-            <DisplayCertificatiDemolizioni
+            <DisplayCertificatiDemolizioniAzienda
             key={cd?.uuid_veicolo_ritirato} uuid={cd?.uuid_veicolo_ritirato} data={DataFormat(cd?.created_at_certificato_demolizione)}
             targa={cd?.dati_veicolo_ritirato.targa_veicolo_ritirato} telaio={cd?.dati_veicolo_ritirato.vin_veicolo_ritirato}
             docDemolizione={cd?.documento_demolizione} altroDocDemolizione={cd?.altro_documento_demolizione} tipologiaDemolizione={cd?.tipologia_demolizione}
             note={cd?.note_demolizione} mobile={cd?.dati_veicolo_ritirato.mobile_detentore} email={cd?.dati_veicolo_ritirato.email_detentore}
-
+            uuidAzienda={uuidAzienda} uuidCD={cd?.uuid_certificato_demolizione}
+            
             completata={cd?.pratica_completata} 
             tipologiaD={cd?.forma_legale_detentore} ragioneSociale={cd?.ragione_sociale_detentore} nome={cd?.nome_detentore} cognome={cd?.cognome_detentore} piva={cd?.piva_detentore}
             cf={cd?.cf_detentore} modelloVeicolo={``} documento={cd?.tipologia_documento_veicolo_ritirato}

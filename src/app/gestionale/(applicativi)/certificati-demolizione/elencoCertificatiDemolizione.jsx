@@ -138,9 +138,6 @@ export default function ElencoCertificatiDemolizione({ onDisplay, statusAziende,
     })()
   }, [])
 
-  console.log("count",countDemolizione)
-  console.log(aziendaRitiroVeicoli)
-
   const iconaCestino = <FaUserSlash/>
     
   return (

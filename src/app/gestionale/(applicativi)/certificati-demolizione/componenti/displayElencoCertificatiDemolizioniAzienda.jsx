@@ -5,9 +5,11 @@ import { MdEmail } from "react-icons/md";
 import { FaCarAlt } from "react-icons/fa";
 import { LinkComponentContact } from "@/app/gestionale/componenti/displayLinkComponentContact";
 import { ButtonLinkDisplayDownloadDOC } from "@/app/gestionale/componenti/displayButtonComponentDownloadDoc";
+import { RiEyeCloseLine } from "react-icons/ri";
 
-export default function DisplayCertificatiDemolizioni ({
-    uuid, targa, telaio, mobile,completata,tipologiaDemolizione, email, data, note, docDemolizione, altroDocDemolizione
+
+export default function DisplayCertificatiDemolizioniAzienda ({
+    uuid, targa, telaio, mobile,completata,tipologiaDemolizione, email, data, note, docDemolizione, altroDocDemolizione, uuidAzienda, uuidCD
     }) {
 
     return (
@@ -41,8 +43,9 @@ export default function DisplayCertificatiDemolizioni ({
                 </div>
             </div>
             <div className="flex flex-row justify-end items-start lg:gap-3 gap-3 lg:w-fit w-full lg:p-1 p-2 lg:border-t-0 border-t">
-                <ButtonLinkDisplayDownloadDOC linkHref={docDemolizione} info={"DEMOLIZIONE"} icon={<FaFileDownload/>}/>
-                {altroDocDemolizione ? <ButtonLinkDisplayDownloadDOC linkHref={altroDocDemolizione} info={"ALTRO"} icon={<FaFileDownload/>}/> : ""}
+                <ButtonLinkDisplayDownloadDOC targetType={`_blank`} linkHref={docDemolizione} info={"DEMOLIZIONE"} icon={<FaFileDownload/>}/>
+                {altroDocDemolizione ? <ButtonLinkDisplayDownloadDOC targetType={`_blank`} linkHref={altroDocDemolizione} info={"ALTRO"} icon={<FaFileDownload/>}/> : ""}
+                <ButtonLinkDisplayDownloadDOC targetType={`_self`} linkHref={`./${uuidAzienda}/${uuidCD}`} info={"VISUALIZZA"} icon={<RiEyeCloseLine/>}/>
             </div>
         </div>
         </>
