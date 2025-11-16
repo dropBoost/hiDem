@@ -37,11 +37,6 @@ import CertificatoDemolizione from "./displayCertificatoDemolizione";
       })()
     }, [uuidDemolizione])
 
-    console.log("uuid", uuidDemolizione)
-
-
-    console.log("certificato",certificatoDemolizione)
-
     const targa = certificatoDemolizione[0]?.dati_veicolo_ritirato.targa_veicolo_ritirato
     const telaio = certificatoDemolizione[0]?.dati_veicolo_ritirato.vin_veicolo_ritirato
 
@@ -75,7 +70,7 @@ import CertificatoDemolizione from "./displayCertificatoDemolizione";
             targa={cd?.dati_veicolo_ritirato.targa_veicolo_ritirato} telaio={cd?.dati_veicolo_ritirato.vin_veicolo_ritirato}
             docDemolizione={cd?.documento_demolizione} altroDocDemolizione={cd?.altro_documento_demolizione} tipologiaDemolizione={cd?.tipologia_demolizione}
             note={cd?.note_demolizione} mobile={cd?.dati_veicolo_ritirato.mobile_detentore} email={cd?.dati_veicolo_ritirato.email_detentore}
-            datiV={certificatoDemolizione[0].dati_veicolo_ritirato}
+            datiV={certificatoDemolizione[0].dati_veicolo_ritirato} uuidDemolizione={uuidDemolizione}
 
             completata={cd?.pratica_completata} 
             tipologiaD={cd?.forma_legale_detentore} ragioneSociale={cd?.ragione_sociale_detentore} nome={cd?.nome_detentore} cognome={cd?.cognome_detentore} piva={cd?.piva_detentore}

@@ -67,8 +67,6 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
     })()
   }, [])
 
-  console.log(praticheRitiroVeicoli)
-
   // OPTION PRATICHE DI RITIRO
   const optionsPraticheRitiro = praticheRitiroVeicoli.map(prv => ({
     value:`${prv.uuid_veicolo_ritirato}`,
@@ -170,7 +168,6 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
   }, [formData, setFourStep, setThreeStep]);
 
   const datiPraticaSelezionata = praticheRitiroVeicoli.find(p => p.uuid_veicolo_ritirato == praticaSelect)
-  console.log("dati",formData)
 
   return (
     <>
@@ -291,7 +288,6 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
                 {anyUploading ? "Caricamento in corso..." : "Inserisci"}
               </button>
             </div>
-            <div className="h-3"></div>
           </form>
       </div>
     </>
