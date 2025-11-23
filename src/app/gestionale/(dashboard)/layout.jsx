@@ -6,14 +6,7 @@ import Link from 'next/link'
 import { moduliInfo } from '../../cosetting'
 import { ThemeToggle } from '../../componenti/theme-toggle'
 import { useAuthUser } from '@/app/admin/components/AuthUserContext'
-
-const NAV = [
-  { href: '/gestionale', label: 'Dashboard', icon: '🏠' },
-  { href: '/gestionale/azienda-ritiro-veicoli', label: 'Inserimento Azienda', icon: '🏢' },
-  { href: '/gestionale/pratiche', label: 'Pratiche', icon: '📄' },
-  { href: '/gestionale/bozze', label: 'Bozze', icon: '📝' },
-  { href: '/gestionale/impostazioni', label: 'Impostazioni', icon: '⚙️' },
-]
+import { version, companyName } from '../../cosetting'
 
 export default function LayoutGestionale({ children }) {
 
@@ -36,7 +29,7 @@ export default function LayoutGestionale({ children }) {
 
       {/* Drawer mobile */}
       <MobileDrawer open={open} onClose={() => setOpen(false)}>
-        <Sidebar pathname={pathname} onNavigate={() => setOpen(false)} />
+        <Sidebar pathname={pathname} u={utente} onNavigate={() => setOpen(false)} />
       </MobileDrawer>
 
       {/* Header */}
@@ -60,7 +53,6 @@ export default function LayoutGestionale({ children }) {
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle/>
-          {/* Qui puoi aggiungere ThemeToggle, user menu, search, ecc. */}
         </div>
       </header>
 
@@ -79,8 +71,8 @@ export default function LayoutGestionale({ children }) {
         border-t border-neutral-200 dark:border-neutral-800
         dark:bg-neutral-900
       ">
-        <span>© {new Date().getFullYear()} – Azienda Demolizioni {userData.mail}</span>
-        <span className="text-neutral-500">v1.0.0</span>
+        <span>© {new Date().getFullYear()} – {companyName}</span>
+        <span className="text-neutral-500">v{version}</span>
       </footer>
     </div>
   )

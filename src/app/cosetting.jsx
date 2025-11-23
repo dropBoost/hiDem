@@ -12,6 +12,7 @@ import { TbEngine } from "react-icons/tb";
 import { FaCar } from "react-icons/fa6";
 import { SiGoogleforms } from "react-icons/si";
 
+//ICONE SOCIAL
 
 const ICONfacebook = <FaFacebookSquare/>
 const ICONwhatsApp = <FaWhatsappSquare/>
@@ -19,6 +20,8 @@ const ICONtikTok = <AiFillTikTok />
 const ICONinstagram = <FaInstagramSquare/>
 const ICONtel = <FaPhoneSquareAlt/>
 const ICONemail = <FaEnvelope/>
+
+//ICONE GESTIONALE
 
 const ICONzero = <FaHome/>
 const ICONone = <MdDashboard/>
@@ -33,11 +36,13 @@ const ICONnine = <MdOutlinePointOfSale/>
 const ICONten = <SiGoogleforms />
 
 // FOOTER SIGN
+
 export const poweredBy = "powered 💜 dropboost.it"
+export const version = "0.0.1"
 
 // PERSONALIZZAZIONI
 
-export const companyName = "ECO-CAR Autodemolizione"
+export const companyName = "ECOCAR Autodemolizione"
 export const logoDark = "/logo-black.png"
 export const logoLight = "/logo-white.png"
 export const logoFullDark = "/logo-fullblack.png"
@@ -77,6 +82,8 @@ export const moduliGestionale = [
     {name:'pos', link:'/gestionale/pos', linkActive:'pos', icon: ICONnine, label:'Pos', attivo:'true'},
     {name:'ritiro-online', link:'/gestionale/richieste-ritiro-online', linkActive:'ritiro-online', icon: ICONten, label:'Ritiri Online', attivo:'true'},
   ]
+
+// MODULI INFO 
 
 export const moduliInfo = [
     {name:'Info', link:'/gestionale/info', linkActive:'info', icon: ICONone, label:'Info', attivo:'true'},

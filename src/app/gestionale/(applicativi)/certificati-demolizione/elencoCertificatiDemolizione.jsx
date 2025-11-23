@@ -127,7 +127,7 @@ export default function ElencoCertificatiDemolizione({ onDisplay, statusAziende,
             )
           )
         `)
-        // .eq("dati_veicolo_ritirato.uuid_azienda_ritiro_veicoli", aziendaRitiroVeicoli)
+        .eq("demolizione_completata", "true")
 
       if (error) {
         console.error("ERRORE CERTIFICATI DEMOLIZIONE:", error)
@@ -138,8 +138,6 @@ export default function ElencoCertificatiDemolizione({ onDisplay, statusAziende,
     })()
   }, [])
 
-  const iconaCestino = <FaUserSlash/>
-    
   return (
     <div className={`${onDisplay === 'on' ? '' : 'hidden'}
       w-full h-full

@@ -8,41 +8,56 @@ import { LinkComponentContact } from "@/app/gestionale/componenti/displayLinkCom
 import { ButtonLinkDisplayDownloadDOC } from "@/app/gestionale/componenti/displayButtonComponentDownloadDoc";
 import { HiMiniPencilSquare } from "react-icons/hi2";
 import { useState, useEffect, useRef } from "react";
-import { Input } from "@/components/ui/input"
+import { FormSelect, FormTextarea } from "@/app/componenti/componentiForm";
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
 import { AiOutlineLoading3Quarters, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
+import { useRouter } from 'next/navigation'
 
 export default function CertificatoDemolizione ({
-  uuid,
-  targa,
-  telaio,
-  mobile,
-  completata,
-  tipologiaDemolizione,
-  email,
-  data,
-  note,
-  docDemolizione,
-  altroDocDemolizione,
-  uuidAzienda,
-  datiV,
-  uuidDemolizione
-}) {
-  const arv = datiV.azienda_ritiro_veicoli
+    uuid,
+    targa,
+    telaio,
+    mobile,
+    completata,
+    tipologiaDemolizione,
+    email,
+    data,
+    note,
+    docDemolizione,
+    altroDocDemolizione,
+    uuidAzienda,
+    datiV,
+    uuidDemolizione,
+    sSPage,
+    sPage
+  }) {
 
   // 🔹 Stato form per UPDATE
   const [formData, setFormData] = useState({
     documentoDemolizione: "",
     altroDocumentoDemolizione: "",
-    tipologiaDemolizione: tipologiaDemolizione,
-    noteDemolizione: note,
+    tipologiaDemolizione:"",
+    noteDemolizione:"",
   })
 
   // 🔹 Stato per mostrare/nascondere i documenti esistenti (UI locale)
   const [docDemolizioneUrl, setDocDemolizioneUrl] = useState(docDemolizione || "")
   const [altroDocDemolizioneUrl, setAltroDocDemolizioneUrl] = useState(altroDocDemolizione || "")
+
+    function DataFormat(value) {
+    if (!value) return '—'
+    const d = new Date(value)
+    if (isNaN(d)) return '—'
+    return d.toLocaleString('it-IT', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
+  }
 
   // Se il padre ricarica i dati, sincronizza lo stato locale
   useEffect(() => {
@@ -54,7 +69,6 @@ export default function CertificatoDemolizione ({
   }, [altroDocDemolizione])
 
   const [uploadingByField, setUploadingByField] = useState({});
-  const anyUploading = Object.values(uploadingByField).some(Boolean);
   const [resetUploadsTick, setResetUploadsTick] = useState(0);
 
   // SELECT OPTION DEMOLIZIONE
@@ -63,12 +77,14 @@ export default function CertificatoDemolizione ({
     { label:'Parziale', value:'parziale' }
   ]
 
+  const anyUploading = Object.values(uploadingByField).some(Boolean);
+  const arv = datiV.azienda_ritiro_veicoli
+
   function handleChange(e) {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  // riceve { target: { name, files: uploadedResults } } da FormFileUpload
   function handleChangeUpload(e) {
     const { name, files } = e.target || {};
     const first = Array.isArray(files) ? files[0] : undefined;
@@ -99,15 +115,36 @@ export default function CertificatoDemolizione ({
     return { bucket, path }
   }
 
-  // ✅ UPDATE: aggiorna solo i campi valorizzati, NON cancella file
+  console.log("status",sPage)
+
   async function handleUpdate(e) {
     e.preventDefault()
 
+    let updatedFormData = { ...formData }
+    let mustResetUploads = false
+
+    if (docDemolizione && updatedFormData.documentoDemolizione) {
+      alert("Per il certificato demolizione devi prima rimuovere il documento esistente.")
+      updatedFormData.documentoDemolizione = ""
+      mustResetUploads = true
+    }
+
+    if (altroDocDemolizione && updatedFormData.altroDocumentoDemolizione) {
+      alert("Per l'altro documento devi prima rimuovere il documento esistente.")
+      updatedFormData.altroDocumentoDemolizione = ""
+      mustResetUploads = true
+    }
+
+    if (mustResetUploads) {
+      setFormData(updatedFormData)
+      setResetUploadsTick(t => t + 1)
+    }
+
     const rawPayload = {
-      documento_demolizione: formData.documentoDemolizione,
-      altro_documento_demolizione: formData.altroDocumentoDemolizione,
-      tipologia_demolizione: formData.tipologiaDemolizione,
-      note_demolizione: formData.noteDemolizione,
+      documento_demolizione: updatedFormData.documentoDemolizione,
+      altro_documento_demolizione: updatedFormData.altroDocumentoDemolizione,
+      tipologia_demolizione: updatedFormData.tipologiaDemolizione,
+      note_demolizione: updatedFormData.noteDemolizione,
     }
 
     const payload = Object.fromEntries(
@@ -134,107 +171,87 @@ export default function CertificatoDemolizione ({
       return
     }
 
-    // opzionale: resetto solo i campi file, lascio testo/select
-    setFormData(prev => ({
-      ...prev,
+    // dopo update, ripulisco i campi upload
+    setFormData({
       documentoDemolizione: "",
       altroDocumentoDemolizione: "",
-    }))
+      noteDemolizione:"",
+      tipologiaDemolizione:"",
+    })
     setResetUploadsTick(t => t + 1)
     setUploadingByField({})
 
     console.log("Aggiornato:", data)
     alert("Demolizione aggiornata con successo!")
+
+    sSPage(prev=>!prev)
+
   }
 
-  // ✅ RIMOZIONE COMPLETA documento (file + url in tabella)
-  async function handleRemoveDocumento(kind = 'principale') {
-    // kind: 'principale' -> documento_demolizione
-    //       'altro'      -> altro_documento_demolizione
+  async function handleRemoveDocumento(url, type) {
 
-    const currentUrl = kind === 'principale'
-      ? docDemolizioneUrl
-      : altroDocDemolizioneUrl
+    const extracted = extractBucketAndPath(url)
 
-    const fieldName = kind === 'principale'
-      ? 'documento_demolizione'
-      : 'altro_documento_demolizione'
-
-    if (!currentUrl) {
-      alert('Nessun documento da rimuovere')
+    if (!extracted) {
+      alert("URL non valido, impossibile estrarre bucket e path")
       return
     }
 
-    if (!window.confirm('Vuoi davvero rimuovere definitivamente questo documento?')) {
+    const { bucket, path } = extracted
+
+    if (!path) {
+      alert("Nessun file da cancellare")
       return
     }
 
-    // 1️⃣ Rimuovo il file dallo Storage
-    const info = extractBucketAndPath(currentUrl)
+    try {
+      const { error } = await supabase.storage
+        .from(bucket)
+        .remove([path])
 
-    if (!info) {
-      console.error('URL non riconosciuto:', currentUrl)
-      alert('Impossibile interpretare il percorso del file')
-      return
+      if (error) {
+        throw error
+      }
+
+      alert("File cancellato finalmente!")
+    } catch (error) {
+      console.error("Errore nel cancellare il file:", error)
+      alert(`Errore nel cancellare il file: ${error.message}`)
     }
 
-    const { bucket, path } = info
+    let payload = {}
 
-    const { error: storageError } = await supabase
-      .storage
-      .from(bucket)
-      .remove([path])
-
-    if (storageError) {
-      console.error('Errore cancellazione da Storage:', storageError)
-      alert('Errore durante la cancellazione del file dallo storage')
-      return
-    }
-
-    // 2️⃣ Azzerare il campo nel DB
-    const { error: updateError } = await supabase
-      .from('certificato_demolizione')
-      .update({ [fieldName]: null })
-      .eq('uuid_certificato_demolizione', uuidDemolizione)
-
-    if (updateError) {
-      console.error('Errore aggiornamento DB:', updateError)
-      alert('File rimosso dallo storage, ma errore nel DB')
-      return
-    }
-
-    // 3️⃣ Aggiorno lo stato locale per nascondere il pulsante download
-    if (kind === 'principale') {
-      setDocDemolizioneUrl("")
-      setFormData(prev => ({ ...prev, documentoDemolizione: "" }))
-    } else {
+    if (type == "altro"){
+      payload = { altro_documento_demolizione: null }
       setAltroDocDemolizioneUrl("")
-      setFormData(prev => ({ ...prev, altroDocumentoDemolizione: "" }))
+    } else {
+      payload = { documento_demolizione: null }
+      setDocDemolizioneUrl("")
     }
 
-    alert('Documento rimosso con successo')
-  }
+    const { data, error } = await supabase
+      .from("certificato_demolizione")
+      .update(payload)
+      .eq("uuid_certificato_demolizione", uuidDemolizione)
+      .select()
+      .single()
 
-  function DataFormat(value) {
-    if (!value) return '—'
-    const d = new Date(value)
-    if (isNaN(d)) return '—'
-    return d.toLocaleString('it-IT', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    })
-  }
+    if (error) {
+      console.error(error)
+      alert(`Errore aggiornamento: ${error.message}`)
+      return
+    }
 
-  // -------------------------------- RENDER --------------------------------
+    sSPage(prev=>!prev)
+
+    console.log("Aggiornato:", data)
+
+  }
 
   return (
     <>
       <div className="flex xl:flex-row flex-col min-h-0 justify-between items-start gap-3 w-full h-full">
-
+        <button onClick={() => handleDelete ("public/00845699-2063-4208-bdb1-4e4c8dfee726/em292sn/em292sn-altro.png", "documentiveicoli")}>CIAO</button>
         {/* COLONNA DATI VEICOLO / AZIENDA / DETENTORE */}
         <div className="flex flex-col w-full justify-start items-start h-full gap-1 border p-5 rounded-xl shadow-xl">
           <div className="flex flex-col gap-1">
@@ -375,7 +392,7 @@ export default function CertificatoDemolizione ({
                     />
                     <button
                       type="button"
-                      onClick={() => handleRemoveDocumento('principale')}
+                      onClick={() => handleRemoveDocumento(docDemolizioneUrl, 'demolizione')}
                       className="text-[0.65rem] px-2 py-1 rounded bg-red-900 text-white hover:bg-red-700"
                     >
                       Rimuovi
@@ -394,7 +411,7 @@ export default function CertificatoDemolizione ({
                     />
                     <button
                       type="button"
-                      onClick={() => handleRemoveDocumento('altro')}
+                      onClick={() => handleRemoveDocumento(altroDocDemolizioneUrl, 'altro')}
                       className="text-[0.65rem] px-2 py-1 rounded bg-red-900 text-white hover:bg-red-700"
                     >
                       Rimuovi
@@ -413,16 +430,14 @@ export default function CertificatoDemolizione ({
           </div>
 
           <form onSubmit={handleUpdate} className="flex flex-col h-full gap-2">
-            <FormSelectRuoli
+
+            <FormSelect
               nome="tipologiaDemolizione"
               label="Tipologia Demolizione"
               value={formData.tipologiaDemolizione}
-              colspan="col-span-10"
-              mdcolspan="lg:col-span-6"
               onchange={handleChange}
               options={tipologiaDemolizioneOption}
             />
-
             <FormTextarea
               nome="noteDemolizione"
               label="Note"
@@ -432,7 +447,6 @@ export default function CertificatoDemolizione ({
               onchange={handleChange}
               type="textarea"
             />
-
             <FormFileUpload
               nome="documentoDemolizione"
               label="Certificato Demolizione"
@@ -448,7 +462,6 @@ export default function CertificatoDemolizione ({
               resetToken={resetUploadsTick}
               pathPrefix={`public/${arv?.uuid_azienda_ritiro_veicoli}/${datiV?.targa_veicolo_ritirato}`}
             />
-
             <FormFileUpload
               nome="altroDocumentoDemolizione"
               label="Altro Documento"
@@ -485,8 +498,6 @@ export default function CertificatoDemolizione ({
   )
 }
 
-/* ----------------- COMPONENTI DI SUPPORTO (uguali ai tuoi) ----------------- */
-
 export function SpanElementList ({icon, label, data}) {
   return(
     <div className="flex flex-row border border-neutral-800 rounded-md p-1 px-3 gap-1 items-center justify-start text-sm text-neutral-400">
@@ -497,57 +508,8 @@ export function SpanElementList ({icon, label, data}) {
   )
 }
 
-export function FormSelectRuoli({ colspan, mdcolspan, nome, label, value, onchange, options = [] }) {
-  const handleValueChange = (val) => {
-    onchange?.({ target: { name: nome, value: val } })
-  }
-  return (
-    <div className={`${colspan ?? ""} ${mdcolspan ?? ""} min-w-0`}>
-      <label className="block text-sm font-semibold mb-1" htmlFor={nome}>{label}</label>
-      <Select value={value ?? ""} onValueChange={handleValueChange}>
-        <SelectTrigger id={nome} className="w-full rounded-lg">
-          <SelectValue placeholder={`-- Seleziona ${label} --`} />
-        </SelectTrigger>
-        <SelectContent position="popper" className="z-[70]">
-          <SelectGroup>
-            {options.map((opt) => (
-              <SelectItem
-                key={opt.value}
-                value={opt.value}
-                className="data-[state=checked]:bg-brand data-[state=checked]:text-foreground focus:bg-brand"
-              >
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <input type="hidden" name={nome} value={value ?? ""} />
-    </div>
-  )
-}
-
-export function FormTextarea ({colspan, mdcolspan, nome, label, value, onchange, type, status}) {
-  return (
-    <div className={`${colspan} ${mdcolspan} min-w-0 ${status || ""}`}>
-      <Label htmlFor={nome}>{label}</Label>
-      <Textarea
-        type={type}
-        id={nome}
-        placeholder={label}
-        name={nome}
-        value={value}
-        onChange={onchange}
-        className="w-full min-w-0 appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:border-brand"
-      />
-    </div>
-  )
-}
-
 export function FormFileUpload({
   targa = '',
-  colspan,
-  mdcolspan,
   campo = '',
   nome,
   label,
