@@ -1,7 +1,7 @@
 'use client'
 
 import { supabase } from "@/lib/supabaseClient"
-import { FaFileDownload, FaCarAlt, FaCaretRight } from "react-icons/fa";
+import { FaFileDownload, FaCarAlt, FaCaretRight, FaTrash } from "react-icons/fa";
 import { TbBrandWhatsappFilled } from "react-icons/tb";
 import { MdEmail } from "react-icons/md";
 import { LinkComponentContact } from "@/app/gestionale/componenti/displayLinkComponentContact";
@@ -12,21 +12,13 @@ import { FormSelect, FormTextarea } from "@/app/componenti/componentiForm";
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { AiOutlineLoading3Quarters, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
-import { useRouter } from 'next/navigation'
 
 export default function CertificatoDemolizione ({
-    uuid,
-    targa,
-    telaio,
-    mobile,
-    completata,
     tipologiaDemolizione,
-    email,
     data,
     note,
     docDemolizione,
     altroDocDemolizione,
-    uuidAzienda,
     datiV,
     uuidDemolizione,
     sSPage,
@@ -251,7 +243,6 @@ export default function CertificatoDemolizione ({
   return (
     <>
       <div className="flex xl:flex-row flex-col min-h-0 justify-between items-start gap-3 w-full h-full">
-        <button onClick={() => handleDelete ("public/00845699-2063-4208-bdb1-4e4c8dfee726/em292sn/em292sn-altro.png", "documentiveicoli")}>CIAO</button>
         {/* COLONNA DATI VEICOLO / AZIENDA / DETENTORE */}
         <div className="flex flex-col w-full justify-start items-start h-full gap-1 border p-5 rounded-xl shadow-xl">
           <div className="flex flex-col gap-1">
@@ -395,7 +386,7 @@ export default function CertificatoDemolizione ({
                       onClick={() => handleRemoveDocumento(docDemolizioneUrl, 'demolizione')}
                       className="text-[0.65rem] px-2 py-1 rounded bg-red-900 text-white hover:bg-red-700"
                     >
-                      Rimuovi
+                      <FaTrash />
                     </button>
                   </div>
                 )}
@@ -414,7 +405,7 @@ export default function CertificatoDemolizione ({
                       onClick={() => handleRemoveDocumento(altroDocDemolizioneUrl, 'altro')}
                       className="text-[0.65rem] px-2 py-1 rounded bg-red-900 text-white hover:bg-red-700"
                     >
-                      Rimuovi
+                      <FaTrash />
                     </button>
                   </div>
                 )}

@@ -27,7 +27,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
 
   const [open, setOpen] = useState(false)
 
-  const [statusSend, setStatusSend] = useState(false)
+  const [statusPratiche, setStatusPratiche] = useState(false)
   const [aziendaScelta, setAziendaScelta] = useState("")
   const [uploadingByField, setUploadingByField] = useState({});
   const anyUploading = Object.values(uploadingByField).some(Boolean);
@@ -56,7 +56,9 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
         .select(`*,
             aziendaRitiro:azienda_ritiro_veicoli(
             ragione_sociale_arv,provincia_legale_arv)`)
+        .eq("pratica_completata", false)
         .order("created_at_veicolo_ritirato", { ascending: false })
+        
 
       if (error) {
         console.error(error)
@@ -65,7 +67,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
       }
       setPraticheRitiroVeicoli(praticheData ?? [])
     })()
-  }, [])
+  }, [statusPratiche])
 
   // OPTION PRATICHE DI RITIRO
   const optionsPraticheRitiro = praticheRitiroVeicoli.map(prv => ({
@@ -96,11 +98,6 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
     setFormData(prev => ({ ...prev, [name]: first.url || '' }));
   }
 
-  function handleChangeCheckbox(e) {
-  const { name, checked } = e.target
-  setFormData(prev => ({ ...prev, [name]: checked }))
-  }
-
   function handleBusyChange(nomeCampo, isBusy) {
     setUploadingByField(prev => ({ ...prev, [nomeCampo]: isBusy }));
   }
@@ -113,7 +110,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
         documento_demolizione: formData.documentoDemolizione,
         altro_documento_demolizione: formData.altroDocumentoDemolizione,
         tipologia_demolizione: formData.tipologiaDemolizione,
-        demolizione_completata: formData.demolizioneCompletata,
+        demolizione_completata: true,
         note_demolizione: formData.noteDemolizione
     }
 
@@ -142,6 +139,18 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
       }
       console.log("Inserito:", data)
       alert("Demolizione Inserita con successo!")
+      
+      const { dataCompletato, errorCompletato } = await supabase.from("dati_veicolo_ritirato").update({pratica_completata: true}).eq("uuid_veicolo_ritirato", praticaSelect).select().single()
+
+      if (errorCompletato) {
+        console.error("Errore aggiornando pratica_completata:", errorCompletato)
+        alert(`Errore aggiornando pratica_completata: ${errorCompletato.message}`)
+      } else {
+        console.log("Pratica segnata come completata:", dataCompletato)
+        setStatusPratiche(prev => !prev)
+        setPraticaSelect("")
+      }
+
     }
   }
 
@@ -275,9 +284,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
                   resetToken={resetUploadsTick}
                   pathPrefix={`public/${datiPraticaSelezionata?.uuid_azienda_ritiro_veicoli}/${datiPraticaSelezionata?.targa_veicolo_ritirato}`}
                 />
-              </div>
-              <FormCheckBox nome="demolizioneCompletata" label='Completata' value={formData.demolizioneCompletata} colspan="col-span-2" mdcolspan="md:col-span-1 lg:col-span-1" onchange={handleChangeCheckbox} type='checkbox'/>
-              
+              </div>              
             </div>  
 
             <div id="fourStep" className={`${fourStep ? "" : "hidden"} col-span-12 flex justify-end`}>
