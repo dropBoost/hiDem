@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/next"
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,12 +24,12 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="it" suppressHydrationWarning className="h-full min-h-0 ">
-      <body className={`${geistSans.variable} ${geistMono.variable} h-dvh min-h-0 overflow-hidden bg-background text-foreground `}>
-        <ThemeProvider attribute='class' enableSystem defaultTheme='system'>
+      <ThemeProvider attribute='class' enableSystem defaultTheme='system'>
+        <body className={`${geistSans.variable} ${geistMono.variable} h-dvh min-h-0 bg-background text-foreground `}>
           <Analytics/>
             {children}
-        </ThemeProvider>
-      </body>
+        </body>
+      </ThemeProvider>
     </html>
   );
 }

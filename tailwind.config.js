@@ -27,6 +27,14 @@ module.exports = {
   				DEFAULT: '#95c11f',
   				foreground: 'hsl(var(--card-foreground))'
   			},
+			companyPrimary: {
+  				DEFAULT: '#253a60',
+  				foreground: 'hsl(var(--card-foreground))'
+  			},
+			companySecondary: {
+  				DEFAULT: '#be1622',
+  				foreground: 'hsl(var(--card-foreground))'
+  			},
   			popover: {
   				DEFAULT: 'hsl(var(--popover))',
   				foreground: 'hsl(var(--popover-foreground))'
