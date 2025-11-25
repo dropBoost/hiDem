@@ -15,16 +15,16 @@ export default function Download () {
   function handleChange(e) {
     const { name, value } = e.target
     if (name == "targa") {
-      setTarga(value.toUpperCase().trim())
+      setTarga(value.toUpperCase().trim().slice(0, 7))
     } else {
-      setCodiceFiscale(value.toLowerCase().trim())
+      setCodiceFiscale(value.toUpperCase().trim().slice(0, 16))
     }
   }
 
   // CARICAMENTO DEMOLIZIONI
   useEffect(() => {
     // se la targa non è completa, non fare query
-    if (!targa || targa.length !== 6) return
+    if (!targa) return
 
     ;(async () => {
       const { data, error } = await supabase
@@ -33,7 +33,8 @@ export default function Download () {
           *,
           dati_veicolo_ritirato!inner (*)
         `)
-        .eq("dati_veicolo_ritirato.targa_veicolo_ritirato", targa)
+        .eq("dati_veicolo_ritirato.targa_veicolo_ritirato", `${targa}`)
+        .eq("dati_veicolo_ritirato.cf_detentore", `${codiceFiscale}`)
 
       console.log("DEMOLIZIONE SUPABASE:", { data, error })
 
@@ -66,7 +67,7 @@ export default function Download () {
                 <form className="flex flex-col  gap-3 border border-neutral-200 p-5 rounded-xl shadow-xl w-96">
                     <FormField nome="codiceFiscale" label='Codice Fiscale' value={codiceFiscale} onchange={handleChange} type='text' colorLabel={`text-companyPrimary`}/>
                     <FormField nome="targa" label='Targa' value={targa} onchange={handleChange} type='text' colorLabel={`text-companyPrimary`}/>
-                    <Link href={`/gestionale`}>
+                    <Link href={`/download-demolizione/${demolizione[0]?.uuid_certificato_demolizione}`}>
                         <button className="border border-companyPrimary hover:bg-companyPrimary text-neutral-800 px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
                             SCARICA
                         </button>
