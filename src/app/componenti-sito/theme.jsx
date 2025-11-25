@@ -43,3 +43,13 @@ export function Footer () {
         </>
     )
 }
+
+export function SpanElementList ({icon, label, data}) {
+  return(
+    <div className="flex flex-row border dark:border-neutral-800 border-neutral-400 rounded-md p-1 px-3 gap-1 items-center justify-start text-sm text-neutral-500 dark:text-neutral-400">
+      <div className="text-companyPrimary">{icon}</div>
+      <span>{label}</span>
+      <span className="dark:text-neutral-300 font-bold">{data}</span>
+    </div>
+  )
+}
