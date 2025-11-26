@@ -8,71 +8,91 @@ import { SpanElementList } from "@/app/componenti-sito/theme";
 import { FaCaretRight } from "react-icons/fa";
 import { DataFormat } from "@/app/componenti-sito/dataFormat";
 
-export default function StatusDemolizione ({uuidDemolizione}) {
+export default function StatusDemolizione () {
 
     const params = useParams();
-    const uuidDemolizioneStatus = params?.uuidDemolizione;
-    const [demolizione, setDemolizione] = useState() //DATI PRATICA
+
+    const uuidVeicoloRitirato = params?.uuidVeicoloRitirato
+    const [veicoloDemolito, setVeicoloDemolito] = useState([]) //DATI PRATICA
+    const [veicoloRitirato, setVeicoloRitirato] = useState([]) //DATI VEICOLO
     const [statoAvanzamento, setStatoAvanzamento] = useState([]) //DATI AVANZAMENTO
-    const aziendaRitiro = demolizione?.dati_veicolo_ritirato.azienda_ritiro_veicoli
-    const datiVeicolo = demolizione?.dati_veicolo_ritirato
-    // CARICAMENTO DEMOLIZIONE
+    const aziendaRitiro = veicoloRitirato[0]?.azienda_ritiro_veicoli
+    const datiVeicolo = veicoloRitirato ? veicoloRitirato[0] : []
+
+    // CARICAMENTO DATI VEICOLO
     useEffect(() => {
   
       ;(async () => {
         const { data, error } = await supabase
-          .from("certificato_demolizione")
+          .from("dati_veicolo_ritirato")
           .select(`
             *,
-            dati_veicolo_ritirato!inner (
-              *,
-              azienda_ritiro_veicoli:azienda_ritiro_veicoli (*),
-              modello_veicolo:modello_veicolo (*)
-            )
+            azienda_ritiro_veicoli:azienda_ritiro_veicoli (*),
+            modello_veicolo:modello_veicolo (*)
           `)
-          .eq("uuid_certificato_demolizione", `${uuidDemolizioneStatus}`)
-          .maybeSingle()
+          .eq("uuid_veicolo_ritirato", `${uuidVeicoloRitirato}`)
 
-        console.log("DEMOLIZIONE SUPABASE:", { data, error })
-  
         if (error) {
-          console.error(error)
+          console.log(error)
           // toast.error("Errore nel caricamento certificati demolizione")
           return
         }
   
         // qui data è un ARRAY
-        setDemolizione(data ?? {})
+        setVeicoloRitirato(data ?? [])
       })()
     }, [])
 
     // CARICAMENTO LOG AVANZAMENTO
     useEffect(() => {
 
+    if (!datiVeicolo){
+      console.log("status non caricato")
+      return
+    }
+
     ;(async () => {
         const { data, error } = await supabase
         .from("log_avanzamento_demolizione")
         .select(`*,
           stato:stati_avanzamento(alias_stato_avanzamento)`)
-        .eq("uuid_veicolo_ritirato", `${demolizione?.uuid_veicolo_ritirato}`)
+        .eq("uuid_veicolo_ritirato", `${datiVeicolo.uuid_veicolo_ritirato}`)
         .order("created_at_stato_avanzamento", { ascending: false })
 
-        console.log("AVANZAMENTO PRATICA:", { data, error })
-
         if (error) {
-        console.error(error)
+        console.log("AVANZAMENTO PRATICA:", { error })
         // toast.error("Errore nel caricamento certificati demolizione")
         return
         }
-        // qui data è un ARRAY
         setStatoAvanzamento(data ?? [])
     })()
 
-    }, [demolizione])  
+    }, [veicoloRitirato])
 
-      console.log("TESTDEM",demolizione)
-      console.log("DemVeic", demolizione?.uuid_veicolo_ritirato)
-      console.log("stat", statoAvanzamento)
+    // CARICAMENTO DEMOLIZIONE
+    useEffect(() => {
+
+      if (datiVeicolo?.pratica_completata == false){
+        return
+      }
+  
+      ;(async () => {
+        const { data, error } = await supabase
+          .from("certificato_demolizione")
+          .select(`*`)
+          .eq("uuid_veicolo_ritirato", `${uuidVeicoloRitirato}`)
+
+        if (error) {
+          console.log(error)
+          // toast.error("Errore nel caricamento certificati demolizione")
+          return
+        }
+        // qui data è un ARRAY
+        setVeicoloDemolito(data ?? {})
+      })()
+    }, [veicoloRitirato])
+
+    console.log(veicoloDemolito)
 
     return (
         <>
@@ -80,6 +100,7 @@ export default function StatusDemolizione ({uuidDemolizione}) {
           <div className="flex items-center justify-center p-8 bg-neutral-200">
             <h3 className="">STATUS DEMOLIZIONE: <font className="font-bold">{datiVeicolo?.targa_veicolo_ritirato}</font></h3>
           </div>
+          {veicoloRitirato.length > 0 ?
           <div className="flex items-center justify-center bg-neutral-100 w-full">
             <div className="flex lg:flex-row flex-col justify-between lg:p-8 p-6 w-full gap-7">
               <div className="flex flex-col gap-3 bg-neutral-100 w-full rounded-xl">
@@ -109,23 +130,34 @@ export default function StatusDemolizione ({uuidDemolizione}) {
                   <SpanElementList icon={<FaCaretRight/>} label="Indirizzo Detentore:" data={`${datiVeicolo?.indirizzo_detentore} - ${datiVeicolo?.cap_detentore} ${datiVeicolo?.citta_detentore} ${datiVeicolo?.provincia_detentore}`}/>
                 </div>
               </div>
-              <div className="border rounded-xl px-7 py-7 lg:w-96 w-full bg-neutral-300">
-                <div className="border rounded-xl p-3 bg-companyPrimary text-neutral-300 mb-5">
-                  <h3 className="text-xs">STATO AVANZAMENTO DEMOLIZIONE</h3>
+              {veicoloDemolito.length == 0 ?
+                <div className="border rounded-xl px-7 py-7 lg:w-96 w-full bg-neutral-300">
+                  <div className="border rounded-xl p-3 bg-companyPrimary text-neutral-300 mb-5">
+                    <h3 className="text-xs">STATO AVANZAMENTO DEMOLIZIONE</h3>
+                  </div>
+                  <Timeline
+                    items={(statoAvanzamento ?? []).map(t => ({
+                      id: t.uuid_log_avanzamento_demolizione,
+                      title: t?.stato?.alias_stato_avanzamento || "Stato",
+                      datetime: t.created_at_stato_avanzamento,
+                      description: t.note_log_stato_avanzamento,
+                      dotClassName: PickDotColor(t?.stato?.alias_stato_avanzamento || "")
+                    }))}
+                    className="ml-2"
+                  />
+                </div> : 
+                <div className="border rounded-xl px-7 py-7 lg:w-96 w-full bg-neutral-300">
+                  SCARICA IL CERTIFICATO
+                  <a href={`${veicoloDemolito[0]?.documento_demolizione}`}>
+                    <button className="border p-3">CERTIFICATO</button>
+                  </a>
+                  <a href={`${veicoloDemolito[0]?.altro_documento_demolizione}`}>
+                    <button className="border p-3">ALTRO DOCUMENTO</button>
+                  </a>
                 </div>
-                <Timeline
-                  items={(statoAvanzamento ?? []).map(t => ({
-                    id: t.uuid_log_avanzamento_demolizione,
-                    title: t?.stato?.alias_stato_avanzamento || "Stato",
-                    datetime: t.created_at_stato_avanzamento,
-                    description: t.note_log_stato_avanzamento,
-                    dotClassName: PickDotColor(t?.stato?.alias_stato_avanzamento || "")
-                  }))}
-                  className="ml-2"
-                />
-              </div>
+              }
             </div>
-          </div>
+          </div> : "...attendi" }
         </div>
         </>
     )

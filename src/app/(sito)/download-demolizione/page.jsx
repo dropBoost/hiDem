@@ -10,7 +10,7 @@ export default function Download () {
   const [loading, setLoading] = useState(false)
   const [targa, setTarga] = useState("")
   const [codiceFiscale, setCodiceFiscale] = useState("")
-  const [demolizione, setDemolizione] = useState({})
+  const [veicoloRitirato, setVeicoloRitirato] = useState({})
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -28,15 +28,10 @@ export default function Download () {
 
     ;(async () => {
       const { data, error } = await supabase
-        .from("certificato_demolizione")
-        .select(`
-          *,
-          dati_veicolo_ritirato!inner (*)
-        `)
-        .eq("dati_veicolo_ritirato.targa_veicolo_ritirato", `${targa}`)
-        .eq("dati_veicolo_ritirato.cf_detentore", `${codiceFiscale}`)
-
-      console.log("DEMOLIZIONE SUPABASE:", { data, error })
+        .from("dati_veicolo_ritirato")
+        .select(`*`)
+        .eq("targa_veicolo_ritirato", `${targa}`)
+        .eq("cf_detentore", `${codiceFiscale}`)
 
       if (error) {
         console.error(error)
@@ -45,12 +40,9 @@ export default function Download () {
       }
 
       // qui data è un ARRAY
-      setDemolizione(data ?? [])
+      setVeicoloRitirato(data ?? [])
     })()
   }, [targa, codiceFiscale])
-
-  console.log("demolizione", demolizione)
-  console.log("targa", targa)
 
     return(
         <>
@@ -67,11 +59,12 @@ export default function Download () {
                 <form className="flex flex-col  gap-3 border border-neutral-200 p-5 rounded-xl shadow-xl w-96">
                     <FormField nome="codiceFiscale" label='Codice Fiscale' value={codiceFiscale} onchange={handleChange} type='text' colorLabel={`text-companyPrimary`}/>
                     <FormField nome="targa" label='Targa' value={targa} onchange={handleChange} type='text' colorLabel={`text-companyPrimary`}/>
-                    <Link href={`/download-demolizione/${demolizione[0]?.uuid_certificato_demolizione}`}>
+                    {veicoloRitirato.length > 0 ?
+                    <Link href={`/download-demolizione/${veicoloRitirato[0]?.uuid_veicolo_ritirato}`}>
                         <button className="border border-companyPrimary hover:bg-companyPrimary text-neutral-800 px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
                             SCARICA
                         </button>
-                    </Link>
+                    </Link> : "... compila i campi" }
                 </form>
             </div>
         </div>

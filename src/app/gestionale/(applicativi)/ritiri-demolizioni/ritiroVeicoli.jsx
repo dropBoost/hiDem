@@ -350,6 +350,25 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
     setSixStep(sixOk);
   }, [formData, setTwoStep, setThreeStep, setFourStep, setFiveStep, setSixStep]);
 
+  async function StatusUpdate(uuidVeicolo, uuidStatoAvanzamento) {
+    const payloadStatus = {
+      uuid_veicolo_ritirato: uuidVeicolo,
+      uuid_stato_avanzamento: uuidStatoAvanzamento,
+    }
+
+    const { data, error } = await supabase
+      .from("log_avanzamento_demolizione")
+      .insert(payloadStatus)
+      .select()
+      .single()
+
+    if (error) {
+      console.log("Errore statusUpdate:", error)
+    } else {
+      console.log("Stato aggiornato:", data)
+    }
+  }
+
   function handleChangeProvinciaLegale(e) {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
@@ -393,105 +412,112 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
     setUploadingByField(prev => ({ ...prev, [nomeCampo]: isBusy }));
   }
   async function handleSubmit(e) {
-    e.preventDefault()
+  e.preventDefault()
 
-    const payload = {
-      uuid_azienda_ritiro_veicoli: aziendaScelta || null,
-      uuid_modello_veicolo: modelloSelect || null,
-      anno_veicolo_ritirato: formData.anno || null,
-      cilindrata_veicolo_ritirato:formData.cilindrata,
-      vin_veicolo_ritirato:formData.vin,
-      targa_veicolo_ritirato: formData.targa || null,
-      km_veicolo_ritirato: formData.km || null,
-      tipologia_detentore: formData.tipologiaDetentore || null,
-      forma_legale_detentore:formData.formaLegale,
-      ragione_sociale_detentore: formData.ragioneSociale || null,
-      nome_detentore: formData.nome || null,
-      cognome_detentore: formData.cognome || null,
-      cf_detentore: formData.cf || null,
-      piva_detentore: formData.piva || null,
-      tipologia_documento_detentore: formData.tipologiaDocumentoD || null,
-      numero_documento_detentore: formData.numeroDocumento || null,
-      nazionalita_documento_detentore: formData.nazionalita || null,
-      email_detentore: formData.email || null,
-      mobile_detentore: formData.mobile || null,
-      cap_detentore: formData.cap || null,
-      provincia_detentore: formData.provincia || null,
-      indirizzo_detentore: formData.indirizzo || null,
-      citta_detentore: formData.citta || null,
-      tipologia_documento_veicolo_ritirato: formData.documentoVeicolo || null,
-      foto_documento_veicolo_ritirato_f: formData.fronteDOCveicolo || null,
-      foto_documento_veicolo_ritirato_r: formData.retroDOCveicolo || null,
-      foto_documento_detentore_f: formData.fronteDOCdetentore || null,
-      foto_documento_detentore_r: formData.retroDOCdetentore || null,
-      pratica_completata: formData.completato,
-    }
-
-    if (targaCaricare === true){
-      alert("Targa Già inserita")
-    } else if (telaioCaricare === true){
-      alert("Telaio Già inserito")
-    } else {
-      const { data, error } = await supabase.from("dati_veicolo_ritirato").insert(payload).select().single()
-      
-      const payloadStatus = {
-        uuid_veicolo_ritirato: data?.uuid_veicolo_ritirato || null,
-        uuid_stato_avanzamento: "3a936e04-5e62-488a-8310-6fa81998fb5b"
-      }
-
-      const { dataStatus, errorStatus } = await supabase.from("log_avanzamento_demolizione").insert(payloadStatus).select().single()
-
-      if (error) {
-        console.error(error)
-        alert(`Errore salvataggio: ${error.message}`)
-        return
-      } else {
-        setFormData({
-          uuid_modello:"",
-          targa:"",
-          vin: "",
-          anno: "",
-          cilindrata:"",
-          km:"",
-          tipologiaDetentore: "",
-          formaLegale:"",
-          ragioneSociale:"",
-          nome:"",
-          cognome:"",
-          cf:"",
-          piva:"",
-          tipologiaDocumentoD:"",
-          numeroDocumento: "",
-          nazionalita:"",
-          provincia:"",
-          citta: "",
-          cap: "",
-          indirizzo: "",
-          email: "",
-          mobile:"",
-          documentoVeicolo:"",
-          fronteDOCveicolo:"",
-          retroDOCveicolo:"",
-          fronteDOCdetentore:"",
-          retroDOCdetentore:"",
-          completato: false,
-        })
-        setResetUploadsTick(t => t + 1)
-        setUploadingByField({});
-        setStatusAziende(prev => !prev)
-        setModelloSelect("")
-        setMarchioSelect("")
-        setAziendaScelta("")
-        setRitiroInserito(data)
-      }
-      
-      alert("Pratica Inserita con successo!")
-
-    }
-    
+  const payload = {
+    uuid_azienda_ritiro_veicoli: aziendaScelta || null,
+    uuid_modello_veicolo: modelloSelect || null,
+    anno_veicolo_ritirato: formData.anno || null,
+    cilindrata_veicolo_ritirato: formData.cilindrata,
+    vin_veicolo_ritirato: formData.vin,
+    targa_veicolo_ritirato: formData.targa || null,
+    km_veicolo_ritirato: formData.km || null,
+    tipologia_detentore: formData.tipologiaDetentore || null,
+    forma_legale_detentore: formData.formaLegale,
+    ragione_sociale_detentore: formData.ragioneSociale || null,
+    nome_detentore: formData.nome || null,
+    cognome_detentore: formData.cognome || null,
+    cf_detentore: formData.cf || null,
+    piva_detentore: formData.piva || null,
+    tipologia_documento_detentore: formData.tipologiaDocumentoD || null,
+    numero_documento_detentore: formData.numeroDocumento || null,
+    nazionalita_documento_detentore: formData.nazionalita || null,
+    email_detentore: formData.email || null,
+    mobile_detentore: formData.mobile || null,
+    cap_detentore: formData.cap || null,
+    provincia_detentore: formData.provincia || null,
+    indirizzo_detentore: formData.indirizzo || null,
+    citta_detentore: formData.citta || null,
+    tipologia_documento_veicolo_ritirato: formData.documentoVeicolo || null,
+    foto_documento_veicolo_ritirato_f: formData.fronteDOCveicolo || null,
+    foto_documento_veicolo_ritirato_r: formData.retroDOCveicolo || null,
+    foto_documento_detentore_f: formData.fronteDOCdetentore || null,
+    foto_documento_detentore_r: formData.retroDOCdetentore || null,
+    pratica_completata: formData.completato,
   }
 
-  console.log("data", ritiroInserito)
+  if (targaCaricare === true) {
+    alert("Targa già inserita")
+    return
+  }
+
+  if (telaioCaricare === true) {
+    alert("Telaio già inserito")
+    return
+  }
+
+  const { data, error } = await supabase
+    .from("dati_veicolo_ritirato")
+    .insert(payload)
+    .select()
+    .single()
+
+  if (error) {
+    console.error(error)
+    alert(`Errore salvataggio: ${error.message}`)
+    return
+  }
+
+  console.log("Pratica inserita:", data)
+
+  // aggiorno lo stato avanzamento
+  await StatusUpdate(data.uuid_veicolo_ritirato, "3a936e04-5e62-488a-8310-6fa81998fb5b")
+
+  // reset form
+  setFormData({
+    uuid_modello: "",
+    targa: "",
+    vin: "",
+    anno: "",
+    cilindrata: "",
+    km: "",
+    tipologiaDetentore: "",
+    formaLegale: "",
+    ragioneSociale: "",
+    nome: "",
+    cognome: "",
+    cf: "",
+    piva: "",
+    tipologiaDocumentoD: "",
+    numeroDocumento: "",
+    nazionalita: "",
+    provincia: "",
+    citta: "",
+    cap: "",
+    indirizzo: "",
+    email: "",
+    mobile: "",
+    documentoVeicolo: "",
+    fronteDOCveicolo: "",
+    retroDOCveicolo: "",
+    fronteDOCdetentore: "",
+    retroDOCdetentore: "",
+    completato: false,
+  })
+
+  setResetUploadsTick(t => t + 1)
+  setUploadingByField({})
+  setStatusAziende(prev => !prev)
+  setModelloSelect("")
+  setMarchioSelect("")
+  setAziendaScelta("")
+  setRitiroInserito(data) // se ti serve ancora da qualche parte
+
+  alert("Pratica inserita con successo!")
+  }
+  
+
+  console.log("data ritiro Inserito", ritiroInserito)
 
   return (
     <>

@@ -13,8 +13,8 @@ export function Header () {
                 <h4>MENU</h4>
             </div>
             <div id="btn-cnt" className="flex flex-row items-end justify-center gap-3">
-            <Link href="./download-demolizione"><Button variant='secondary'>SCARICA DEMOLIZIONE</Button></Link>
-            <Link href="./gestionale"><Button>GESTIONALE</Button></Link>
+            <Link href="/download-demolizione"><Button variant='secondary'>SCARICA DEMOLIZIONE</Button></Link>
+            <Link href="/gestionale"><Button>GESTIONALE</Button></Link>
             <ThemeToggle/>
             </div>
         </div>
@@ -27,7 +27,7 @@ export function FooterInfo () {
         <>
         <div className="h-24 flex flex-row justify-between items-center bg-brand border w-full">
             <Button variant='secondary'>Button 2</Button>
-            <Link href="./gestionale"><Button>GESTIONALE</Button></Link>
+            <Link href="/gestionale"><Button>GESTIONALE</Button></Link>
             <h1 className="p-5 text-neutral-50">CIAO</h1>
         </div>
         </>
