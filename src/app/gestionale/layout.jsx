@@ -42,7 +42,7 @@ export default function LayoutGestionale({ children }) {
 
   return (
     <AuthUserProvider value={utente}>
-      <div className="min-h-screen bg-neutral-900 text-neutral-100">
+      <div className="min-h-screen bg-neutral-900 text-neutral-100 overflow-hidden">
         <main>{children}</main>
       </div>
     </AuthUserProvider>

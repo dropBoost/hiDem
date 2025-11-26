@@ -38,6 +38,7 @@ export function Footer () {
     return(
         <>
         <div className="flex flex-row justify-center items-center bg-neutral-900 w-full py-3">
+            <span>© {new Date().getFullYear()} – Azienda Demolizioni</span>
             <h6>ECOCAR PARTS</h6>
         </div>
         </>

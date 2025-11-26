@@ -468,8 +468,6 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
     return
   }
 
-  console.log("Pratica inserita:", data)
-
   // aggiorno lo stato avanzamento
   await StatusUpdate(data.uuid_veicolo_ritirato, "3a936e04-5e62-488a-8310-6fa81998fb5b")
 
@@ -515,9 +513,6 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
 
   alert("Pratica inserita con successo!")
   }
-  
-
-  console.log("data ritiro Inserito", ritiroInserito)
 
   return (
     <>
@@ -1036,13 +1031,11 @@ export function FormFileUpload({
       }
       const ext = (it.file.name.split('.').pop() || 'jpg').toLowerCase();
       const finalPath = `${base}${safeTarga}-${safeCampo}.${ext}`;
-      console.log(`📤 Upload → bucket=${bucket}, path=${finalPath}`);
 
       const res = await uploadOne(it.file, i, finalPath);
       if (res) uploadedResults.push(res);
     }
 
-    console.log('[FormFileUpload] uploaded ->', { nome, uploaded: uploadedResults });
     onchange?.({ target: { name: nome, files: uploadedResults } });
 
     onBusyChange?.(nome, false);
