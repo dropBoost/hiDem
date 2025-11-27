@@ -12,7 +12,7 @@ export default function DisplayAziendeRitiro ({uuid, ragioneSociale, piva, stato
 
     return (
         <>
-        <div className="flex lg:flex-row flex-col min-h-0 w-full border lg:items-center justify-between items-start border-neutral-700 rounded-xl p-3 gap-2 shadow-xl">
+        <div className="flex lg:flex-row flex-col min-h-0 w-full border lg:items-center justify-between items-start border-neutral-200 dark:border-neutral-700 rounded-xl p-3 gap-2 dark:shadow-xl">
             <div className="flex lg:flex-row flex-col lg:w-fit w-full justify-start lg:items-start items-start gap-1 min-h-0 h-full overflow-auto">
                 <div className="flex flex-col justify-start items-center lg:w-fit w-full min-h-0 h-full lg:mt-1 m-0">
                     {stato == true

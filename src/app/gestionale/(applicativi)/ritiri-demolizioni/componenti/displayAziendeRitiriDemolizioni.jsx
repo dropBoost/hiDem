@@ -6,7 +6,7 @@ export default function DisplayAziendeRitiriDemolizioni ({uuid, n, ragioneSocial
 
     return (
         <>
-        <div className="flex lg:flex-row flex-col min-h-0 w-full border lg:items-center justify-between items-start border-neutral-700 rounded-xl lg:p-3 px-2 py-3 lg:gap-2 gap-1 shadow-xl">
+        <div className="flex lg:flex-row flex-col min-h-0 w-full border lg:items-center justify-between items-start border-neutral-200 dark:border-neutral-700 rounded-xl p-3 gap-2 dark:shadow-xl">
             <div className="flex lg:flex-row flex-col lg:w-fit w-full justify-start lg:items-center items-start gap-3">
                 <div className="flex flex-col justify-center items-center lg:w-fit w-full h-fit">
                     {n == 0

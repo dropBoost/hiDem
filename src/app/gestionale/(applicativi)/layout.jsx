@@ -50,7 +50,7 @@ export default function LayoutGestionale({ children }) {
           </button>
           <span className="font-medium uppercase">Backoffice Demolizioni</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <ThemeToggle/>
           <LogoutButton/>
         </div>

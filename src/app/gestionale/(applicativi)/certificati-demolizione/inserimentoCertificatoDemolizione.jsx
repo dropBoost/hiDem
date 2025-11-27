@@ -242,7 +242,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
               <div className="col-span-12">
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">SPECIFICHE VEICOLO</h4>
               </div>
-              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 min-h-0 bg-white dark:bg-neutral-900 border'>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl dark:shadow-lg min-w-0 bg-white dark:bg-neutral-900 border'>
                 <FormSelectRuoli nome="tipologiaDemolizione" label='Tipologia Demolizione' value={formData.tipologiaDemolizione} colspan="col-span-10" mdcolspan="lg:col-span-6" onchange={handleChange} options={tipologiaDemolizione}/>
                 <FormTextarea nome="noteDemolizione" label='Note' value={formData.noteDemolizione} colspan="col-span-6" mdcolspan="lg:col-span-12" onchange={handleChange} type="textarea" as="textarea"/>
                 
@@ -253,7 +253,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
               <div className={"col-span-12"}>
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">FOTO</h4>
               </div>
-              <div className={'grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg bg-white dark:bg-neutral-900 border'}>
+              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl dark:shadow-lg min-w-0 bg-white dark:bg-neutral-900 border'>
                 <FormFileUpload
                   nome="documentoDemolizione"
                   label="Certificato Demolizione"
@@ -291,7 +291,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
               <button
                 type="submit"
                 disabled={anyUploading}
-                className="border border-brand hover:bg-brand text-white px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
+                className="border border-brand hover:bg-brand text-neutral-600 dark:text-neutral-200 px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
                 {anyUploading ? "Caricamento in corso..." : "Inserisci"}
               </button>
             </div>

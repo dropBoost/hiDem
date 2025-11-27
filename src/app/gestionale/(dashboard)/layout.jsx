@@ -7,6 +7,7 @@ import { moduliInfo } from '../../cosetting'
 import { ThemeToggle } from '../../componenti/theme-toggle'
 import { useAuthUser } from '@/app/admin/components/AuthUserContext'
 import { version, companyName } from '../../cosetting'
+import LogoutButton from '@/app/componenti/buttonLogout'
 
 export default function LayoutGestionale({ children }) {
 
@@ -23,7 +24,7 @@ export default function LayoutGestionale({ children }) {
       bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100
     ">
       {/* Sidebar desktop */}
-      <aside className="hidden md:block md:row-span-3 border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+      <aside className="hidden md:block md:row-span-3 border-neutral-200 dark:border-neutral-800 bg-neutral-500 dark:bg-neutral-900">
         <Sidebar pathname={pathname} u={utente}/>
       </aside>
 
@@ -51,13 +52,14 @@ export default function LayoutGestionale({ children }) {
           </button>
           <span className="font-medium uppercase">Backoffice Demolizioni</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <ThemeToggle/>
+          <LogoutButton/>
         </div>
       </header>
 
       {/* Main scrollabile */}
-      <main className="bg-white dark:bg-neutral-900 col-start-1 md:col-start-2 row-start-2 min-w-0 min-h-0 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]">
+      <main className="bg-neutral-100 dark:bg-neutral-900 col-start-1 md:col-start-2 row-start-2 min-w-0 min-h-0 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]">
         <div className="p-5">
           {children}
         </div>
@@ -68,11 +70,11 @@ export default function LayoutGestionale({ children }) {
       <footer className="
         col-start-1 md:col-start-2 row-start-3
         flex items-center justify-between px-3 md:px-4 text-sm
-        border-t border-neutral-200 dark:border-neutral-800
+        border-t border-neutral-200 dark:border-neutral-800 bg-neutral-500 dark:text-neutral-500 text-neutral-100
         dark:bg-neutral-900
       ">
         <span>© {new Date().getFullYear()} – {companyName}</span>
-        <span className="text-neutral-500">v{version}</span>
+        <span>v{version}</span>
       </footer>
     </div>
   )
@@ -85,7 +87,7 @@ function Sidebar({ pathname, onNavigate, u }) {
         <span className="font-semibold">Gestione</span>
       </div>
 
-      <div className="flex-1 overflow-y-auto py-3 bg-neutral-100 dark:bg-neutral-900 border-r">
+      <div className="flex-1 overflow-y-auto py-3 bg-neutral-200 dark:bg-neutral-900 border-r">
         <ul className="space-y-1 px-2">
           {moduliInfo.map((item, index) => {
             const active =
@@ -112,7 +114,7 @@ function Sidebar({ pathname, onNavigate, u }) {
         </ul>
       </div>
 
-      <div className="h-[48px] border-t border-neutral-200 dark:border-neutral-800 px-3 flex items-center text-xs text-neutral-500">
+      <div className="h-[48px] border-t border-neutral-200 dark:border-neutral-800 px-3 flex items-center text-xs dark:text-neutral-500 text-neutral-100">
         {u?.email}
       </div>
     </nav>
