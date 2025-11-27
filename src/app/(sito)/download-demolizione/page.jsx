@@ -63,11 +63,13 @@ export default function Download () {
                     <FormField nome="codiceFiscale" label='Codice Fiscale' value={codiceFiscale} onchange={handleChange} type='text' colorLabel={`text-companyPrimary`}/>
                     <FormField nome="targa" label='Targa' value={targa} onchange={handleChange} type='text' colorLabel={`text-companyPrimary`}/>
                     {veicoloRitirato.length > 0 ?
-                    <Link href={`/download-demolizione/${veicoloRitirato[0]?.uuid_veicolo_ritirato}`}>
-                        <button className="flex flex-row items-center justify-center gap-2 border border-companyPrimary hover:bg-companyPrimary text-neutral-800 hover:text-neutral-200 px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
-                            <FaFileDownload/> SCARICA
-                        </button>
-                    </Link> : <span className="text-xs">... compila i campi</span> }
+                    <div className="flex justify-end items-center mt-2">
+                      <Link href={`/download-demolizione/${veicoloRitirato[0]?.uuid_veicolo_ritirato}`}>
+                          <button className="flex flex-row items-center justify-center gap-2 border border-companyPrimary hover:bg-companyPrimary text-neutral-800 hover:text-neutral-200 px-5 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
+                              <FaFileDownload/> SCARICA
+                          </button>
+                      </Link>
+                    </div> : <span className="text-xs text-end">... compila i campi</span> }
                 </form>
             </div>
           </div>
