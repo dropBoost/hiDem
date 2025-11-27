@@ -23,15 +23,15 @@ module.exports = {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
   			},
-			brand: {
+  			brand: {
   				DEFAULT: '#95c11f',
   				foreground: 'hsl(var(--card-foreground))'
   			},
-			companyPrimary: {
+  			companyPrimary: {
   				DEFAULT: '#253a60',
   				foreground: 'hsl(var(--card-foreground))'
   			},
-			companySecondary: {
+  			companySecondary: {
   				DEFAULT: '#be1622',
   				foreground: 'hsl(var(--card-foreground))'
   			},
@@ -69,6 +69,28 @@ module.exports = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
+  		},
+  		keyframes: {
+  			'accordion-down': {
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
+  			},
+  			'accordion-up': {
+  				from: {
+  					height: 'var(--radix-accordion-content-height)'
+  				},
+  				to: {
+  					height: '0'
+  				}
+  			}
+  		},
+  		animation: {
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out'
   		}
   	}
   },

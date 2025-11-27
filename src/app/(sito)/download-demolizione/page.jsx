@@ -4,6 +4,7 @@ import { FormField } from "@/app/componenti-sito/formComponents"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { supabase } from "@/lib/supabaseClient"
+import { FaFileDownload } from "react-icons/fa";
 
 export default function Download () {
 
@@ -47,26 +48,29 @@ export default function Download () {
     return(
         <>
         {/* CONTENUTO PAGINA */}
-        <div id="pageContenent" className="w-full">
-            <img src={`/download-demolizione.jpg`} alt="test" className="w-full object-cover h-96"/>
-            <div className="flex flex-col items-center justify-center bg-neutral-700 p-5">
-                <h6 className="font-semibold uppercase">SCARICA LA TUA DEMOLIZIONE</h6>
-            </div>
-            <div className="flex flex-col items-center px-48 py-10 bg-neutral-300">
-                <p className="text-neutral-700">Compila il modulo ed ottieni il certificato di demolizione della tua auto</p>
-            </div>
-            <div className="flex flex-col items-center justify-center w-full p-28">
-                <form className="flex flex-col  gap-3 border border-neutral-200 p-5 rounded-xl shadow-xl w-96">
+        <div id="pageContenent" className="w-full h-full flex lg:flex-row flex-col dark:bg-neutral-900">
+          <div id="col-sx" className="lg:w-96 lg:h-full h-48 w-full lg:order-1 order-2">
+            <img src={`/download-demolizione.jpg`} alt="test" className="w-full h-full object-cover"/>
+          </div>
+          <div id="col-dx" className="flex flex-col w-full flex-1 gap-2 h-full border-3 border-red-900 lg:p-0 p-24 order-1 lg:order-2">
+            <div className="flex flex-col items-center justify-center h-full gap-5">
+                <div className="flex flex-col items-center justify-center gap-1">
+                  <span className="text-2xl dark:text-neutral-100 text-companyPrimary border border-companyPrimary p-4 rounded-full mb-2"><FaFileDownload/></span>
+                  <h6 className="font-semibold uppercase text-companyPrimary">SCARICA LA TUA DEMOLIZIONE</h6>
+                  <p className="text-neutral-700 dark:text-neutral-400 text-xs">Compila il modulo ed ottieni il certificato di demolizione della tua auto</p>
+                </div>
+                <form className="flex flex-col gap-3 border border-neutral-200 p-5 rounded-xl shadow-xl w-96">
                     <FormField nome="codiceFiscale" label='Codice Fiscale' value={codiceFiscale} onchange={handleChange} type='text' colorLabel={`text-companyPrimary`}/>
                     <FormField nome="targa" label='Targa' value={targa} onchange={handleChange} type='text' colorLabel={`text-companyPrimary`}/>
                     {veicoloRitirato.length > 0 ?
                     <Link href={`/download-demolizione/${veicoloRitirato[0]?.uuid_veicolo_ritirato}`}>
-                        <button className="border border-companyPrimary hover:bg-companyPrimary text-neutral-800 px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
-                            SCARICA
+                        <button className="flex flex-row items-center justify-center gap-2 border border-companyPrimary hover:bg-companyPrimary text-neutral-800 hover:text-neutral-200 px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
+                            <FaFileDownload/> SCARICA
                         </button>
-                    </Link> : "... compila i campi" }
+                    </Link> : <span className="text-xs">... compila i campi</span> }
                 </form>
             </div>
+          </div>
         </div>
         {/* FINE PAGINA */}
         </>

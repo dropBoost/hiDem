@@ -16,10 +16,8 @@ export default function LayoutGestionale({ children }) {
       <Header/>
 
       {/* Main scrollabile */}
-      <main className="bg-white dark:bg-neutral-900 col-start-1 md:col-start-2 row-start-2 min-w-0 min-h-0 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]">
-        <div className="">
-          {children}
-        </div>
+      <main className="bg-neutral-100 flex-1 dark:bg-neutral-900 col-start-1 md:col-start-2 row-start-2 min-w-0 min-h-0 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]">
+        {children}
       </main>
 
       {/* Footer */}
