@@ -9,6 +9,7 @@ export default function Customer() {
 
   const [onDisplaySectionOne, setOnDisplaySectionOne] = useState("on")
   const [onDisplaySectionTwo, setOnDisplaySectionTwo] = useState("off")
+
   const [statusAziende, setStatusAziende] = useState(false)
 
   function ClickSectionOne () {

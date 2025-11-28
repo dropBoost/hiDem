@@ -107,8 +107,6 @@ export default function CertificatoDemolizione ({
     return { bucket, path }
   }
 
-  console.log("status",sPage)
-
   async function handleUpdate(e) {
     e.preventDefault()
 
@@ -249,9 +247,9 @@ export default function CertificatoDemolizione ({
             <div className="flex flex-row gap-1 items-center border border-brand w-fit rounded-lg px-2">
               <FaCarAlt className="text-brand text-xs"/>
               <span className="text-base font-semibold uppercase truncate text-ellipsis">
-                {datiV.targa_veicolo_ritirato}
+                {datiV?.targa_veicolo_ritirato}
                 <font className="text-xs text-neutral-500 font-medium italic uppercase">
-                  {' '}{datiV.vin_veicolo_ritirato}
+                  {' '}{datiV?.vin_veicolo_ritirato}
                 </font>
               </span>
             </div>
@@ -461,7 +459,7 @@ export default function CertificatoDemolizione ({
               campo="altro"
               colspan="col-span-12"
               mdcolspan="lg:col-span-6"
-              targa={datiV.targa_veicolo_ritirato}
+              targa={datiV?.targa_veicolo_ritirato}
               makePublic={true}
               onchange={handleChangeUpload}
               onBusyChange={handleBusyChange}

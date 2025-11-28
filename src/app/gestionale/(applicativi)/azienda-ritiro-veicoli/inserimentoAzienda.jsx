@@ -336,7 +336,7 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
           <button
             type="submit"
             disabled={anyUploading}
-            className="border border-brand hover:bg-brand text-white px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
+            className="border border-brand hover:bg-brand text-neutral-500 hover:text-neutral-800 dark:text-white px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
             {anyUploading ? "Caricamento in corso..." : "Inserisci"}
           </button>
         </div>

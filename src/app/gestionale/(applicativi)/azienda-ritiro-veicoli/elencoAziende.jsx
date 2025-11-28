@@ -10,8 +10,6 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import DisplayAziendeRitiro from "./componenti/displayAziendeRitiro";
 
-import ButtonDeleteRow from "@/app/componenti/buttonDeleteSup";
-
 export default function ElencoAziende({ onDisplay, statusAziende, setStatusAziende }) {
   const [aziendaRitiroVeicoli, setAziendaRitiroVeicoli] = useState([])
 
