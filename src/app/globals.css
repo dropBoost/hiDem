@@ -11,15 +11,12 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  scrollbar-width: thin;
-  scrollbar-color: #95c11f transparent; 
 }
 
 a {
   color: inherit;
   text-decoration: none;
 }
-
 
 @layer base {
   :root {
@@ -120,3 +117,40 @@ select:-moz-autofill {
   }
 }
 
+/* Scrollbar SITO */
+.scrollbar-sito {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 transparent;
+}
+
+.scrollbar-sito::-webkit-scrollbar {
+  width: 2px;
+}
+
+.scrollbar-sito::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-sito::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 999px;
+}
+
+/* Scrollbar GESTIONALE */
+.scrollbar-gestionale {
+  scrollbar-width: none;
+  scrollbar-color: #95c11f transparent;
+}
+
+.scrollbar-gestionale::-webkit-scrollbar {
+  width: 2px;
+}
+
+.scrollbar-gestionale::-webkit-scrollbar-track {
+  background: #95c11f;
+}
+
+.scrollbar-gestionale::-webkit-scrollbar-thumb {
+  background: #95c11f;
+  border-radius: 999px;
+}

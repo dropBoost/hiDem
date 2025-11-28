@@ -24,7 +24,7 @@ export default function LayoutGestionale({ children }) {
       if (!data.session) {
         router.push('admin/login')
       } else {
-        setUtente(data.session.user)   // 👈 salvo l'utente
+        setUtente(data.session.user)
         setChecking(false)
         console.log("layout gestionale",data)
       }
@@ -42,7 +42,7 @@ export default function LayoutGestionale({ children }) {
 
   return (
     <AuthUserProvider value={utente}>
-      <div className="min-h-screen dark:bg-neutral-900 text-neutral-100 overflow-hidden">
+      <div className="min-h-screen dark:bg-neutral-900 text-neutral-100 overflow-hidden scrollbar-gestionale">
         <main>{children}</main>
       </div>
     </AuthUserProvider>

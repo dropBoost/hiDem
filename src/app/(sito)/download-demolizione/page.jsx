@@ -12,6 +12,7 @@ export default function Download () {
   const [targa, setTarga] = useState("")
   const [codiceFiscale, setCodiceFiscale] = useState("")
   const [veicoloRitirato, setVeicoloRitirato] = useState({})
+  const [statoRicerca, setStatoRicerca] = useState("...compila i campi")
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -41,7 +42,7 @@ export default function Download () {
       }
 
       // qui data è un ARRAY
-      setVeicoloRitirato(data ?? [])
+      setVeicoloRitirato(data ?? [], setStatoRicerca("targa non trovata o codice fiscale errato"))
     })()
   }, [targa, codiceFiscale])
 
@@ -69,7 +70,7 @@ export default function Download () {
                               <FaFileDownload/> SCARICA
                           </button>
                       </Link>
-                    </div> : <span className="text-xs text-end">... compila i campi</span> }
+                    </div> : <span className="text-xs text-end">{statoRicerca}</span> }
                 </form>
             </div>
           </div>

@@ -4,15 +4,15 @@ import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { moduliGestionale } from '../../cosetting'
-import { ThemeToggle } from '../../componenti/theme-toggle'
-import LogoutButton from '@/app/componenti/buttonLogout'
 import { useAuthUser } from "@/app/admin/components/AuthUserContext";
+import { HomeButton, ThemeToggle, LogoutButton, PlusButton } from '@/app/componenti/button'
 
 export default function LayoutGestionale({ children }) {
 
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const utente = useAuthUser()
+  const [openUpBar, setOpenUpBar] = useState(false)
 
   return (
     <div className="
@@ -32,27 +32,26 @@ export default function LayoutGestionale({ children }) {
       </MobileDrawer>
 
       {/* Header */}
-      <header className="
-        col-start-1 md:col-start-2 row-start-1
-        flex items-center justify-between gap-3 px-3 md:px-4
-      bg-brand backdrop-blur 
-      ">
-        <div className="flex items-center gap-2">
-          <button
-            className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-950/50"
-            onClick={() => setOpen(true)}
-            aria-label="Apri menu"
-          >
-            {/* Icona hamburger */}
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-          </button>
-          <span className="font-medium uppercase">Backoffice Demolizioni</span>
+      <header className="col-start-1 md:col-start-2 row-start-1 flex items-center justify-between gap-3 px-3 md:px-4 bg-brand backdrop-blur">
+        <div id='headerCNT' className={`${!openUpBar ? "flex items-center justify-between flex-row w-full" : "hidden"}`}>
+          <div className="flex items-center gap-2">
+            <button className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-950/50" onClick={() => setOpen(true)} aria-label="Apri menu">
+              {/* Icona hamburger */}
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </button>
+            <span className="font-medium uppercase">Backoffice Demolizioni</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <PlusButton open={() => setOpenUpBar(prev => !prev)} stato={openUpBar}/>
+            <HomeButton/>
+            <LogoutButton/>
+          </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div id='headerCNT' className={`${openUpBar ? "flex items-center justify-end flex-row w-full gap-2" : "hidden"}`}>
           <ThemeToggle/>
-          <LogoutButton/>
+          <PlusButton open={() => setOpenUpBar(prev => !prev)} stato={openUpBar}/>
         </div>
       </header>
 
