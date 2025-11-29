@@ -12,6 +12,7 @@ export default function CertificatiDemolizione() {
   const [onDisplaySectionTwo, setOnDisplaySectionTwo] = useState("off")
   const [onDisplaySectionThree, setOnDisplaySectionThree] = useState("off")
   const [statusAziende, setStatusAziende] = useState(false)
+  const [statusPage, setStatusPage] = useState(false)
 
   function ClickSectionOne () {
     setOnDisplaySectionOne("on")
@@ -43,7 +44,7 @@ export default function CertificatiDemolizione() {
       <div className="flex flex-1 justify-start items-start w-full min-h-0">
         <InserimentoCertificatiDemolizione statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionOne}/>
         <ElencoCertificatiDemolizione statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionTwo}/>
-        <CercaDemolizioneTarga statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionThree}/>
+        <CercaDemolizioneTarga statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionThree} sPage={statusPage} sSPage={setStatusPage}/>
       </div>
     </div>
     </>

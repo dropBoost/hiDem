@@ -10,13 +10,13 @@ import { MdEmail } from "react-icons/md";
 import { ButtonLinkDisplayDownloadDOC } from "../../componenti/displayButtonComponentDownloadDoc"
 import { FormSelect, FormTextarea } from "@/app/componenti/componentiForm";
 import { HiMiniPencilSquare } from "react-icons/hi2";
+import { AiOutlineLoading3Quarters, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 
-export default function CercaDemolizioneTarga({ onDisplay }) {
+export default function CercaDemolizioneTarga({ onDisplay, sSPage, sPage }) {
 
   const [demolizioneTarga, setDemolizioneTarga] = useState(null)
   const [targaSearch, setTargaSearch] = useState("")
   const [targa, setTarga] = useState("")
-  const [statusPage, setStatusPage] = useState(true)
   const datiV = demolizioneTarga?.dati_veicolo_ritirato
   const arv = demolizioneTarga?.dati_veicolo_ritirato?.azienda_ritiro_veicoli
   const [docDemolizioneUrl, setDocDemolizioneUrl] = useState(demolizioneTarga?.documento_demolizione || "")
@@ -30,10 +30,11 @@ export default function CercaDemolizioneTarga({ onDisplay }) {
   const [uploadingByField, setUploadingByField] = useState({});
   const [resetUploadsTick, setResetUploadsTick] = useState(0);
 
-  function handleReset() {
-    setDataSearch("")
-    setDataSearchSubmit("")
-    setPage(1)
+  function handleReset(e) {
+    e?.preventDefault?.()
+    setDemolizioneTarga(null)
+    setTargaSearch("")
+    setTarga("")
   }
 
   function DataFormat(value) {
@@ -53,7 +54,7 @@ export default function CercaDemolizioneTarga({ onDisplay }) {
   //CERTIFICATO DEMOLIZIONE
   useEffect(() => {
 
-    if (!targaSearch) return
+  if (!targaSearch) return
 
     (async () => {
       const { data, error } = await supabase
@@ -77,7 +78,8 @@ export default function CercaDemolizioneTarga({ onDisplay }) {
 
       setDemolizioneTarga(data ?? {})
     })()
-  }, [targaSearch])
+
+  }, [targaSearch, sPage])
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -93,7 +95,6 @@ export default function CercaDemolizioneTarga({ onDisplay }) {
     setTargaSearch(targa)
   }
 
-  // Se il padre ricarica i dati, sincronizza lo stato locale
   useEffect(() => {
     setDocDemolizioneUrl(demolizioneTarga?.documento_demolizione || "")
   }, [demolizioneTarga?.documento_demolizione])
@@ -260,7 +261,7 @@ export default function CercaDemolizioneTarga({ onDisplay }) {
     const { data, error } = await supabase
       .from("certificato_demolizione")
       .update(payload)
-      .eq("uuid_certificato_demolizione", uuidDemolizione)
+      .eq("uuid_certificato_demolizione", demolizioneTarga?.uuid_certificato_demolizione)
       .select()
       .single()
 
@@ -276,20 +277,6 @@ export default function CercaDemolizioneTarga({ onDisplay }) {
 
   }
 
-  function DataFormat(value) {
-    if (!value) return '—'
-    const d = new Date(value)
-    if (isNaN(d)) return '—'
-    return d.toLocaleString('it-IT', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    })
-  }
-console.log("ARV",arv)
   return (
     <div className={`${onDisplay === 'on' ? '' : 'hidden'}
       w-full h-full
@@ -298,6 +285,7 @@ console.log("ARV",arv)
         <form onSubmit={handleSubmit} className="flex flex-row w-full items-center justify-center border rounded-xl px-3 py-5 gap-3">
           <FormField nome="targa" label='Targa' placeholder={"... cerca targa"} value={targa} className={'flex-1'} onchange={handleChange} type='text'/>
           <button type="submit" className="w-20 bg-brand rounded-lg h-full">CERCA</button>
+          <button type="button" onClick={handleReset} className="w-20 bg-brand rounded-lg h-full">RESET</button>
         </form>
         {demolizioneTarga ? 
         <div className="flex xl:flex-row flex-col min-h-0 justify-between items-start gap-3 w-full h-full">
@@ -430,17 +418,17 @@ console.log("ARV",arv)
                   </div>
 
                   {/* Documento principale */}
-                  {demolizioneTarga?.documento_demolizione && (
+                  {docDemolizioneUrl && (
                     <div className="flex flex-row items-center gap-2">
                       <ButtonLinkDisplayDownloadDOC
                         targetType="_blank"
-                        linkHref={demolizioneTarga?.documento_demolizione}
+                        linkHref={docDemolizioneUrl}
                         info="DEMOLIZIONE"
                         icon={<FaFileDownload/>}
                       />
                       <button
                         type="button"
-                        onClick={() => handleRemoveDocumento(demolizioneTarga?.documento_demolizione, 'demolizione')}
+                        onClick={() => handleRemoveDocumento(docDemolizioneUrl, 'demolizione')}
                         className="text-[0.65rem] px-2 py-1 rounded bg-red-900 text-white hover:bg-red-700"
                       >
                         <FaTrash />
@@ -449,17 +437,17 @@ console.log("ARV",arv)
                   )}
 
                   {/* Altro documento */}
-                  {demolizioneTarga?.altro_documento_demolizione && (
+                  {altroDocDemolizioneUrl && (
                     <div className="flex flex-row items-center gap-2">
                       <ButtonLinkDisplayDownloadDOC
                         targetType="_blank"
-                        linkHref={demolizioneTarga?.altro_documento_demolizione}
+                        linkHref={altroDocDemolizioneUrl}
                         info="ALTRO"
                         icon={<FaFileDownload/>}
                       />
                       <button
                         type="button"
-                        onClick={() => handleRemoveDocumento(demolizioneTarga?.altro_documento_demolizione, 'altro')}
+                        onClick={() => handleRemoveDocumento(altroDocDemolizioneUrl, 'altro')}
                         className="text-[0.65rem] px-2 py-1 rounded bg-red-900 text-white hover:bg-red-700"
                       >
                         <FaTrash />
