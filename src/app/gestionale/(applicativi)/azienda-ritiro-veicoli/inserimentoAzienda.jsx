@@ -209,7 +209,6 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
         console.log("P.IVA già registrata")
       } else {
         setAziendaInserimento(true)
-        console.log("P.IVA libera")
       }
     }
 
