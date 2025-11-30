@@ -28,8 +28,10 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
   const [aziendeRitiro, setAziendeRitiro] = useState([])
   const [ruoliUtente, setRuoliUtente] = useState([])
   const [aziendaInserimento, setAziendaInserimento] = useState(true)
-
+  const [camionRitiro, setCamionRitiro] = useState([])
+  const [targaCamionScelta, setTargaCamionScelta] = useState("")
   const [open, setOpen] = useState(false)
+  const [openTargheCamion, setOpenTargheCamion] = useState(false)
   const [openMarchio, setOpenMarchio] = useState(false)
   const [openModello, setOpenModello] = useState(false)
   const [statusSend, setStatusSend] = useState(false)
@@ -118,9 +120,31 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
     })()
   }, [])
 
+  // CARICAMENTO CAMION
+  useEffect(() => {
+    ;(async () => {
+      const { data: data, error } = await supabase
+        .from("camion_ritiro")
+        .select("*")
+        .order("targa_camion", { ascending: false })
+
+      if (error) {
+        console.error(error)
+        toast.error("Errore nel caricamento Targhe Camion")
+        return
+      }
+      setCamionRitiro(data ?? [])
+    })()
+  }, [aziendaScelta])
+
   const optionsAziendeRitiro = aziendeRitiro.map(ar => ({
     value:ar.uuid_azienda_ritiro_veicoli,
     label:`${ar.ragione_sociale_arv}`,
+  }))
+
+  const optionsTargheCamion = camionRitiro.map(ar => ({
+    value:ar.uuid_camion_ritiro,
+    label:`${ar.targa_camion}`,
   }))
 
   // CARICAMENTO MARCA VEICOLI
@@ -417,6 +441,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
   const payload = {
     uuid_azienda_ritiro_veicoli: aziendaScelta || null,
     uuid_modello_veicolo: modelloSelect || null,
+    uuid_camion_ritiro: targaCamionScelta || null,
     anno_veicolo_ritirato: formData.anno || null,
     cilindrata_veicolo_ritirato: formData.cilindrata,
     vin_veicolo_ritirato: formData.vin,
@@ -509,6 +534,7 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
   setModelloSelect("")
   setMarchioSelect("")
   setAziendaScelta("")
+  setTargaCamionScelta("")
   setRitiroInserito(data) // se ti serve ancora da qualche parte
 
   alert("Pratica inserita con successo!")
@@ -565,8 +591,44 @@ export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, se
                     </PopoverContent>
                   </Popover>
                 </div>
-                {/* SELECT DI RICERCA MARCHIO */}
+                {/* SELECT TARGA CAMION */}
                 <div className={`${aziendaScelta ? "" : "hidden"} col-span-12 lg:col-span-3 min-w-0`}>
+                  <label className="block text-sm font-semibold mb-1">Targa Camion Ritiro</label>
+                  <Popover open={openTargheCamion} onOpenChange={setOpenTargheCamion} className="w-full">
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={openTargheCamion}
+                        className="w-full min-w-0 justify-between outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background data-[state=open]:ring-2 data-[state=open]:ring-ring data-[state=open]:ring-offset-2">
+                        {targaCamionScelta ? optionsTargheCamion.find((ar) => ar.value === targaCamionScelta)?.label  : "seleziona una targa..."}
+                        <ChevronsUpDown className="opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent align="start" sideOffset={4} className="p-0 w-[var(--radix-popover-trigger-width)]">
+                      <Command className="p-1">
+                        <CommandInput placeholder="Cerca..." className="h-8 focus:ring-1 focus:ring-brand focus:border-brand outline-none focus:outline-none my-2" />
+                        <CommandList className="my-1">
+                          <CommandEmpty>Nessun risultato</CommandEmpty>
+                          <CommandGroup>
+                            {optionsTargheCamion.map((opt) => (
+                              <CommandItem
+                                key={opt.value}
+                                value={`${opt.value}`}
+                                onSelect={() => { setTargaCamionScelta(opt.value); setOpenTargheCamion(false) }}
+                              >
+                                {opt.label}
+                                <Check className={cn("ml-auto", optionsTargheCamion === opt.value ? "opacity-100" : "opacity-0")} />
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                {/* SELECT DI RICERCA MARCHIO */}
+                <div className={`${targaCamionScelta ? "" : "hidden"} col-span-12 lg:col-span-3 min-w-0`}>
                   <label className="block text-sm font-semibold mb-1">Marchio Veicolo</label>
                   <Popover open={openMarchio} onOpenChange={setOpenMarchio} className="w-full">
                     <PopoverTrigger asChild>

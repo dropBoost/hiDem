@@ -6,6 +6,7 @@ import { FaCarAlt } from "react-icons/fa";
 import { LinkComponentContact } from "@/app/gestionale/componenti/displayLinkComponentContact";
 import { ButtonLinkDisplayDownloadDOC } from "@/app/gestionale/componenti/displayButtonComponentDownloadDoc";
 import { RiEyeCloseLine } from "react-icons/ri";
+import TargaDesign from "@/app/componenti/targaDesign";
 
 
 export default function DisplayCertificatiDemolizioniAzienda ({
@@ -16,15 +17,16 @@ export default function DisplayCertificatiDemolizioniAzienda ({
         <>
         <div className="flex lg:flex-row flex-col min-h-0 w-full border lg:items-center justify-between items-start border-neutral-700 rounded-xl p-3 gap-2 shadow-xl">
             <div className="flex lg:flex-row flex-col lg:w-fit w-full justify-start lg:items-start items-start gap-1 min-h-0 h-full overflow-auto">
-                <div className="flex flex-row justify-between w-full h-full">
+                <div className="flex flex-col xl:flex-row justify-between w-full h-full">
                     <div className="flex flex-col justify-start items-start lg:min-w-[16rem] h-full gap-1">
                         <div className={`flex flex-row gap-1 items-center border border-neutral-500 w-fit rounded-md px-2`}>
                             <span className={`text-xs text-neutral-400`}>{data}</span>
                         </div>
                         <div className="flex flex-col gap-1">
+                            <TargaDesign targa={targa}/>
                             <div className="flex flex-row gap-1 items-center border border-brand w-fit rounded-lg px-2">
                                 <FaCarAlt className="text-brand text-xs"/> 
-                                <span className={`text-sm font-semibold uppercase truncate text-ellipsis`}>{targa} <font className="text-xs text-neutral-500 font-medium italic uppercase">{telaio}</font></span> 
+                                <span className={`text-xs text-neutral-400 font-semibold truncate text-ellipsis`}>VIN: <font className="text-xs text-neutral-500 font-medium italic uppercase">{telaio}</font></span> 
                             </div>
                         </div>
                         <div className={`flex flex-row gap-1 items-center border border-neutral-500 w-fit rounded-md px-2`}>
@@ -36,13 +38,13 @@ export default function DisplayCertificatiDemolizioniAzienda ({
                         </div>
                         }
                     </div>
-                    <div className="flex flex-col justify-start items-start h-full gap-1 border-s ps-3">
+                    <div className="flex flex-col justify-start items-start h-full gap-1 border-s-0 xl:border-s border-t xl:border-t-0 ps-0 pt-2 xl:pt-0 mt-2 xl:mt-0 xl:ps-3">
                         <LinkComponentContact label="mobile detentore" icon={<TbBrandWhatsappFilled/>} info={mobile} linkHref={`https://wa.me/`}/>
                         <LinkComponentContact label="email detentore" icon={<MdEmail/>} info={email} linkHref={`mailto:`}/>
                     </div>
                 </div>
             </div>
-            <div className="flex flex-row justify-end items-start lg:gap-3 gap-3 lg:w-fit w-full lg:p-1 p-2 lg:border-t-0 border-t">
+            <div className="flex flex-row justify-end items-start lg:gap-3 gap-3 lg:w-fit w-full lg:p-1 p-2 lg:border-t-0 border-t bg-brand lg:bg-neutral-900">
                 <ButtonLinkDisplayDownloadDOC targetType={`_blank`} linkHref={docDemolizione} info={"DEMOLIZIONE"} icon={<FaFileDownload/>}/>
                 {altroDocDemolizione ? <ButtonLinkDisplayDownloadDOC targetType={`_blank`} linkHref={altroDocDemolizione} info={"ALTRO"} icon={<FaFileDownload/>}/> : ""}
                 <ButtonLinkDisplayDownloadDOC targetType={`_self`} linkHref={`./${uuidAzienda}/${uuidCD}`} info={"VISUALIZZA"} icon={<RiEyeCloseLine/>}/>

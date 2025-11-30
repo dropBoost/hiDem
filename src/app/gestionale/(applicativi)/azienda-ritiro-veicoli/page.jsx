@@ -6,7 +6,7 @@ import InserimentoAzienda from "./inserimentoAzienda";
 import ElencoAziende from "./elencoAziende";
 import InserimentoCamion from "./inserimentoCamion";
 
-export default function Customer() {
+export default function AziendeRitiroVeicoliPAGE() {
 
   const [onDisplaySectionOne, setOnDisplaySectionOne] = useState("on")
   const [onDisplaySectionTwo, setOnDisplaySectionTwo] = useState("off")

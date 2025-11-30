@@ -124,7 +124,7 @@ import DisplayVeicoliRitirati from "../componenti/displayVeicoliRitirati";
           value={dataSearch}
           onChange={handleChangeSearchBar}
           onKeyDown={handleSearchKeyDown}
-          className="appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand
+          className="appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand placeholder:text-xs
                      focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:border-brand"
         />
         <Button type="button" onClick={handleSearchClick}>Cerca</Button>
