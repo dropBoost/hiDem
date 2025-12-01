@@ -47,6 +47,7 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
     mobileAutista: "",
     rules:"",
     piva:"",
+    password:"",
     attiva: false,
   })
   
@@ -221,64 +222,115 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
     const payload = {
       uuid_rules: formData.rules || null,
       ragione_sociale_arv: formData.ragioneSociale || null,
-      piva_arv: formData.piva || null,      
-      sdi_arv:formData.sdi, 
-      cap_legale_arv:formData.capLegale,    
+      piva_arv: formData.piva || null,
+      sdi_arv: formData.sdi,
+      cap_legale_arv: formData.capLegale,
       citta_legale_arv: formData.cittaLegale || null,
       provincia_legale_arv: formData.provinciaLegale || null,
       indirizzo_legale_arv: formData.indirizzoLegale || null,
-      cap_operativa_arv:formData.capOperativa,    
+      cap_operativa_arv: formData.capOperativa,
       citta_operativa_arv: formData.cittaOperativa || null,
       provincia_operativa_arv: formData.provinciaOperativa || null,
-      indirizzo_operativa_arv: formData.indirizzoOperativa || null,    
-      mobile_arv: formData.mobile || null,  
-      mobile_autista_arv: formData.mobileAutista || null, 
+      indirizzo_operativa_arv: formData.indirizzoOperativa || null,
+      mobile_arv: formData.mobile || null,
+      mobile_autista_arv: formData.mobileAutista || null,
       email_arv: formData.email || null,
       telefono_arv: formData.telefono || null,
       attiva_arv: formData.attiva,
+      uuid_azienda_ritiro_veicoli: null,
     }
-    
-    if (formData.rules === "" || formData.ragioneSociale === "" || formData.piva === "" || formData.email === "" ){
+
+    // ✅ VALIDAZIONI
+    if (
+      formData.rules === "" ||
+      formData.ragioneSociale === "" ||
+      formData.piva === "" ||
+      formData.email === ""
+    ) {
       alert("Campi Vuoti")
+      return
     } else if (formData.piva.length !== 11) {
       alert("Partita IVA Non corretta")
+      return
     } else if (!aziendaInserimento) {
-      alert("Partita IVA Gia inserita")
+      alert("Partita IVA già inserita")
+      return
+    } else if (!formData.password || formData.password.length < 6) {
+      alert("La password deve avere almeno 6 caratteri")
+      return
     }
-    else {
-      const { data, error } = await supabase.from("azienda_ritiro_veicoli").insert(payload).select().single()
-      if (error) {
-        console.error(error)
-        alert(`Errore salvataggio: ${error.message}`)
+
+    // 👇 DA QUI PARTE IL FLUSSO "BUONO"
+    try {
+      // 1️⃣ REGISTRAZIONE UTENTE IN AUTH
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password, // <-- campo del tuo form
+        options: {
+          data: {
+            ragione_sociale: formData.ragioneSociale,
+            piva: formData.piva,
+            mobile: formData.mobile,
+            ruolo: formData.rules
+          },
+          // opzionale:
+          // emailRedirectTo: 'https://tuodominio.it/auth/callback',
+        },
+      })
+
+      if (authError) {
+        console.error("Errore signUp auth:", authError)
+        alert(`Errore registrazione utente: ${authError.message}`)
         return
-      } else {
-        setFormData({
-          ragioneSociale: "",
-          capLegale:"",
-          sdi:"",
-          provinciaLegale: "",
-          cittaLegale: "",
-          capLegale:"",
-          indirizzoLegale:"",
-          provinciaOperativa: "",
-          cittaOperativa: "",
-          capOperativa:"",
-          indirizzoOperativa:"",
-          email: "",
-          telefono: "",
-          mobile: "",
-          mobileAutista: "",
-          rules:"",
-          piva:"",
-          attiva: false,
-        })
-
-        setStatusAziende(prev => !prev)
-
       }
 
+      // opzionale: se vuoi salvare lo user.id dentro la tabella azienda_ritiro_veicoli
+      const authUserId = authData?.user?.id || null
+      // se hai una colonna dedicata:
+      payload.uuid_azienda_ritiro_veicoli = authUserId
+
+      // 2️⃣ INSERIMENTO AZIENDA NELLA TABELLA
+      const { data, error } = await supabase
+        .from("azienda_ritiro_veicoli")
+        .insert(payload)
+        .select()
+        .single()
+
+      if (error) {
+        console.error(error)
+        alert(`Errore salvataggio azienda: ${error.message}`)
+        return
+      }
+
+      // 3️⃣ RESET FORM
+      setFormData({
+        ragioneSociale: "",
+        capLegale: "",
+        sdi: "",
+        provinciaLegale: "",
+        cittaLegale: "",
+        indirizzoLegale: "",
+        capOperativa: "",
+        provinciaOperativa: "",
+        cittaOperativa: "",
+        indirizzoOperativa: "",
+        email: "",
+        telefono: "",
+        mobile: "",
+        mobileAutista: "",
+        rules: "",
+        piva: "",
+        attiva: false,
+        password: "",
+      })
+
+      setStatusAziende(prev => !prev)
+
       console.log("Inserito:", data)
-      alert("Azienda Inserita con successo!")
+      alert("Azienda e utente inseriti con successo! Controlla la mail per confermare l'account (se hai conferma email attiva).")
+    } catch (err) {
+      console.error("Errore imprevisto:", err)
+      alert("Si è verificato un errore imprevisto")
     }
   }
 
@@ -330,6 +382,7 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
         <FormField nome="telefono" label='Telefono' value={formData.telefono} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChangeNumerico} type='tel'/>
         <FormField nome="mobile" label='Mobile' value={formData.mobile} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChangeNumerico} type='tel'/>
         <FormField nome="mobileAutista" label='Mobile Autista' value={formData.mobileAutista} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChangeNumerico} type='tel'/>
+        <FormField nome="password" label='Password' value={formData.password} colspan="col-span-12" mdcolspan="lg:col-span-6" onchange={handleChange} type='text'/>
         </div>
         <div className="col-span-12 flex justify-end">
           <button
