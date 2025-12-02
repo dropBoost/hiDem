@@ -27,6 +27,7 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
   const [uploadingByField, setUploadingByField] = useState({});
   const anyUploading = Object.values(uploadingByField).some(Boolean);
   const [ruoliUtente, setRuoliUtente] = useState([])
+  const [ruoloSelezionato, setRuoloSelezionato] = useState([])
   const [aziendaInserimento, setAziendaInserimento] = useState(true)
 
   const [formData, setFormData] = useState({
@@ -72,10 +73,10 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
     })()
   }, [])
 
-  const optionsRuoliUtente = ruoliUtente.map(r => ({
-    value:r.uuid_rules,
-    label:`${r.alias_rules}`,
-  }))
+  const optionsRuoliUtente = [{
+    value:"0f94ac5a-f7c0-4c27-a1c7-bdbc7c057e03",
+    label:`company`,
+  }]
 
   //FINE CARICAMENTO RUOLI
 
@@ -167,7 +168,11 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
   }
-
+  function handleRuoli(e) {
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
+    setRuoloSelezionato("company")
+  } 
   function handleChangeNumerico(e) {
     const { name, value } = e.target
     const digitsOnly = value.trim().replace(/\D/g, "")
@@ -240,7 +245,7 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
       uuid_azienda_ritiro_veicoli: null,
     }
 
-    // ✅ VALIDAZIONI
+    // VALIDAZIONI
     if (
       formData.rules === "" ||
       formData.ragioneSociale === "" ||
@@ -260,21 +265,20 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
       return
     }
 
-    // 👇 DA QUI PARTE IL FLUSSO "BUONO"
+    // INSERIMENTO UTENTE AUTENTICATO
     try {
-      // 1️⃣ REGISTRAZIONE UTENTE IN AUTH
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
-        password: formData.password, // <-- campo del tuo form
+        phone: formData.mobile,
+        password: formData.password,
         options: {
           data: {
+            display_name: formData.ragioneSociale,
             ragione_sociale: formData.ragioneSociale,
             piva: formData.piva,
             mobile: formData.mobile,
-            ruolo: formData.rules
+            ruolo: ruoloSelezionato
           },
-          // opzionale:
-          // emailRedirectTo: 'https://tuodominio.it/auth/callback',
         },
       })
 
@@ -284,9 +288,8 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
         return
       }
 
-      // opzionale: se vuoi salvare lo user.id dentro la tabella azienda_ritiro_veicoli
+      
       const authUserId = authData?.user?.id || null
-      // se hai una colonna dedicata:
       payload.uuid_azienda_ritiro_veicoli = authUserId
 
       // 2️⃣ INSERIMENTO AZIENDA NELLA TABELLA
@@ -327,7 +330,7 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
       setStatusAziende(prev => !prev)
 
       console.log("Inserito:", data)
-      alert("Azienda e utente inseriti con successo! Controlla la mail per confermare l'account (se hai conferma email attiva).")
+      alert("Azienda e utente inseriti con successo!")
     } catch (err) {
       console.error("Errore imprevisto:", err)
       alert("Si è verificato un errore imprevisto")
@@ -353,7 +356,7 @@ export default function InserimentoAzienda({onDisplay, setStatusAziende}) {
           <FormField nome="ragioneSociale" label='Ragione Sociale' value={formData.ragioneSociale} colspan="col-span-12" mdcolspan="lg:col-span-4" onchange={handleChangeRagioneSociale} type='text'/>
           <FormField nome="piva" label='Partita Iva' value={formData.piva} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChangePiva} type='text'/>
           <FormField nome="sdi" label='SDI' value={formData.sdiArv} colspan="col-span-6" mdcolspan="lg:col-span-2" onchange={handleChange} type='text'/>
-          <FormSelectRuoli nome="rules" label='Ruolo' value={formData.rules} colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleChange} options={optionsRuoliUtente}/>
+          <FormSelectRuoli nome="rules" label='Ruolo' value={formData.rules} colspan="col-span-10" mdcolspan="lg:col-span-3" onchange={handleRuoli} options={optionsRuoliUtente}/>
           <FormCheckBox nome="attiva" label='Attiva' value={formData.attiva} colspan="col-span-2" mdcolspan="md:col-span-1 lg:col-span-1" onchange={handleChangeCheckbox} type='checkbox'/>
         </div>
         <div className="col-span-12">

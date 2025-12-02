@@ -52,7 +52,7 @@ export function ThemeToggle(){
 
 export function PlusButton({open, stato}){
   return (
-    <button onClick={open} className="px-3 py-1 rounded-md bg-neutral-100 hover:bg-neutral-900 hover:text-neutral-100 text-neutral-700 text-xs">
+    <button onClick={open} className="px-3 py-1 rounded-md bg-neutral-100 hover:bg-neutral-900 hover:text-neutral-100 text-neutral-700 text-xs h-full">
         {!stato ? <FaPlus/> : <FaMinus/>}
     </button>
   )

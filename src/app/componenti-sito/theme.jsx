@@ -1,9 +1,10 @@
 'use client'
 
-import { ThemeToggle } from "@/app/componenti/theme-toggle";
 import Link from "next/link";
 import { useState } from "react";
 import { FaBars } from "react-icons/fa";
+import { HomeButton, ThemeToggle, LogoutButton, PlusButton } from '@/app/componenti/button'
+import { useAdmin } from '@/app/admin/components/AdminContext'
 
 export function Header () {
 
@@ -79,4 +80,30 @@ export function SpanElementListBorder ({icon, label, data}) {
       <span className="dark:text-neutral-300 font-bold">{data}</span>
     </div>
   )
+}
+
+export function HeaderAccount () {
+
+    const { utente, azienda, checking } = useAdmin()
+    const [openUpBar, setOpenUpBar] = useState(false)
+
+    return(
+        <>
+        <div className={`${openUpBar ? "flex flex-row justify-end gap-10 dark:bg-neutral-950 bg-neutral-400 p-5" : "hidden"} `}>
+            <div id="col-one" className="">
+                <ThemeToggle/>
+            </div>
+        </div>
+        <div className="flex lg:flex-row flex-col gap-3 justify-between items-center py-5 px-5 w-full bg-companyPrimary">
+            <div id="logo-cnt" className="w-32">
+                <img src={'/logo-white.png'} width={150} height={50} quality={20} alt="logo-company"/>
+            </div>
+            <div id="btn-cnt" className="flex flex-row items-center justify-end gap-3 px-7">
+                <span className="text-xs text-neutral-300 rounded-lg max-h-full">{utente?.email}</span>
+                <PlusButton open={() => setOpenUpBar(prev => !prev)}/>
+                <LogoutButton/>
+            </div>
+        </div>
+        </>
+    )
 }

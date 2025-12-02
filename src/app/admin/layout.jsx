@@ -1,19 +1,21 @@
-'use client'
+import { AdminProvider } from './components/AdminContext'
+import { Footer } from '@/app/componenti-sito/theme'
+import { HeaderAccount } from '@/app/componenti-sito/theme'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabaseClient'
-import { AuthUserProvider } from './components/AuthUserContext'
-
-export default function LayoutGestionale({ children }) {
-
-  const [utente, setUtente] = useState(null)
+export default function LayoutAdmin({ children }) {
 
   return (
-    <AuthUserProvider value={utente}>
-      <div className="min-h-screen bg-neutral-900 text-neutral-100">
-        <main>{children}</main>
+    <AdminProvider>
+      <div
+        className="flex flex-col h-dvh min-h-0 overflow-hidden supports-[height:100svh]:h-[100svh] bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
+        <HeaderAccount/>
+        {/* Main scrollabile */}
+        <main className="bg-neutral-100 dark:bg-neutral-900 flex-1 min-w-0 min-h-0 overflow-y-auto overscroll-contain scrollbar-sito">
+          {children}
+        </main>
+        {/* Footer */}
+        <Footer />
       </div>
-    </AuthUserProvider>
+    </AdminProvider>
   )
 }

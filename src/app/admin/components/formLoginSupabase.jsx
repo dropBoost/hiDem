@@ -28,7 +28,7 @@ export default function LoginPage() {
       setErrorMsg(error.message || 'Errore durante il login')
       return
     }
-
+    console.log(data)
     // Login OK → vai al gestionale (cambia rotta se vuoi)
     router.push('/gestionale')
   }
