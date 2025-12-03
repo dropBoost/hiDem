@@ -4,14 +4,16 @@ import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { moduliGestionale } from '../../cosetting'
-import { useAuthUser } from "@/app/admin/components/AuthUserContext";
+import { useAdmin } from '@/app/admin/components/AdminContext'
 import { HomeButton, ThemeToggle, LogoutButton, PlusButton } from '@/app/componenti/button'
 
 export default function LayoutGestionale({ children }) {
 
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const utente = useAuthUser()
+  const user = useAdmin()
+  const utente = user?.utente
+  const ruolo = utente?.user_metadata.ruolo
   const [openUpBar, setOpenUpBar] = useState(false)
 
   return (
@@ -23,7 +25,7 @@ export default function LayoutGestionale({ children }) {
     ">
       {/* Sidebar desktop */}
       <aside className="hidden md:block md:row-span-3 border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
-        <Sidebar pathname={pathname} u={utente}/>
+        <Sidebar pathname={pathname} u={utente} ruolo={ruolo}/>
       </aside>
 
       {/* Drawer mobile */}
@@ -82,7 +84,7 @@ export default function LayoutGestionale({ children }) {
   )
 }
 
-function Sidebar({ pathname, onNavigate, u }) {
+function Sidebar({ pathname, onNavigate, u, ruolo }) {
   return (
     <nav className="flex h-full flex-col">
       <div className="h-[64px] flex items-center px-4 bg-brand">
@@ -91,7 +93,9 @@ function Sidebar({ pathname, onNavigate, u }) {
 
       <div className="flex-1 overflow-y-auto py-3 bg-neutral-100 dark:bg-neutral-900 border-r">
         <ul className="space-y-1 px-2">
-          {moduliGestionale.map((item, index) => {
+          {ruolo == "admin" ? 
+          <>
+          {moduliGestionale.filter(r => (r.level == "admin")).map((item, index) => {
             const active =
               pathname === item.link ||
               (item.link !== '/gestionale' && pathname?.startsWith(item.link))
@@ -113,6 +117,33 @@ function Sidebar({ pathname, onNavigate, u }) {
               </li>
             )
           })}
+          </> : 
+          <>
+          {moduliGestionale.filter(r => (r.level !== "company" )).map((item, index) => {
+            const active =
+              pathname === item.link ||
+              (item.link !== '/gestionale' && pathname?.startsWith(item.link))
+
+            return (
+              <li key={index}>
+                <Link
+                  href={item.link}
+                  onClick={onNavigate}
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition
+                    ${active
+                      ? 'bg-brand/60 text-neutral-100 dark:bg-brand/40 dark:text-neutral-100'
+                      : 'text-neutral-700 hover:text-neutral-50 hover:bg-brand dark:text-neutral-500 dark:hover:text-neutral-900 dark:hover:bg-brand'
+                    }`}
+                >
+                  <span className="text-lg leading-none">{item.icon}</span>
+                  <span className="truncate">{item.label}</span>
+                </Link>
+              </li>
+            )
+          })}
+          </>
+        }
+          
         </ul>
       </div>
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
-import { AuthUserProvider } from '@/app/admin/components/AuthUserContext'
+import { AdminProvider } from '@/app/admin/components/AdminContext'
 
 export default function LayoutGestionale({ children }) {
 
@@ -26,7 +26,6 @@ export default function LayoutGestionale({ children }) {
       } else {
         setUtente(data.session.user)
         setChecking(false)
-        console.log("layout gestionale",data)
       }
     }
     checkAuth()
@@ -41,10 +40,10 @@ export default function LayoutGestionale({ children }) {
   }
 
   return (
-    <AuthUserProvider value={utente}>
+    <AdminProvider>
       <div className="min-h-screen dark:bg-neutral-900 text-neutral-100 overflow-hidden scrollbar-gestionale">
         <main>{children}</main>
       </div>
-    </AuthUserProvider>
+    </AdminProvider>
   )
 }

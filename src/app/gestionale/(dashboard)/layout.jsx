@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { moduliInfo } from '../../cosetting'
 import { ThemeToggle } from '../../componenti/theme-toggle'
-import { useAuthUser } from '@/app/admin/components/AuthUserContext'
+import { useAdmin } from '@/app/admin/components/AdminContext'
 import { version, companyName } from '../../cosetting'
 import LogoutButton from '@/app/componenti/buttonLogout'
 
@@ -14,7 +14,7 @@ export default function LayoutGestionale({ children }) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [userData, setUserData] = useState([])
-  const utente = useAuthUser()
+  const utente = useAdmin()
 
   return (
     <div className="

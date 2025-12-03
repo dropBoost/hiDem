@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { AiOutlineLoading3Quarters, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
+import { useAdmin } from '@/app/admin/components/AdminContext'
 
 export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAziende, setStatusAziende}) {
   const dataOggi = new Date().toISOString().split("T")[0]
@@ -51,7 +52,9 @@ export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAzie
   const [fourStep, setFourStep] = useState(false)
   const [fiveStep, setFiveStep] = useState(false)
   const [sixStep, setSixStep] = useState(false)
-  
+  const user = useAdmin()
+  const userUUID = user?.utente?.id
+
   const [formData, setFormData] = useState({
     uuid_modello:"",
     targa:"",
@@ -103,13 +106,16 @@ export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAzie
     })()
   }, [])
 
-  // CARICAMENTO AZIENDE
+  // CARICAMENTO AZIENDA
   useEffect(() => {
+
+    if(!userUUID) return
+
     ;(async () => {
       const { data: aziendeData, error } = await supabase
         .from("azienda_ritiro_veicoli")
         .select("*")
-        .order("ragione_sociale_arv", { ascending: false })
+        .eq("uuid_azienda_ritiro_veicoli", userUUID)
 
       if (error) {
         console.error(error)
@@ -118,7 +124,8 @@ export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAzie
       }
       setAziendeRitiro(aziendeData ?? [])
     })()
-  }, [])
+
+  }, [user])
 
   // CARICAMENTO CAMION
   useEffect(() => {

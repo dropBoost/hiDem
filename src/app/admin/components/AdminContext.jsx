@@ -29,42 +29,56 @@ export function AdminProvider({ children }) {
       }
 
       if (!data.session) {
+        setChecking(false)
         router.push('/admin/login')
         return
       }
 
       setUtente(data.session.user)
       setChecking(false)
-      console.log('layout gestionale', data)
 
-      // 🔹 QUERY AZIENDA
-      const { data: dataAzienda, error: errorAzienda } = await supabase
-        .from('azienda_ritiro_veicoli')
-        .select(`
-          *,
-          uuid_rules(*)
-        `)
-        .eq('uuid_azienda_ritiro_veicoli', data.session.user.id)
-        .maybeSingle()
+      const rules = data?.session.user.user_metadata.ruolo
 
-      if (errorAzienda) {
-        console.error(errorAzienda)
-        toast.error('Errore nel caricamento Azienda Dati')
-        return
-      }
+      console.log("ruolo",rules)
 
-      setAzienda(dataAzienda ?? null)
-
-      const rules = dataAzienda?.uuid_rules?.alias_rules
-
-      if (!rules || (rules !== 'company' && rules !== 'admin')) {
+      if (rules !== 'company' && rules !== 'admin' && rules !== 'superadmin') {
         router.push('/admin/login')
         return
-      }
+      } else if (rules == 'company'){
+        router.push('/admin/account')
+      } else if (rules == 'admin' && rules == 'superadmin'){
+        router.push('/gestionale')
+      } 
     }
 
     checkAuth()
   }, [router])
+
+  // DATI AZIENDA
+  useEffect(() => {
+
+    if (!utente?.id) return
+
+    async function checkRules() {
+      const { data, error } = await supabase
+        .from('azienda_ritiro_veicoli')
+        .select(`*, uuid_rules(*)`)
+        .eq('uuid_azienda_ritiro_veicoli', utente.id)
+        .maybeSingle()
+
+      if (error) {
+        console.error(error)
+        toast.error('Errore nel caricamento Azienda Dati')
+        return
+      }
+
+      setAzienda(data)
+
+    }
+
+    checkRules()
+
+  }, [utente?.id, router])
 
   return (
     <AdminContext.Provider value={{ utente, azienda, checking }}>
