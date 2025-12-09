@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import ElencoVeicoliRitiratiACCOUNT from "./componenti/elencoVeicoliRitirati";
+import PraticheAziendaACCOUNT from "./componenti/elencoVeicoliRitirati";
 
 export default function VeicoliRitiratiAccount() {
 
@@ -14,7 +15,7 @@ export default function VeicoliRitiratiAccount() {
       <h2>ELENCO VEICOLI RITIRATI</h2>
       <div className="h-[1px] w-full bg-gradient-to-r from-brand to-brandDark"/>
       <div className="flex flex-1 justify-start items-start w-full min-h-0">
-        <ElencoVeicoliRitiratiACCOUNT statusAziende={statusAziende} setStatusAziende={setStatusAziende}/>
+        <PraticheAziendaACCOUNT statusAziende={statusAziende} setStatusAziende={setStatusAziende}/>
       </div>
     </div>
     </>

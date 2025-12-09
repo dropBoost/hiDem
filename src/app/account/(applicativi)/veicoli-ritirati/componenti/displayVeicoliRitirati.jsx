@@ -8,10 +8,16 @@ import { MdEmail } from "react-icons/md";
 import { FaCarAlt } from "react-icons/fa";
 import { LinkComponentContact } from "@/app/gestionale/componenti/displayLinkComponentContact";
 import TargaDesign from "@/app/componenti/targaDesign";
+import DownloadRitiroVeicoloDOC from "@/app/componenti/pdf/DOWritiroveicolo";
 
-export default function DisplayVeicoliRitirati ({
+export default function DisplayVeicoliRitiratiACCOUNT ({
     uuid, targa, modelloVeicolo, telaio, nome, cognome, mobileDetentore,completata,tipologiaD,ragioneSociale, piva, cf, email, documento, data
     }) {
+
+    const datiContratto={
+        numeroContratto:uuid,
+        targa:targa,
+    }
 
     return (
         <>
@@ -64,10 +70,7 @@ export default function DisplayVeicoliRitirati ({
             </div>
             <div className="flex flex-row justify-end items-start lg:gap-3 gap-3 lg:w-fit w-full bg-brand/50 rounded-md lg:p-1 p-2">
                 <div className="flex flex-col justify-center items-start w-fit h-full">
-                    <Link className="lg:p-2 p-1 bg-brand/70 rounded-md hover:bg-brand" href={`ritiri-demolizioni/${uuid}`}><FaFileDownload /></Link>
-                </div>
-                <div className="flex flex-col justify-center items-start w-fit h-full">
-                    <Link className="lg:p-2 p-1 bg-brand/70 rounded-md hover:bg-brand" href={`ritiri-demolizioni/${uuid}`}><RiEyeCloseLine/></Link>
+                    <DownloadRitiroVeicoloDOC datiContratto={datiContratto}/>
                 </div>
             </div>
         </div>

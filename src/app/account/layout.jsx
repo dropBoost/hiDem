@@ -17,101 +17,103 @@ export default function LayoutGestionale({ children }) {
   const router = useRouter()
   const [checking, setChecking] = useState(true)
   const [utente, setUtente] = useState(null)
+  const ruolo = utente?.identities[0]?.identity_data.ruolo
 
-  console.log("utenteLAYOUT", utente)
+  console.log(ruolo)
 
-    useEffect(() => {
-        async function checkAuth() {
-        const { data, error } = await supabase.auth.getSession()
+  useEffect(() => {
+      async function checkAuth() {
+      const { data, error } = await supabase.auth.getSession()
 
-        if (error) {
-            console.error(error)
-            setChecking(false)
-            return
-        }
+      if (error) {
+          console.error(error)
+          setChecking(false)
+          return
+      }
 
-        if (!data.session) {
-            router.push('admin/login')
-        } else {
-            setUtente(data.session.user)
-            setChecking(false)
-        }
-        }
-        checkAuth()
-    }, [router])
+      if (!data.session) {
+          router.push('admin/login')
+      } else {
+          setUtente(data.session.user)
+          setChecking(false)
+      }
+      }
+      checkAuth()
+  }, [router])
 
-    if (checking) {
-        return (
-        <div className="min-h-screen flex items-center justify-center bg-neutral-900">
-            <p className="text-neutral-100">Verifica autenticazione...</p>
-        </div>
-        )
-    }
+  if (checking) {
+      return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral-900">
+          <p className="text-neutral-100">Verifica autenticazione...</p>
+      </div>
+      )
+  }
+  console.log("utentelay",utente)
+  return (
+      <AdminProvider>
+      {ruolo == "company" && ruolo !== "" ? 
+      <div className="
+      grid h-dvh min-h-0 overflow-hidden supports-[height:100svh]:h-[100svh]
+      grid-cols-1 grid-rows-[64px_1fr_48px]
+      md:grid-cols-[280px_1fr]
+      bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100
+      ">
+      {/* Sidebar desktop */}
+      <aside className="hidden md:block md:row-span-3 border-neutral-200 dark:border-neutral-800 bg-neutral-500 dark:bg-neutral-900">
+          <Sidebar pathname={pathname} u={utente}/>
+      </aside>
 
-    return (
-        <AdminProvider>
-        <div className="
-        grid h-dvh min-h-0 overflow-hidden supports-[height:100svh]:h-[100svh]
-        grid-cols-1 grid-rows-[64px_1fr_48px]
-        md:grid-cols-[280px_1fr]
-        bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100
-        ">
-        {/* Sidebar desktop */}
-        <aside className="hidden md:block md:row-span-3 border-neutral-200 dark:border-neutral-800 bg-neutral-500 dark:bg-neutral-900">
-            <Sidebar pathname={pathname} u={utente}/>
-        </aside>
+      {/* Drawer mobile */}
+      <MobileDrawer open={open} onClose={() => setOpen(false)}>
+          <Sidebar pathname={pathname} u={utente} onNavigate={() => setOpen(false)} />
+      </MobileDrawer>
 
-        {/* Drawer mobile */}
-        <MobileDrawer open={open} onClose={() => setOpen(false)}>
-            <Sidebar pathname={pathname} u={utente} onNavigate={() => setOpen(false)} />
-        </MobileDrawer>
+      {/* Header */}
+      <header className="
+          col-start-1 md:col-start-2 row-start-1
+          flex items-center justify-between gap-3 px-3 md:px-4
+      bg-brand backdrop-blur 
+      ">
+          <div className="flex items-center gap-2">
+          <button
+              className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-950/50"
+              onClick={() => setOpen(true)}
+              aria-label="Apri menu"
+          >
+              {/* Icona hamburger */}
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+          </button>
+          <span className="font-medium uppercase">Backoffice Demolizioni</span>
+          </div>
+          <div className="flex items-center gap-4">
+          <ThemeToggle/>
+          <LogoutButton/>
+          </div>
+      </header>
 
-        {/* Header */}
-        <header className="
-            col-start-1 md:col-start-2 row-start-1
-            flex items-center justify-between gap-3 px-3 md:px-4
-        bg-brand backdrop-blur 
-        ">
-            <div className="flex items-center gap-2">
-            <button
-                className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-950/50"
-                onClick={() => setOpen(true)}
-                aria-label="Apri menu"
-            >
-                {/* Icona hamburger */}
-                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-            </button>
-            <span className="font-medium uppercase">Backoffice Demolizioni</span>
-            </div>
-            <div className="flex items-center gap-4">
-            <ThemeToggle/>
-            <LogoutButton/>
-            </div>
-        </header>
+      {/* Main scrollabile */}
+      <main className="bg-neutral-100 dark:bg-neutral-900 col-start-1 md:col-start-2 row-start-2 min-w-0 min-h-0 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]">
+          <div className="p-5">
+          {children}
+          </div>
+      </main>
 
-        {/* Main scrollabile */}
-        <main className="bg-neutral-100 dark:bg-neutral-900 col-start-1 md:col-start-2 row-start-2 min-w-0 min-h-0 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]">
-            <div className="p-5">
-            {children}
-            </div>
-        </main>
-
-        {/* Footer */}
-        
-        <footer className="
-            col-start-1 md:col-start-2 row-start-3
-            flex items-center justify-between px-3 md:px-4 text-sm
-            border-t border-neutral-200 dark:border-neutral-800 bg-neutral-500 dark:text-neutral-500 text-neutral-100
-            dark:bg-neutral-900
-        ">
-            <span>© {new Date().getFullYear()} – {companyName}</span>
-            <span>v{version}</span>
-        </footer>
-        </div>
-        </AdminProvider>
-    )
+      {/* Footer */}
+      
+      <footer className="
+          col-start-1 md:col-start-2 row-start-3
+          flex items-center justify-between px-3 md:px-4 text-sm
+          border-t border-neutral-200 dark:border-neutral-800 bg-neutral-500 dark:text-neutral-500 text-neutral-100
+          dark:bg-neutral-900
+      ">
+          <span>© {new Date().getFullYear()} – {companyName}</span>
+          <span>v{version}</span>
+      </footer>
+      </div> : "non autorizzato"}
+      </AdminProvider>
+  )
 }
 
 function Sidebar({ pathname, onNavigate, u }) {

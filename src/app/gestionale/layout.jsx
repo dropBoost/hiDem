@@ -10,6 +10,7 @@ export default function LayoutGestionale({ children }) {
   const router = useRouter()
   const [checking, setChecking] = useState(true)
   const [utente, setUtente] = useState(null)
+  const ruolo = utente?.user_metadata?.ruolo
 
   useEffect(() => {
     async function checkAuth() {
@@ -41,9 +42,10 @@ export default function LayoutGestionale({ children }) {
 
   return (
     <AdminProvider>
+      {ruolo !== "company" && ruolo !== "" ? 
       <div className="min-h-screen dark:bg-neutral-900 text-neutral-100 overflow-hidden scrollbar-gestionale">
         <main>{children}</main>
-      </div>
+      </div> : "non autorizzato"}
     </AdminProvider>
   )
 }
