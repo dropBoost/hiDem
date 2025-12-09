@@ -5,8 +5,6 @@ import { usePathname } from 'next/navigation';
 import { moduliGestionale } from '@/app/cosetting';
 import { FaHome } from "react-icons/fa";
 
-const iconaHome = "ciao"
-
 export default function MenuSidebar () {
 
     const pathname = usePathname();

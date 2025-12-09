@@ -77,7 +77,7 @@ export const moduliGestionale = [
     {name:'ritiri-demolizioni', link:'/gestionale/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICONthree, label:'Ritiri Demolizioni', attivo:'true', level:'admin'},
     {name:'demolizioni', link:'/gestionale/certificati-demolizione', linkActive:'demolizioni', icon: ICONfour, label:'Certificati Demolizione', attivo:'true', level:'admin'},
     {name:'magazzino', link:'/gestionale/magazzino', linkActive:'magazzino', icon: ICONfive, label:'Magazzino', attivo:'false', level:'admin'},
-    {name:'veicoli', link:'/gestionale/modelli-veicoli', linkActive:'modelli-veicoli', icon: ICONsix, label:'Veicoli', attivo:'false', level:'admin'},
+    {name:'veicoli', link:'/gestionale/modelli-veicoli', linkActive:'modelli-veicoli', icon: ICONsix, label:'Veicoli', attivo:'true', level:'admin'},
     {name:'clienti', link:'/gestionale/clienti', linkActive:'clienti', icon: ICONseven, label:'Clienti', attivo:'false', level:'admin'},
     {name:'documenti', link:'/gestionale/documenti', linkActive:'documenti', icon: ICONeight, label:'Documenti', attivo:'false', level:'admin'},
     {name:'pos', link:'/gestionale/pos', linkActive:'pos', icon: ICONnine, label:'Pos', attivo:'false', level:'admin'},

@@ -6,8 +6,6 @@ import InserimentoModelliVeicoli from "./inserimentoModelliVeicoli";
 export default function ModelliVeicoliPAGE () {
 
   const [onDisplaySectionOne, setOnDisplaySectionOne] = useState("on")
-  const [onDisplaySectionTwo, setOnDisplaySectionTwo] = useState("off")
-  const [onDisplaySectionThree, setOnDisplaySectionThree] = useState("off")
 
   const [statusAziende, setStatusAziende] = useState(false)
 
@@ -17,24 +15,11 @@ export default function ModelliVeicoliPAGE () {
     setOnDisplaySectionThree("off")
   }
 
-  function ClickSectionTwo () {
-    setOnDisplaySectionOne("off")
-    setOnDisplaySectionTwo("on")
-    setOnDisplaySectionThree("off")
-  }
-
-  function ClickSectionThree () {
-    setOnDisplaySectionOne("off")
-    setOnDisplaySectionTwo("off")
-    setOnDisplaySectionThree("on")
-  }
-
   return (
     <>
     <div className="flex flex-col min-h-0 w-full justify-start items-start overflow-auto gap-3">
       <div className="flex items-start md:justify-start justify-center w-full gap-3">
         <ButtonSection click={ClickSectionOne} nome="INSERIMENTO MODELLI VEICOLI" section={onDisplaySectionOne}/>
-        <ButtonSection click={ClickSectionTwo} nome="ELENCO MODELLI" section={onDisplaySectionTwo}/>
       </div>
       <div className="h-[1px] w-full bg-gradient-to-r from-brand to-brandDark"/>
       <div className="flex flex-1 justify-start items-start w-full min-h-0">

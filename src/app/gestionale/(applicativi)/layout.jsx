@@ -95,7 +95,7 @@ function Sidebar({ pathname, onNavigate, u, ruolo }) {
         <ul className="space-y-1 px-2">
           {ruolo == "admin" ? 
           <>
-          {moduliGestionale.filter(r => (r.level == "admin")).map((item, index) => {
+          {moduliGestionale.filter(r => (r.level === "admin" && r.attivo ==="true")).map((item, index) => {
             const active =
               pathname === item.link ||
               (item.link !== '/gestionale' && pathname?.startsWith(item.link))
@@ -119,7 +119,7 @@ function Sidebar({ pathname, onNavigate, u, ruolo }) {
           })}
           </> : 
           <>
-          {moduliGestionale.filter(r => (r.level !== "company" )).map((item, index) => {
+          {moduliGestionale.filter(r => (r.level !== "company" && r.attivo === "true")).map((item, index) => {
             const active =
               pathname === item.link ||
               (item.link !== '/gestionale' && pathname?.startsWith(item.link))
