@@ -5,9 +5,9 @@ import { FaUserSlash } from "react-icons/fa";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
-import DisplayAziendeRitiriDemolizioni from "./componenti/displayAziendeRitiriDemolizioni";
+import DisplayAziendeRitiriDemolizioni from "./displayAziendeRitiriDemolizioni";
 
-export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setStatusAziende }) {
+export default function ElencoVeicoliRitiratiACCOUNT({ onDisplay, statusAziende, setStatusAziende }) {
   const [aziendaRitiroVeicoli, setAziendaRitiroVeicoli] = useState([])
   const [praticheAperte, setPraticheAperte] = useState([])
   // ricerca
@@ -101,7 +101,7 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
   const iconaCestino = <FaUserSlash/>
     
   return (
-    <div className={`${onDisplay === 'on' ? '' : 'hidden'}
+    <div className={`
       w-full h-full
       flex-1 flex flex-col
       md:p-0 md:pe-3 px-4 gap-4`}>

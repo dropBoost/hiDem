@@ -85,6 +85,12 @@ export const moduliGestionale = [
     {name:'utenti', link:'/gestionale/update-utenti', linkActive:'update-utenti', icon: ICONeleven, label:'Utenti', attivo:'true', level:'superadmin'},
   ]
 
+export const moduliAccount = [
+    {name:'ritiri-demolizioni', link:'/account/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICONthree, label:'Ritiri Demolizioni', attivo:'true', level:'company'},
+    {name:'veicoli-ritirati', link:'/account/veicoli-ritirati', linkActive:'veicoli-ritirati', icon: ICONfour, label:'Veicoli Ritirati', attivo:'true', level:'company'},
+    {name:'aiuto', link:'/account/aiuto', linkActive:'aiuto', icon: ICONfour, label:'Aiuto', attivo:'true', level:'company'},
+  ]
+
 // MODULI INFO 
 
 export const moduliInfo = [

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { moduliInfo } from '@/app/cosetting'
+import { moduliInfo, moduliAccount } from '@/app/cosetting'
 import { ThemeToggle } from '@/app/componenti/theme-toggle'
 import { AdminProvider } from '@/app/admin/components/AdminContext'
 import { version, companyName } from '@/app/cosetting'
@@ -123,7 +123,7 @@ function Sidebar({ pathname, onNavigate, u }) {
 
       <div className="flex-1 overflow-y-auto py-3 bg-neutral-200 dark:bg-neutral-900 border-r">
         <ul className="space-y-1 px-2">
-          {moduliInfo.map((item, index) => {
+          {moduliAccount.map((item, index) => {
             const active =
               pathname === item.link ||
               (item.link !== '/gestionale' && pathname?.startsWith(item.link))

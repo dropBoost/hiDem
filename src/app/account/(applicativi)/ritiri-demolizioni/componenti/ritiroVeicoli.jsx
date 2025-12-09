@@ -17,7 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { AiOutlineLoading3Quarters, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 import { useAdmin } from '@/app/admin/components/AdminContext'
 
-export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAziende, setStatusAziende}) {
+export default function InserimentoVeicoliRitiratiACCOUNT({onDisplay, statusAziende, setStatusAziende}) {
   const dataOggi = new Date().toISOString().split("T")[0]
 
   // VARIABILI GESTIONE INSERIMENTO INDIRIZZO LEGALE
@@ -52,9 +52,7 @@ export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAzie
   const [fourStep, setFourStep] = useState(false)
   const [fiveStep, setFiveStep] = useState(false)
   const [sixStep, setSixStep] = useState(false)
-  const user = useAdmin()
-  const userUUID = user?.utente?.id
-
+  
   const [formData, setFormData] = useState({
     uuid_modello:"",
     targa:"",
@@ -89,43 +87,11 @@ export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAzie
   const province = comuni.flatMap(c => c.sigla)
   const provinceSet = [...new Set(province)].sort()
 
-  // CARICAMENTO RUOLI
-  useEffect(() => {
-    ;(async () => {
-      const { data: ruoliData, error } = await supabase
-        .from("rules_user")
-        .select("*")
-        .order("alias_rules", { ascending: false })
+  const utente = useAdmin()
 
-      if (error) {
-        console.error(error)
-        toast.error("Errore nel caricamento personal Trainer")
-        return
-      }
-      setRuoliUtente(ruoliData ?? [])
-    })()
-  }, [])
-
-  // CARICAMENTO AZIENDA
-  useEffect(() => {
-
-    if(!userUUID) return
-
-    ;(async () => {
-      const { data: aziendeData, error } = await supabase
-        .from("azienda_ritiro_veicoli")
-        .select("*")
-        .eq("uuid_azienda_ritiro_veicoli", userUUID)
-
-      if (error) {
-        console.error(error)
-        toast.error("Errore nel caricamento Aziende")
-        return
-      }
-      setAziendeRitiro(aziendeData ?? [])
-    })()
-
-  }, [user])
+  console.log("utenteRitiro", utente)
+  console.log("aziendeData", aziendeRitiro)
+  console.log("formData", formData)
 
   // CARICAMENTO CAMION
   useEffect(() => {
@@ -133,6 +99,7 @@ export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAzie
       const { data: data, error } = await supabase
         .from("camion_ritiro")
         .select("*")
+        .eq("uuid_azienda_ritiro_veicoli", utente?.azienda?.uuid_azienda_ritiro_veicoli)
         .order("targa_camion", { ascending: false })
 
       if (error) {
@@ -142,12 +109,12 @@ export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAzie
       }
       setCamionRitiro(data ?? [])
     })()
-  }, [aziendaScelta])
+  }, [utente])
 
-  const optionsAziendeRitiro = aziendeRitiro.map(ar => ({
-    value:ar.uuid_azienda_ritiro_veicoli,
-    label:`${ar.ragione_sociale_arv}`,
-  }))
+  const optionsAziendeRitiro = [{
+    value:utente?.azienda?.uuid_azienda_ritiro_veicoli,
+    label:`${utente?.azienda?.ragione_sociale_arv}`,
+  }]
 
   const optionsTargheCamion = camionRitiro.map(ar => ({
     value:ar.uuid_camion_ritiro,
@@ -399,7 +366,6 @@ export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAzie
       console.log("Stato aggiornato:", data)
     }
   }
-
   function handleChangeProvinciaLegale(e) {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
@@ -446,7 +412,7 @@ export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAzie
   e.preventDefault()
 
   const payload = {
-    uuid_azienda_ritiro_veicoli: aziendaScelta || null,
+    uuid_azienda_ritiro_veicoli: optionsAziendeRitiro.value || null,
     uuid_modello_veicolo: modelloSelect || null,
     uuid_camion_ritiro: targaCamionScelta || null,
     anno_veicolo_ritirato: formData.anno || null,
@@ -549,7 +515,7 @@ export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAzie
 
   return (
     <>
-      <div className={`${onDisplay === 'on' ? '' : 'hidden'} w-full flex-1 min-h-0 flex flex-col md:p-0 md:pe-3 px-4`}>
+      <div className={`w-full flex-1 min-h-0 flex flex-col md:p-0 md:pe-3 px-4`}>
           <form onSubmit={handleSubmit} className="grid min-h-0 grid-cols-12 gap-4">
             <div id="oneStep" className='flex flex-col col-span-12 h-fit gap-3'>  
               <div className="col-span-12 flex flex-row justify-between">
@@ -562,44 +528,15 @@ export default function InserimentoVeicoliRitiratiAccount({onDisplay, statusAzie
                   </button>
               </div>
               <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-brand/50'>
-                {/* SELECT DI RICERCA AZIENDE */}
-                <div className="col-span-12 lg:col-span-3 min-w-0">
-                  <label className="block text-sm font-semibold mb-1">Azienda Ritiro</label>
-                  <Popover open={open} onOpenChange={setOpen} className="w-full">
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={open}
-                        className="w-full min-w-0 justify-between outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background data-[state=open]:ring-2 data-[state=open]:ring-ring data-[state=open]:ring-offset-2">
-                        {aziendaScelta ? optionsAziendeRitiro.find((ar) => ar.value === aziendaScelta)?.label  : "seleziona un azienda..."}
-                        <ChevronsUpDown className="opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent align="start" sideOffset={4} className="p-0 w-[var(--radix-popover-trigger-width)]">
-                      <Command className="p-1">
-                        <CommandInput placeholder="Cerca..." className="h-8 focus:ring-1 focus:ring-brand focus:border-brand outline-none focus:outline-none my-2" />
-                        <CommandList className="my-1">
-                          <CommandEmpty>Nessun risultato</CommandEmpty>
-                          <CommandGroup>
-                            {optionsAziendeRitiro.map((opt) => (
-                              <CommandItem
-                                key={opt.value}
-                                value={`${opt.value}`}
-                                onSelect={() => { setAziendaScelta(opt.value); setOpen(false) }}
-                              >
-                                {opt.label}
-                                <Check className={cn("ml-auto", optionsAziendeRitiro === opt.value ? "opacity-100" : "opacity-0")} />
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                {/* AZIENDA */}
+                <div className="col-span-12 lg:col-span-3 min-w-0 min-h-0 border p-1 px-3 rounded-xl">
+                  <label className="block text-sm font-semibold mb-1">Azienda Ritiro:</label>
+                  <div className='w-full min-w-0'>
+                    <span>{utente?.azienda?.ragione_sociale_arv}</span>
+                  </div>
                 </div>
                 {/* SELECT TARGA CAMION */}
-                <div className={`${aziendaScelta ? "" : "hidden"} col-span-12 lg:col-span-3 min-w-0`}>
+                <div className={`col-span-12 lg:col-span-3 min-w-0`}>
                   <label className="block text-sm font-semibold mb-1">Targa Camion Ritiro</label>
                   <Popover open={openTargheCamion} onOpenChange={setOpenTargheCamion} className="w-full">
                     <PopoverTrigger asChild>

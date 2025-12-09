@@ -1,12 +1,14 @@
-'use client'
+"use client"
 
-import Link from "next/link"
+import { useEffect, useState } from "react"
+import { supabase } from "@/lib/supabaseClient"
+import MENUaccount from "../componenti/menuAccount"
 
-export default function AccountPAGE () {
-    return (
-        <>
-        <h2>ACCOUNT PAGE</h2>
-        <Link href="account/ritiri-demolizioni">CIAO</Link>
-        </>
-    )
+export default function ACCOUNTPage() {
+
+  return (
+    <div className="flex items-start justify-start overflow-x-auto">
+      <MENUaccount/>
+    </div>
+  )
 }
