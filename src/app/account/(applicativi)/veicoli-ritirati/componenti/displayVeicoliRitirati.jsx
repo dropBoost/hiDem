@@ -48,7 +48,7 @@ export default function DisplayVeicoliRitiratiACCOUNT ({
                             </div>
                         </div>
                         <div className="flex flex-col gap-1">
-                        {tipologiaD == "azienda" ?
+                        {tipologiaD == "azienda " ?
                         <>
                             <span className="text-xs font-light truncate">{ragioneSociale}</span>
                             <span className="text-xs font-light truncate">{nome} {cognome} / <font className="italic text-yellow-600">{tipologiaD}</font></span>
