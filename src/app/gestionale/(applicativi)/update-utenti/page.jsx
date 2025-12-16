@@ -1,8 +1,8 @@
-// src/app/gestionale/(applicativi)/update-utenti/page.jsx
 import { supabaseAdmin } from '@/lib/supabaseAdminClient'
 import UpdateUtentiClient from './updateUtentiClient'
 
 export default async function AccountPage() {
+
   const { data, error: listError } = await supabaseAdmin.auth.admin.listUsers({
     page: 1,
     perPage: 50,

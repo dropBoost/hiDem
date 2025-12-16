@@ -39,8 +39,6 @@ export function AdminProvider({ children }) {
 
       const rules = data?.session.user.user_metadata.ruolo
 
-      console.log("ruolo",rules)
-
       if (rules !== 'company' && rules !== 'admin' && rules !== 'superadmin') {
         router.push('/admin/login')
         return

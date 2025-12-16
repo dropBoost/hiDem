@@ -4,11 +4,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { moduliGestionale } from '@/app/cosetting';
 import { FaHome } from "react-icons/fa";
+import { useAdmin } from '@/app/admin/components/AdminContext';
 
 export default function MenuSidebar () {
 
-    const pathname = usePathname();
+    const utente = useAdmin().utente
+    const ruolo = utente?.user_metadata?.ruolo
 
+    const pathname = usePathname();
+    console.log(utente)
     // Modifica qui: isActive controlla se pathname inizia con 'path'
     const isActive = (path) => pathname?.startsWith(path);
     const isActiveHome = (path) => pathname == path;
@@ -27,7 +31,7 @@ export default function MenuSidebar () {
             </Link>
         </div>
         {moduliGestionale
-            .filter(moduli => moduli.attivo === "true")
+            .filter(moduli => (moduli.attivo === "true") || ruolo === "superadmin")
             .map(modulo => (
             <div key={modulo.name}>
                 <Link

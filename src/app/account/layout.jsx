@@ -19,8 +19,6 @@ export default function LayoutGestionale({ children }) {
   const [utente, setUtente] = useState(null)
   const ruolo = utente?.identities[0]?.identity_data.ruolo
 
-  console.log(ruolo)
-
   useEffect(() => {
       async function checkAuth() {
       const { data, error } = await supabase.auth.getSession()
@@ -48,7 +46,7 @@ export default function LayoutGestionale({ children }) {
       </div>
       )
   }
-  console.log("utentelay",utente)
+
   return (
       <AdminProvider>
       {ruolo == "company" && ruolo !== "" ? 

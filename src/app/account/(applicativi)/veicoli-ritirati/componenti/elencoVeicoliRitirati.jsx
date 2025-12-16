@@ -21,8 +21,6 @@ import DisplayVeicoliRitiratiACCOUNT from "./displayVeicoliRitirati";
     const utente = useAdmin()
     const uuidAzienda = utente?.utente?.id
 
-    console.log("veicoli ritirati",utente, uuidAzienda)
-
     // paginazione
     const [page, setPage] = useState(1)
     const [pageSize, setPageSize] = useState(20)
@@ -84,8 +82,6 @@ import DisplayVeicoliRitiratiACCOUNT from "./displayVeicoliRitirati";
         setDataSearchSubmit("")
         setPage(1)
     }
-
-  console.log("lista",listPraticheAzienda)
 
   return (
   <>

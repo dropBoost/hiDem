@@ -14,7 +14,7 @@ export default function LayoutGestionale({ children }) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [userData, setUserData] = useState([])
-  const utente = useAdmin()
+  const utente = useAdmin()?.utente
 
   return (
     <div className="
@@ -81,6 +81,7 @@ export default function LayoutGestionale({ children }) {
 }
 
 function Sidebar({ pathname, onNavigate, u }) {
+
   return (
     <nav className="flex h-full flex-col">
       <div className="h-[64px] flex items-center px-4 bg-brand">

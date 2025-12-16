@@ -105,9 +105,6 @@ import ReadTracking from "../../componenti/readTracking";
       return () => { cancelled = true; };
     }, [uuidRitiroVeicolo]);
 
-    console.log("dati", datiDemolizione)
-    console.log("pratica", praticaAuto)
-
   return (
   <>
     <div className={`${praticaAuto ? '' : 'hidden'} w-full h-full flex flex-1 flex-col gap-4 p-3`}>

@@ -70,9 +70,9 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
   }, [statusPratiche])
 
   // OPTION PRATICHE DI RITIRO
-  const optionsPraticheRitiro = praticheRitiroVeicoli.map(prv => ({
+  const optionsPraticheRitiro = praticheRitiroVeicoli?.map(prv => ({
     value:`${prv.uuid_veicolo_ritirato}`,
-    label: `${prv.targa_veicolo_ritirato} / ${prv.aziendaRitiro.ragione_sociale_arv} - ${prv.aziendaRitiro?.provincia_legale_arv}`,
+    label: `${prv.targa_veicolo_ritirato} / ${prv.aziendaRitiro?.ragione_sociale_arv} - ${prv.aziendaRitiro?.provincia_legale_arv}`,
   }))
 
   // SELECT OPTION DEMOLIZIONE

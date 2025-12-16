@@ -89,10 +89,6 @@ export default function InserimentoVeicoliRitiratiACCOUNT({onDisplay, statusAzie
 
   const utente = useAdmin()
 
-  console.log("utenteRitiro", utente)
-  console.log("aziendeData", aziendeRitiro)
-  console.log("formData", formData)
-
   // CARICAMENTO CAMION
   useEffect(() => {
     ;(async () => {

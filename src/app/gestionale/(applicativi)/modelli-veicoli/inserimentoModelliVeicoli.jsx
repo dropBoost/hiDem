@@ -72,8 +72,6 @@ export default function InserimentoModelliVeicoli({onDisplay, setStatusAziende})
   fetchData()
   }, [formData.marchioVeicolo])
   
-  console.log(modelloAuto)
-
   function handleChange(e) {
       const { name, value } = e.target
       setFormData({ ...formData, [name]: value.toUpperCase().trim() })

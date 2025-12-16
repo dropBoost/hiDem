@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { moduliGestionale } from '../../cosetting'
@@ -11,10 +11,11 @@ export default function LayoutGestionale({ children }) {
 
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
-  const user = useAdmin()
-  const utente = user?.utente
+  const utente = useAdmin()?.utente
   const ruolo = utente?.user_metadata.ruolo
   const [openUpBar, setOpenUpBar] = useState(false)
+
+  console.log(ruolo)
 
   return (
     <div className="
@@ -25,12 +26,12 @@ export default function LayoutGestionale({ children }) {
     ">
       {/* Sidebar desktop */}
       <aside className="hidden md:block md:row-span-3 border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
-        <Sidebar pathname={pathname} u={utente} ruolo={ruolo}/>
+        <Sidebar pathname={pathname} u={utente} rule={ruolo}/>
       </aside>
 
       {/* Drawer mobile */}
       <MobileDrawer open={open} onClose={() => setOpen(false)}>
-        <Sidebar pathname={pathname} onNavigate={() => setOpen(false)} />
+        <Sidebar pathname={pathname} u={utente} rule={ruolo} onNavigate={() => setOpen(false)} />
       </MobileDrawer>
 
       {/* Header */}
@@ -84,7 +85,7 @@ export default function LayoutGestionale({ children }) {
   )
 }
 
-function Sidebar({ pathname, onNavigate, u, ruolo }) {
+function Sidebar({ pathname, onNavigate, u, rule }) {
   return (
     <nav className="flex h-full flex-col">
       <div className="h-[64px] flex items-center px-4 bg-brand">
@@ -93,9 +94,12 @@ function Sidebar({ pathname, onNavigate, u, ruolo }) {
 
       <div className="flex-1 overflow-y-auto py-3 bg-neutral-100 dark:bg-neutral-900 border-r">
         <ul className="space-y-1 px-2">
-          {ruolo == "admin" ? 
+          {rule !== "superadmin" ?
           <>
-          {moduliGestionale.filter(r => (r.level === "admin" && r.attivo ==="true")).map((item, index) => {
+          {moduliGestionale
+          .filter((r) => r.attivo === true)
+          .filter((r) => r.level?.includes(rule))
+          .map((item, index) => {
             const active =
               pathname === item.link ||
               (item.link !== '/gestionale' && pathname?.startsWith(item.link))
@@ -117,9 +121,11 @@ function Sidebar({ pathname, onNavigate, u, ruolo }) {
               </li>
             )
           })}
-          </> : 
+          </> :
           <>
-          {moduliGestionale.filter(r => (r.level !== "company" && r.attivo === "true")).map((item, index) => {
+          {moduliGestionale
+          .filter((r) => r.level?.includes(rule))
+          .map((item, index) => {
             const active =
               pathname === item.link ||
               (item.link !== '/gestionale' && pathname?.startsWith(item.link))
@@ -141,9 +147,7 @@ function Sidebar({ pathname, onNavigate, u, ruolo }) {
               </li>
             )
           })}
-          </>
-        }
-          
+          </>}
         </ul>
       </div>
 

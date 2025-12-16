@@ -93,8 +93,6 @@ export default function StatusDemolizione () {
       })()
     }, [veicoloRitirato])
 
-    console.log(veicoloDemolito)
-
     return (
         <div className="flex flex-col items-center lg:justify-center justify-start bg-neutral-200 dark:bg-neutral-900 lg:px-5 lg:py-5 px-5 py-5 h-full">
           <div className="flex flex-col gap-5 bg-neutral-50 dark:bg-neutral-900 border dark:border-neutral-700 w-full max-w-[1100px] py-5 px-5 lg:mx-10 lg:my-10 m-0 rounded-2xl shadow-2xl lg:h-fit h-full overflow-auto">
