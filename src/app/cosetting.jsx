@@ -8,7 +8,7 @@ import { MdDashboard, MdOutlinePointOfSale } from "react-icons/md";
 import { IoFitnessSharp, IoAnalyticsSharp  } from "react-icons/io5";
 import { BiSolidReport } from "react-icons/bi";
 import { GiTowTruck } from "react-icons/gi";
-import { TbEngine } from "react-icons/tb";
+import { TbEngine, TbBuildingSkyscraper } from "react-icons/tb";
 import { FaCar } from "react-icons/fa6";
 import { SiGoogleforms } from "react-icons/si";
 
@@ -35,6 +35,7 @@ const ICONeight = <FaArchive/>
 const ICONnine = <MdOutlinePointOfSale/>
 const ICONten = <SiGoogleforms />
 const ICONeleven = <FaUserCheck />
+const ICONtwelve = <TbBuildingSkyscraper />
 
 // FOOTER SIGN
 
@@ -73,8 +74,9 @@ export const socialLink = [
 export const moduliGestionale = [
     {name:'home', link:'/gestionale', linkActive:'home', icon: ICONzero, label:'home', attivo:true, level:['admin', 'superadmin']},
     {name:'dashboard', link:'/gestionale/dashboard', linkActive:'dashboard', icon: ICONone, label:'dashboard', attivo:false, level:['admin', 'superadmin']},
-    {name:'azienda ritiro veicoli', link:'/gestionale/azienda-ritiro-veicoli', linkActive:'azienda-ritiro-veicoli', icon: ICONtwo, label:'Azienda Ritiro Veicoli', attivo:true, level:['admin', 'superadmin']},
+    {name:'azienda ritiro veicoli', link:'/gestionale/azienda-ritiro-veicoli', linkActive:'azienda-ritiro-veicoli', icon: ICONtwelve, label:'Azienda Ritiro Veicoli', attivo:true, level:['admin', 'superadmin']},
     {name:'ritiri-demolizioni', link:'/gestionale/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICONthree, label:'Ritiri Demolizioni', attivo:true, level:['admin', 'superadmin']},
+    {name:'trasporto-veicoli', link:'/gestionale/trasporto-veicoli', linkActive:'trasporto-veicoli', icon: ICONtwo, label:'Trasporto Veicoli', attivo:true, level:['admin', 'superadmin']},
     {name:'demolizioni', link:'/gestionale/certificati-demolizione', linkActive:'demolizioni', icon: ICONfour, label:'Certificati Demolizione', attivo:true, level:['admin', 'superadmin']},
     {name:'magazzino', link:'/gestionale/magazzino', linkActive:'magazzino', icon: ICONfive, label:'Magazzino', attivo:false, level:['admin', 'superadmin']},
     {name:'veicoli', link:'/gestionale/modelli-veicoli', linkActive:'modelli-veicoli', icon: ICONsix, label:'Veicoli', attivo:true, level:['admin', 'superadmin']},

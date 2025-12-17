@@ -10,10 +10,10 @@ export default function MENUhomepage () {
     const utente = useAdmin().utente
     const ruolo = utente?.user_metadata?.ruolo
 
-    if  (!utente) return
-
     const pathname = usePathname();
     const isActive = (path) => pathname?.startsWith(path);
+
+    if  (!utente) return
 
     return (
     <div className="flex flex-wrap lg:justify-start justify-center flex-row gap-4">
