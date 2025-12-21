@@ -4,18 +4,11 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/lib/supabaseClient"
-import { Button } from "@/components/ui/button"
-import { FaFileDownload } from "react-icons/fa";
-import { FaUserSlash } from "react-icons/fa";
-
 import { FaCircle, FaDotCircle } from "react-icons/fa";
 import Link from "next/link";
-import ButtonDeleteRow from "@/app/componenti/buttonDeleteSup";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-
-
 import StatusTracking from "../../componenti/statusTracking";
 import ReadTracking from "../../componenti/readTracking";
+import BTNapprovazionePratica from "./componenti/bottoneApprovazionePratica";
 
   export default function SchedaVeicoli() {
 
@@ -24,25 +17,8 @@ import ReadTracking from "../../componenti/readTracking";
     const [praticaAuto, setPraticaAuto] = useState([])  
     const [datiDemolizione, setDatiDemolizione] = useState([])
     const [updateTracking, setUpdateTracking] = useState(false)
+    const [sUpdateComponent,setSUpdateComponent] = useState(false)
 
-    // ricerca
-    const [dataSearch, setDataSearch] = useState("")        // testo digitato
-    const [dataSearchSubmit, setDataSearchSubmit] = useState("") // testo applicato
-
-    // paginazione
-    const [page, setPage] = useState(1)
-    const [pageSize, setPageSize] = useState(20)
-    const [totalCount, setTotalCount] = useState(0)
-
-    // calcolo indici per Supabase range (inclusivo)
-    const { from, to } = useMemo(() => {
-        const start = (page - 1) * pageSize
-        return { from: start, to: start + pageSize - 1 }
-    }, [page, pageSize])
-
-    const totalPages = Math.max(1, Math.ceil(totalCount / pageSize))
-
-    const escapeLike = (s) => s.replace(/([%_\\])/g, "\\$1")
 
     // CARICAMENTO PRATICA VEICOLO
     useEffect(() => {
@@ -75,7 +51,7 @@ import ReadTracking from "../../componenti/readTracking";
         }
         setPraticaAuto(praticheData ?? [])
         })()
-    }, [uuidRitiroVeicolo])  
+    }, [uuidRitiroVeicolo, sUpdateComponent])  
 
     // CARICAMENTO DEMOLIZIONI
     useEffect(() => {
@@ -103,11 +79,15 @@ import ReadTracking from "../../componenti/readTracking";
     })();
 
       return () => { cancelled = true; };
-    }, [uuidRitiroVeicolo]);
+    }, [uuidRitiroVeicolo, sUpdateComponent]);
+
+    console.log(praticaAuto, "pratica auto")
+    console.log("uuid",praticaAuto[0]?.uuid_veicolo_ritirato)
+    console.log("prev", sUpdateComponent)
 
   return (
   <>
-    <div className={`${praticaAuto ? '' : 'hidden'} w-full h-full flex flex-1 flex-col gap-4 p-3`}>
+    <div className={`${praticaAuto[0] ? '' : 'hidden'} w-full h-full flex flex-1 flex-col gap-4 p-3`}>
       {/* AZIENDA RITIRO */}
       <div className="">
         <h4 className="text-[0.6rem] font-bold text-dark dark:text-neutral-400 border border-neutral-400 px-3 py-2 w-fit rounded-xl">{praticaAuto[0]?.azienda.ragione_sociale_arv} / {praticaAuto[0]?.azienda.piva_arv}</h4>
@@ -281,7 +261,7 @@ import ReadTracking from "../../componenti/readTracking";
               <div className="h-24 text-center">Nessun documento disponibile</div>
             )}
         </div>
-      </div>      
+      </div>
       {/* DEMOLIZIONE */}
       <div className="">
         <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DEMOLIZIONE</h4>
@@ -337,6 +317,18 @@ import ReadTracking from "../../componenti/readTracking";
       </div>
       <div className='p-6 rounded-2xl shadow-lg min-w-0 min-h-0 bg-white dark:bg-neutral-900 border'>
         <ReadTracking uuidRitiroVeicolo={uuidRitiroVeicolo} updateTracking={updateTracking}/>
+      </div>
+      {/* APPROVAZIONE O RIFIUTO PRATICA */}
+      <div className="flex flex-row justify-between border p-3 w-full rounded-xl items-center my-3">
+        <span className="text-sm font-medium">
+          STATO ATTUALE:{" "}
+          {(() => {
+            if (praticaAuto[0]?.demolizione_approvata == null) return "in attesa"
+            if (praticaAuto[0]?.demolizione_approvata === true) return "approvata"
+            return "rifiutata"
+          })()}
+        </span>
+        <BTNapprovazionePratica uuidPratica={uuidRitiroVeicolo} setSUpdateComponent={setSUpdateComponent}/>
       </div>
     </div>
   </>
