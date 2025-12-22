@@ -76,7 +76,7 @@ export const moduliGestionale = [
     {name:'dashboard', link:'/gestionale/dashboard', linkActive:'dashboard', icon: ICONone, label:'dashboard', attivo:false, level:['admin', 'superadmin']},
     {name:'azienda ritiro veicoli', link:'/gestionale/azienda-ritiro-veicoli', linkActive:'azienda-ritiro-veicoli', icon: ICONtwelve, label:'Azienda Ritiro Veicoli', attivo:true, level:['admin', 'superadmin']},
     {name:'ritiri-demolizioni', link:'/gestionale/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICONthree, label:'Ritiri Demolizioni', attivo:true, level:['admin', 'superadmin']},
-    {name:'trasporto-veicoli', link:'/gestionale/trasporto-veicoli', linkActive:'trasporto-veicoli', icon: ICONtwo, label:'Trasporto Veicoli', attivo:true, level:['admin', 'superadmin']},
+    {name:'gestione-trasporto', link:'/gestionale/gestione-trasporto', linkActive:'gestione-trasporto', icon: ICONtwo, label:'Gestione Trasporto', attivo:true, level:['admin', 'superadmin']},
     {name:'demolizioni', link:'/gestionale/certificati-demolizione', linkActive:'demolizioni', icon: ICONfour, label:'Certificati Demolizione', attivo:true, level:['admin', 'superadmin']},
     {name:'magazzino', link:'/gestionale/magazzino', linkActive:'magazzino', icon: ICONfive, label:'Magazzino', attivo:false, level:['admin', 'superadmin']},
     {name:'veicoli', link:'/gestionale/modelli-veicoli', linkActive:'modelli-veicoli', icon: ICONsix, label:'Veicoli', attivo:true, level:['admin', 'superadmin']},
@@ -91,6 +91,10 @@ export const moduliAccount = [
     {name:'ritiri-demolizioni', link:'/account/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICONthree, label:'Ritiri Demolizioni', attivo:true, level:['company', 'superadmin']},
     {name:'veicoli-ritirati', link:'/account/veicoli-ritirati', linkActive:'veicoli-ritirati', icon: ICONfour, label:'Veicoli Ritirati', attivo:true, level:['company', 'superadmin']},
     {name:'aiuto', link:'/account/aiuto', linkActive:'aiuto', icon: ICONfour, label:'Aiuto', attivo:true, level:['company', 'superadmin']},
+  ]
+
+export const moduliTrasportatori = [
+    {name:'ritiro-veicoli', link:'/account/ritiro-veicoli', linkActive:'ritiro-veicoli', icon: ICONthree, label:'Ritiro Veicoli', attivo:true, level:['transporter', 'superadmin']},
   ]
 
 // MODULI INFO 

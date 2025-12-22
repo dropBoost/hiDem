@@ -81,10 +81,6 @@ import BTNapprovazionePratica from "./componenti/bottoneApprovazionePratica";
       return () => { cancelled = true; };
     }, [uuidRitiroVeicolo, sUpdateComponent]);
 
-    console.log(praticaAuto, "pratica auto")
-    console.log("uuid",praticaAuto[0]?.uuid_veicolo_ritirato)
-    console.log("prev", sUpdateComponent)
-
   return (
   <>
     <div className={`${praticaAuto[0] ? '' : 'hidden'} w-full h-full flex flex-1 flex-col gap-4 p-3`}>

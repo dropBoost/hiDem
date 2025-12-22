@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { FaPlusSquare, FaCar } from "react-icons/fa";
 
-export default function SECTIONcamionTrasporto({onDisplay, setStatusAziende}) {
+export default function SECTIONgestioneTrasporto({onDisplay, setStatusAziende}) {
     
   const [uploadingByField, setUploadingByField] = useState({});
   const anyUploading = Object.values(uploadingByField).some(Boolean);
@@ -145,10 +145,12 @@ console.log("formData",formDataCamion)
                     {anyUploading ? "Caricamento in corso..." : <FaPlusSquare className='font-bold text-dark dark:text-white'/>}
                     </button>
                 </div>
-                <form id="inserimentoAutista" onSubmit={handleSubmitAutista} className="flex gap-4">
-                  <FormField nome="nomeAutista" label='Nome' value={formDataAutista.nomeAutista} basis="basis-4/12" onchange={handleChangeAutista} type='text'/>
-                  <FormField nome="cognomeAutista" label='Cognome' value={formDataAutista.cognomeAutista} basis="basis-4/12" onchange={handleChangeAutista} type='text'/>
-                  <FormField nome="numeroPatateAutista" label='N° Patente' value={formDataAutista.numeroPatateAutista} basis="basis-4/12" onchange={handleChangeAutista} type='text'/>
+                <form id="inserimentoAutista" onSubmit={handleSubmitAutista} className="flex flex-wrap">
+                  <FormField nome="nomeAutista" label='Nome' value={formDataAutista.nomeAutista} basis="basis-2/12 px-2" onchange={handleChangeAutista} type='text'/>
+                  <FormField nome="cognomeAutista" label='Cognome' value={formDataAutista.cognomeAutista} basis="basis-2/12 px-2" onchange={handleChangeAutista} type='text'/>
+                  <FormField nome="numeroPatateAutista" label='N° Patente' value={formDataAutista.numeroPatateAutista} basis="basis-2/12 px-2" onchange={handleChangeAutista} type='text'/>
+                  <FormField nome="emailAutista" label='Email' value={formDataAutista.emailAutista} basis="basis-3/12 px-2" onchange={handleChangeAutista} type='email'/>
+                  <FormField nome="passwordAutista" label='Password' value={formDataAutista.passwordAutista} basis="basis-3/12 px-2" onchange={handleChangeAutista} type='password'/>
                 </form>
               </div>
            

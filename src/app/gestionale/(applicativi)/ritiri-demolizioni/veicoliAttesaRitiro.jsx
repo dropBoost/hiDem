@@ -1,4 +1,3 @@
-'use client'
 import { useEffect, useMemo, useState, useRef } from 'react'
 import comuni from "@/app/componenti/comuni.json"
 import { supabase } from "@/lib/supabaseClient"
@@ -16,7 +15,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { AiOutlineLoading3Quarters, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
 
-export default function InserimentoVeicoliRitirati({onDisplay, statusAziende, setStatusAziende}) {
+export default function PAGEveicoliAttesaRitiro({onDisplay, statusAziende, setStatusAziende}) {
   const dataOggi = new Date().toISOString().split("T")[0]
 
   // VARIABILI GESTIONE INSERIMENTO INDIRIZZO LEGALE
