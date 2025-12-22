@@ -59,21 +59,8 @@ console.log("formData",formData)
           <div className="flex flex-col gap-4">
             <div className="flex flex-row w-full gap-4 min-h-0">
               <div className="flex flex-col gap-4 basis-6/12 bg-neutral-950 p-5 rounded-2xl">    
-                <div className="col-span-12 flex flex-row justify-between">
-                    <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">INSERIMENTO AUTISTA</h4>
-                    <button
-                    form="inserimentoCamion"
-                    type="submit"
-                    disabled={anyUploading}
-                    className=' bg-brand px-3 py-2 w-fit rounded-xl h-full'>
-                    {anyUploading ? "Caricamento in corso..." : <FaPlusSquare className='font-bold text-dark dark:text-white'/>}
-                    </button>
-                </div>
-                <form id="inserimentoCamion" onSubmit={handleSubmit} className="flex flex-col gap-4 ">
-                  <FormField nome="targaCamion" label='Targa' value={formData.targaCamion} colspan="col-span-12" mdcolspan="lg:col-span-4" onchange={handleChange} type='text'/>
-                  <FormField nome="marcaCamion" label='Marchio' value={formData.marcaCamion} colspan="col-span-12" mdcolspan="lg:col-span-4" onchange={handleChange} type='text'/>
-                  <FormField nome="modelloCamion" label='Modello' value={formData.modelloCamion} colspan="col-span-12" mdcolspan="lg:col-span-4" onchange={handleChange} type='text'/>
-                </form>
+
+
               </div>
               <div className="flex flex-col gap-4 basis-6/12 border p-5 rounded-2xl">
                 <div className="col-span-12 flex flex-row justify-between">

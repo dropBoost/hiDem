@@ -51,7 +51,7 @@ export default function ElencoAziende({ onDisplay, statusAziende, setStatusAzien
     setDataSearchSubmit("")
     setPage(1)
   }
-
+  
   useEffect(() => {
     const fetchData = async () => {
       let query = supabase
