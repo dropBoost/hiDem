@@ -39,12 +39,12 @@ export function AdminProvider({ children }) {
 
       const rules = data?.session.user.user_metadata.ruolo
 
-      if (rules !== 'company' && rules !== 'admin' && rules !== 'superadmin') {
+      if (rules !== 'company' && rules !== 'admin' && rules !== 'superadmin' && rules !== 'transporter') {
         router.push('/admin/login')
         return
       } else if (rules == 'company'){
         router.push('/account')
-      } else if (rules == 'admin' && rules == 'superadmin'){
+      } else if (rules == 'admin' && rules == 'superadmin' && rules == 'transporter'){
         router.push('/gestionale')
       } 
     }

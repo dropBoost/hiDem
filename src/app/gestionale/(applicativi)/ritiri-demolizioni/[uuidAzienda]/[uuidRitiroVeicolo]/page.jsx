@@ -19,7 +19,7 @@ import BTNapprovazionePratica from "./componenti/bottoneApprovazionePratica";
     const [updateTracking, setUpdateTracking] = useState(false)
     const [sUpdateComponent,setSUpdateComponent] = useState(false)
 
-
+console.log(praticaAuto)
     // CARICAMENTO PRATICA VEICOLO
     useEffect(() => {
         if (!params.uuidRitiroVeicolo){
@@ -190,9 +190,8 @@ import BTNapprovazionePratica from "./componenti/bottoneApprovazionePratica";
       </div>
       <div className="w-full border border-neutral-600 rounded-xl p-5">
         <div id="mainImagecontainergridtwo" className="flex flex-row">
-            {praticaAuto.length ? praticaAuto.map((pa, index) => {
+            {praticaAuto?.length ? praticaAuto.map((pa, index) => {
               return (
-                <>
                 <div id="rowImageContainer" className="grid grid-cols-4 w-full gap-2" key={`${pa.uuid_veicolo_ritirato ?? index}`}>
                     {pa.foto_documento_detentore_f ? 
                     <div className="lg:col-span-1 col-start-1 col-span-2 flex flex-row items-start h-fit gap-2 text-sm">
@@ -251,7 +250,6 @@ import BTNapprovazionePratica from "./componenti/bottoneApprovazionePratica";
                     </div> : null
                     }                    
                 </div>
-                </>
               )
             }) : (
               <div className="h-24 text-center">Nessun documento disponibile</div>

@@ -2,13 +2,13 @@ import Link from "next/link"
 import { FaFileDownload } from "react-icons/fa";
 import { RiEyeCloseLine } from "react-icons/ri";
 
-export default function DisplayAziendeRitiriDemolizioni ({uuid, n, ragioneSociale, piva}) {
+export default function DisplayAziendeRitiriDemolizioni ({uuid, n, pl, ar, ragioneSociale, piva}) {
 
     return (
         <>
-        <div className="flex lg:flex-row flex-col min-h-0 w-full border lg:items-center justify-between items-start border-neutral-200 dark:border-neutral-700 rounded-xl p-3 gap-2 dark:shadow-xl">
-            <div className="flex lg:flex-row flex-col lg:w-fit w-full justify-start lg:items-center items-start gap-3">
-                <div className="flex flex-col justify-center items-center lg:w-fit w-full h-fit">
+        <div className="flex lg:flex-row flex-col min-h-0 w-full border lg:items-center justify-between items-start border-neutral-200 dark:border-neutral-700 rounded-xl p-3 gap-2">
+            <div className="flex lg:flex-row flex-col justify-between items-center gap-3">
+                <div className="flex flex-col justify-center items-center lg:w-fit h-fit">
                     {n == 0
                     ?
                     <div className="flex lg:flex-col flex-row gap-1 lg:items-center lg:justify-between justify-between w-full"> 
@@ -16,30 +16,32 @@ export default function DisplayAziendeRitiriDemolizioni ({uuid, n, ragioneSocial
                     </div>
                     : <div className="flex lg:flex-col flex-row gap-1 lg:items-center lg:justify-between justify-between w-full">
                         <span className="flex items-center justify-center border bg-red-600 rounded-full w-3 h-3 text-[0.6rem] font-bold">{null}</span>
-                        <span className="flex items-center justify-center w-3 h-3 text-[0.6rem] font-bold">{n}</span>
                     </div>
                     }
                 </div>
-                <div className="flex lg:flex-row flex-col">
-                    <div className="flex flex-col justify-center lg:items-center items-start lg:min-w-[16rem] h-full">
-                        <span className="text-xs font-light truncate">RAGIONE SOCIALE</span>
-                        <span className="text-sm font-semibold text-brand uppercase truncate text-ellipsis">{ragioneSociale}</span>
-                    </div>
-                    <div className="flex flex-col justify-center items-start min-w-[16rem] h-full lg:border-s lg:border-t-0 border-t lg:ps-3 lg:pt-0 pt-1 ps-0">
-                        <span className="text-xs font-light">P.IVA</span>
-                        <span className="text-sm font-semibold">{piva}</span>
-                    </div>
+                <div className="flex flex-col justify-center lg:items-start items-start lg:min-w-[16rem] h-full">
+                    <span className="text-sm font-semibold text-brand uppercase truncate text-ellipsis">{ragioneSociale}</span>
+                    <span className="text-xs ">{piva}</span>
+                </div>
+                <div className={`${n <= 0 ? "hidden" : ""} border border-brand px-2 py-1 rounded-lg`}>
+                    <span className="flex items-center justify-start text-[0.6rem] font-bold"> Pratiche in corso: {n}</span>
+                </div>
+                <div className={`${pl <= 0 ? "hidden" : ""} border border-red-600 px-2 py-1 rounded-lg`}>
+                    <span className="flex items-center justify-start text-[0.6rem] font-bold"> Pratiche da lavorare: {pl}</span>
+                </div>
+                <div className={`${ar <= 0 ? "hidden" : ""} border border-yellow-500 px-2 py-1 rounded-lg`}>
+                    <span className="flex items-center justify-start text-[0.6rem] font-bold"> Attesa Ritiro: {ar}</span>
                 </div>
             </div>
-            <div className="flex flex-row justify-end items-start lg:gap-3 gap-3 lg:w-fit w-full bg-brand/50 rounded-md lg:p-1 p-2">
+            <div className="flex flex-row items-start lg:gap-3 gap-3 rounded-md lg:p-1 p-2">
                 <div className="flex flex-col justify-center items-start w-fit h-full">
-                    <Link className="lg:p-2 p-1 bg-brand/70 rounded-md hover:bg-brand" href={`ritiri-demolizioni/${uuid}`}><FaFileDownload /></Link>
+                    <Link className="lg:p-2 p-1 bg-brand/70 rounded-md hover:bg-brand text-xs" href={`ritiri-demolizioni/${uuid}`}><FaFileDownload /></Link>
                 </div>
                 <div className="flex flex-col justify-center items-start w-fit h-full">
-                    <Link className="lg:p-2 p-1 bg-brand/70 rounded-md hover:bg-brand" href={`ritiri-demolizioni/${uuid}`}><FaFileDownload /></Link>
+                    <Link className="lg:p-2 p-1 bg-brand/70 rounded-md hover:bg-brand text-xs" href={`ritiri-demolizioni/${uuid}`}><FaFileDownload /></Link>
                 </div>
                 <div className="flex flex-col justify-center items-start w-fit h-full">
-                    <Link className="lg:p-2 p-1 bg-brand/70 rounded-md hover:bg-brand" href={`ritiri-demolizioni/${uuid}`}><RiEyeCloseLine/></Link>
+                    <Link className="lg:p-2 p-1 bg-brand/70 rounded-md hover:bg-brand text-xs" href={`ritiri-demolizioni/${uuid}`}><RiEyeCloseLine/></Link>
                 </div>
             </div>
         </div>

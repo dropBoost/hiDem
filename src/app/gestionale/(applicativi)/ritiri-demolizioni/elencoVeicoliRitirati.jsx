@@ -9,7 +9,7 @@ import DisplayAziendeRitiriDemolizioni from "./componenti/displayAziendeRitiriDe
 
 export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setStatusAziende }) {
   const [aziendaRitiroVeicoli, setAziendaRitiroVeicoli] = useState([])
-  const [praticheAperte, setPraticheAperte] = useState([])
+  const [datiVeicoloRitirato, setDatiVeicoloRitirato] = useState([])
   // ricerca
   const [dataSearch, setDataSearch] = useState("")        // testo digitato
   const [dataSearchSubmit, setDataSearchSubmit] = useState("") // testo applicato
@@ -78,25 +78,29 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
     fetchData()
   }, [dataSearchSubmit, page, pageSize, from, to, statusAziende])
 
-  //PRATICHE APERTE
+  //PRATICHE APERTE DA COMPLETARE
   useEffect(() => {
-    if (!aziendaRitiroVeicoli) return;
 
     (async () => {
       const { data, error } = await supabase
-        .from("v_pratiche_aperte_per_azienda")
+        .from("dati_veicolo_ritirato")
         .select("*")
+        .eq("pratica_completata", false)
 
       if (error) {
         console.error(error);
         return;
       }
 
-      setPraticheAperte(data);
+      setDatiVeicoloRitirato(data);
 
     })();
 
   }, []);
+
+  console.log("datiVeicoloRitirato", datiVeicoloRitirato)
+
+
 
   const iconaCestino = <FaUserSlash/>
     
@@ -124,11 +128,17 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
       <div className="flex flex-col gap-3">
         {aziendaRitiroVeicoli.length ? aziendaRitiroVeicoli.map((a, index) => {
           
-          const n = praticheAperte?.filter(ua => ua.uuid_azienda_ritiro_veicoli == a?.uuid_azienda_ritiro_veicoli).map(pa => (pa.pratiche_aperte))
+          const praticheAperte = datiVeicoloRitirato?.filter(ua => ua.uuid_azienda_ritiro_veicoli == a?.uuid_azienda_ritiro_veicoli).length
+          const veicoliDaRitirare = datiVeicoloRitirato?.filter(ua => ua.uuid_azienda_ritiro_veicoli == a?.uuid_azienda_ritiro_veicoli).filter(da => da.demolizione_approvata !== true).length
+          const attesaDiRitiro = datiVeicoloRitirato?.
+          filter(ua => ua.uuid_azienda_ritiro_veicoli == a?.uuid_azienda_ritiro_veicoli).
+          filter(da => da.demolizione_approvata == true).
+          filter(ar => ar.veicolo_ritirato == false).length
+
           const uuid = a?.uuid_azienda_ritiro_veicoli ?? String(index);
 
           return (
-            <DisplayAziendeRitiriDemolizioni key={uuid} ragioneSociale={a?.ragione_sociale_arv} piva={a?.piva_arv} uuid={uuid} n={n}/>
+            <DisplayAziendeRitiriDemolizioni key={uuid} ragioneSociale={a?.ragione_sociale_arv} piva={a?.piva_arv} uuid={uuid} n={praticheAperte} pl={veicoliDaRitirare} ar={attesaDiRitiro}/>
           );
         }) : (
             <span colSpan={8} className="h-24 text-center">Nessun risultato.</span>

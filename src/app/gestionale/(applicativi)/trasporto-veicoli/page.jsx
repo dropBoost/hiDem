@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from "react";
-import SECTIONgestioneTrasporto from '@/app/gestionale/(applicativi)/gestione-trasporto/componenti/gestioneTrasporto';
 import SECTIONautistiCamion from '@/app/gestionale/(applicativi)/gestione-trasporto/componenti/autistiCamion';
+import SECTIONtrasportoVeicoli from "@/app/gestionale/(applicativi)/trasporto-veicoli/componenti/trasportoVeicoli";
 
-export default function PAGEgestioneTrasportoVeicoli() {
+export default function PAGEtrasportoVeicoli() {
 
   const [onDisplaySectionOne, setOnDisplaySectionOne] = useState(true)
   const [onDisplaySectionTwo, setOnDisplaySectionTwo] = useState(false)
@@ -25,13 +25,13 @@ export default function PAGEgestioneTrasportoVeicoli() {
     <>
     <div className="flex flex-col min-h-0 w-full justify-start items-start overflow-auto gap-3">
       <div className="flex items-start md:justify-start justify-center w-full gap-3">
-        <ButtonSection click={ClickSectionOne} nome="GESTIONE TRASPORTO" section={onDisplaySectionOne}/>
-        {/* <ButtonSection click={ClickSectionTwo} nome="AUTISTI" section={onDisplaySectionTwo}/> */}
+        <ButtonSection click={ClickSectionOne} nome="TRASPORTO VEICOLI" section={onDisplaySectionOne}/>
+        <ButtonSection click={ClickSectionTwo} nome="VEICOLI IN TRANSITO" section={onDisplaySectionTwo}/>
       </div>
       <div className="h-[1px] w-full bg-gradient-to-r from-brand to-brandDark"/>
       <div className="flex flex-1 justify-start items-start w-full min-h-0">
-        <SECTIONgestioneTrasporto statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionOne}/>
-        {/* <SECTIONautistiCamion statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionTwo}/> */}
+        <SECTIONtrasportoVeicoli statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionOne}/>
+        <SECTIONautistiCamion statusAziende={statusAziende} setStatusAziende={setStatusAziende} onDisplay={onDisplaySectionTwo}/>
       </div>
     </div>
     </>

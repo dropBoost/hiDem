@@ -1,15 +1,10 @@
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faFacebook, faInstagram, faTiktok, faWhatsapp } from "@fortawesome/free-brands-svg-icons"
-// import { faEnvelope, faSquarePhone, faGauge, faPhotoFilm, faCalendar, faKeyboard, faFolderOpen } from '@fortawesome/free-solid-svg-icons'
-
 import { FaCarCrash, FaFacebookSquare, FaWhatsappSquare, FaInstagramSquare, FaPhoneSquareAlt, FaEnvelope, FaUserCheck, FaUser, FaFileInvoiceDollar, FaUsers, FaArchive, FaHome } from "react-icons/fa";
 import { AiFillTikTok } from "react-icons/ai";
 import { MdDashboard, MdOutlinePointOfSale } from "react-icons/md";
-import { IoFitnessSharp, IoAnalyticsSharp  } from "react-icons/io5";
 import { BiSolidReport } from "react-icons/bi";
 import { GiTowTruck } from "react-icons/gi";
 import { TbEngine, TbBuildingSkyscraper } from "react-icons/tb";
-import { FaCar } from "react-icons/fa6";
+import { FaCar, FaCarOn } from "react-icons/fa6";
 import { SiGoogleforms } from "react-icons/si";
 
 //ICONE SOCIAL
@@ -23,19 +18,20 @@ const ICONemail = <FaEnvelope/>
 
 //ICONE GESTIONALE
 
-const ICONzero = <FaHome/>
-const ICONone = <MdDashboard/>
-const ICONtwo = <GiTowTruck/>
-const ICONthree = <FaCarCrash />
-const ICONfour = <BiSolidReport/>
-const ICONfive = <TbEngine/>
-const ICONsix = <FaCar/>
-const ICONseven = <FaUsers/>
-const ICONeight = <FaArchive/>
-const ICONnine = <MdOutlinePointOfSale/>
-const ICONten = <SiGoogleforms />
-const ICONeleven = <FaUserCheck />
-const ICONtwelve = <TbBuildingSkyscraper />
+const ICON0 = <FaHome/>
+const ICON1 = <MdDashboard/>
+const ICON2 = <GiTowTruck/>
+const ICON3 = <FaCarCrash/>
+const ICON4 = <BiSolidReport/>
+const ICON5 = <TbEngine/>
+const ICON6 = <FaCar/>
+const ICON7 = <FaUsers/>
+const ICON8 = <FaArchive/>
+const ICON9 = <MdOutlinePointOfSale/>
+const ICON10 = <SiGoogleforms/>
+const ICON11 = <FaUserCheck/>
+const ICON12 = <TbBuildingSkyscraper/>
+const ICON13 = <FaCarOn/>
 
 // FOOTER SIGN
 
@@ -72,37 +68,33 @@ export const socialLink = [
 // MODULI GESTIONALE
 
 export const moduliGestionale = [
-    {name:'home', link:'/gestionale', linkActive:'home', icon: ICONzero, label:'home', attivo:true, level:['admin', 'superadmin']},
-    {name:'dashboard', link:'/gestionale/dashboard', linkActive:'dashboard', icon: ICONone, label:'dashboard', attivo:false, level:['admin', 'superadmin']},
-    {name:'azienda ritiro veicoli', link:'/gestionale/azienda-ritiro-veicoli', linkActive:'azienda-ritiro-veicoli', icon: ICONtwelve, label:'Azienda Ritiro Veicoli', attivo:true, level:['admin', 'superadmin']},
-    {name:'ritiri-demolizioni', link:'/gestionale/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICONthree, label:'Ritiri Demolizioni', attivo:true, level:['admin', 'superadmin']},
-    {name:'gestione-trasporto', link:'/gestionale/gestione-trasporto', linkActive:'gestione-trasporto', icon: ICONtwo, label:'Gestione Trasporto', attivo:true, level:['admin', 'superadmin']},
-    {name:'demolizioni', link:'/gestionale/certificati-demolizione', linkActive:'demolizioni', icon: ICONfour, label:'Certificati Demolizione', attivo:true, level:['admin', 'superadmin']},
-    {name:'magazzino', link:'/gestionale/magazzino', linkActive:'magazzino', icon: ICONfive, label:'Magazzino', attivo:false, level:['admin', 'superadmin']},
-    {name:'veicoli', link:'/gestionale/modelli-veicoli', linkActive:'modelli-veicoli', icon: ICONsix, label:'Veicoli', attivo:true, level:['admin', 'superadmin']},
-    {name:'clienti', link:'/gestionale/clienti', linkActive:'clienti', icon: ICONseven, label:'Clienti', attivo:false, level:['admin', 'superadmin']},
-    {name:'documenti', link:'/gestionale/documenti', linkActive:'documenti', icon: ICONeight, label:'Documenti', attivo:false, level:['admin', 'superadmin']},
-    {name:'pos', link:'/gestionale/pos', linkActive:'pos', icon: ICONnine, label:'Pos', attivo:false, level:['admin', 'superadmin']},
-    {name:'ritiro-online', link:'/gestionale/richieste-ritiro-online', linkActive:'ritiro-online', icon: ICONten, label:'Ritiri Online', attivo:false, level:['admin', 'superadmin']},
-    {name:'utenti', link:'/gestionale/update-utenti', linkActive:'update-utenti', icon: ICONeleven, label:'Utenti', attivo:false, level:['superadmin']},
+    {name:'home', link:'/gestionale', linkActive:'home', icon: ICON0, label:'home', attivo:true, level:['admin', 'superadmin']},
+    {name:'dashboard', link:'/gestionale/dashboard', linkActive:'dashboard', icon: ICON1, label:'dashboard', attivo:false, level:['admin', 'superadmin']},
+    {name:'azienda ritiro veicoli', link:'/gestionale/azienda-ritiro-veicoli', linkActive:'azienda-ritiro-veicoli', icon: ICON12, label:'Azienda Ritiro Veicoli', attivo:true, level:['admin', 'superadmin']},
+    {name:'ritiri-demolizioni', link:'/gestionale/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICON3, label:'Ritiri Demolizioni', attivo:true, level:['admin', 'superadmin']},
+    {name:'gestione-trasporto', link:'/gestionale/gestione-trasporto', linkActive:'gestione-trasporto', icon: ICON2, label:'Gestione Trasporto', attivo:true, level:['admin', 'superadmin']},
+    {name:'trasporto-veicoli', link:'/gestionale/trasporto-veicoli', linkActive:'trasporto-veicoli', icon: ICON13, label:'Trasporto Veicoli', attivo:true, level:['transporter','admin','superadmin']},
+    {name:'demolizioni', link:'/gestionale/certificati-demolizione', linkActive:'demolizioni', icon: ICON4, label:'Certificati Demolizione', attivo:true, level:['admin', 'superadmin']},
+    {name:'veicoli', link:'/gestionale/modelli-veicoli', linkActive:'modelli-veicoli', icon: ICON6, label:'Veicoli', attivo:true, level:['admin', 'superadmin']},
+    {name:'utenti', link:'/gestionale/update-utenti', linkActive:'update-utenti', icon: ICON11, label:'Utenti', attivo:false, level:['superadmin']},
   ]
 
 export const moduliAccount = [
-    {name:'ritiri-demolizioni', link:'/account/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICONthree, label:'Ritiri Demolizioni', attivo:true, level:['company', 'superadmin']},
-    {name:'veicoli-ritirati', link:'/account/veicoli-ritirati', linkActive:'veicoli-ritirati', icon: ICONfour, label:'Veicoli Ritirati', attivo:true, level:['company', 'superadmin']},
-    {name:'aiuto', link:'/account/aiuto', linkActive:'aiuto', icon: ICONfour, label:'Aiuto', attivo:true, level:['company', 'superadmin']},
+    {name:'ritiri-demolizioni', link:'/account/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICON3, label:'Ritiri Demolizioni', attivo:true, level:['company', 'superadmin']},
+    {name:'veicoli-ritirati', link:'/account/veicoli-ritirati', linkActive:'veicoli-ritirati', icon: ICON4, label:'Veicoli Ritirati', attivo:true, level:['company', 'superadmin']},
+    {name:'aiuto', link:'/account/aiuto', linkActive:'aiuto', icon: ICON4, label:'Aiuto', attivo:true, level:['company', 'superadmin']},
   ]
 
 export const moduliTrasportatori = [
-    {name:'ritiro-veicoli', link:'/account/ritiro-veicoli', linkActive:'ritiro-veicoli', icon: ICONthree, label:'Ritiro Veicoli', attivo:true, level:['transporter', 'superadmin']},
+    {name:'trasporto-veicoli', link:'/account/ritiro-veicoli', linkActive:'ritiro-veicoli', icon: ICON3, label:'Ritiro Veicoli', attivo:true, level:['transporter', 'superadmin']},
   ]
 
 // MODULI INFO 
 
 export const moduliInfo = [
-    {name:'Info', link:'/gestionale/info', linkActive:'info', icon: ICONone, label:'Info', attivo:'true'},
-    {name:'Aiuto', link:'/gestionale/aiuto', linkActive:'aiuto', icon: ICONtwo, label:'Aiuto', attivo:'true'},
-    {name:'Test', link:'/gestionale/test', linkActive:'test', icon: ICONthree, label:'Test', attivo:'true'},
-    {name:'Account', link:'/admin/account', linkActive:'account', icon: ICONfour, label:'Account', attivo:'true'},
+    {name:'Info', link:'/gestionale/info', linkActive:'info', icon: ICON1, label:'Info', attivo:'true'},
+    {name:'Aiuto', link:'/gestionale/aiuto', linkActive:'aiuto', icon: ICON2, label:'Aiuto', attivo:'true'},
+    {name:'Test', link:'/gestionale/test', linkActive:'test', icon: ICON3, label:'Test', attivo:'true'},
+    {name:'Account', link:'/admin/account', linkActive:'account', icon: ICON4, label:'Account', attivo:'true'},
   ]
 
