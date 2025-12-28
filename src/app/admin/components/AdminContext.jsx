@@ -43,7 +43,7 @@ export function AdminProvider({ children }) {
         router.push('/admin/login')
         return
       } else if (rules == 'company'){
-        router.push('/account')
+        router.push('/gestionale')
       } else if (rules == 'admin' && rules == 'superadmin' && rules == 'transporter'){
         router.push('/gestionale')
       } 

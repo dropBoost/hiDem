@@ -55,8 +55,6 @@ export default function PAGEveicoliAttesaRitiro({ onDisplay, statusAziende, setS
     }
   }, [])
 
-  console.log('veicoliAttesa', veicoliAttesa)
-
   return (
     <div className={`${onDisplay ? "" : "hidden"} w-full flex-1 min-h-0 flex flex-col md:p-0 md:pe-3 px-4`}>
       <div className="flex flex-col gap-3">

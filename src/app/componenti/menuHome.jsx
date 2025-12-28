@@ -16,7 +16,7 @@ export default function MENUhomepage () {
     if  (!utente) return
 
     return (
-    <div className="flex flex-wrap lg:justify-start justify-center flex-row gap-4">
+    <div className="flex flex-wrap lg:justify-start justify-center flex-row gap-4 w-full">
     {ruolo !== 'superadmin' ?
     <> 
     {moduliGestionale

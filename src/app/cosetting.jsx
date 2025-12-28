@@ -68,10 +68,10 @@ export const socialLink = [
 // MODULI GESTIONALE
 
 export const moduliGestionale = [
-    {name:'home', link:'/gestionale', linkActive:'home', icon: ICON0, label:'home', attivo:true, level:['admin', 'superadmin']},
+    {name:'home', link:'/gestionale', linkActive:'home', icon: ICON0, label:'home', attivo:true, level:['admin', 'superadmin', 'company']},
     {name:'dashboard', link:'/gestionale/dashboard', linkActive:'dashboard', icon: ICON1, label:'dashboard', attivo:false, level:['admin', 'superadmin']},
     {name:'azienda ritiro veicoli', link:'/gestionale/azienda-ritiro-veicoli', linkActive:'azienda-ritiro-veicoli', icon: ICON12, label:'Azienda Ritiro Veicoli', attivo:true, level:['admin', 'superadmin']},
-    {name:'ritiri-demolizioni', link:'/gestionale/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICON3, label:'Ritiri Demolizioni', attivo:true, level:['admin', 'superadmin']},
+    {name:'ritiri-demolizioni', link:'/gestionale/ritiri-demolizioni', linkActive:'ritiri-demolizioni', icon: ICON3, label:'Ritiri Demolizioni', attivo:true, level:['admin', 'superadmin', 'company']},
     {name:'gestione-trasporto', link:'/gestionale/gestione-trasporto', linkActive:'gestione-trasporto', icon: ICON2, label:'Gestione Trasporto', attivo:true, level:['admin', 'superadmin']},
     {name:'trasporto-veicoli', link:'/gestionale/trasporto-veicoli', linkActive:'trasporto-veicoli', icon: ICON13, label:'Trasporto Veicoli', attivo:true, level:['transporter','admin','superadmin']},
     {name:'demolizioni', link:'/gestionale/certificati-demolizione', linkActive:'demolizioni', icon: ICON4, label:'Certificati Demolizione', attivo:true, level:['admin', 'superadmin']},

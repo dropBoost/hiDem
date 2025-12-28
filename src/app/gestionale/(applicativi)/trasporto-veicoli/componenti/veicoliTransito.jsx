@@ -16,7 +16,7 @@ import {
   SelectGroup,
 } from "@/components/ui/select";
 
-export default function SECTIONtrasportoVeicoli({
+export default function SECTIONveicoliTransito({
   onDisplay,
   setStatusAziende,
 }) {
@@ -120,8 +120,8 @@ export default function SECTIONtrasportoVeicoli({
         .from("dati_veicolo_ritirato")
         .select(
           `*,
-                aziendaRitiro:azienda_ritiro_veicoli(ragione_sociale_arv)
-                )`
+				aziendaRitiro:azienda_ritiro_veicoli(ragione_sociale_arv)
+				)`
         )
         .eq("pratica_completata", false)
         .eq("demolizione_approvata", true)
@@ -343,27 +343,6 @@ export default function SECTIONtrasportoVeicoli({
               </h4>
             </div>
           </div>
-          {/* SELEZIONA CAMION */}
-          <div className="flex flex-row justify-between w-full gap-4 min-h-0 p-5 rounded-2xl border">
-            <div className="flex flex-row basis-6/12">
-              <FormSelect
-                nome="camionRitiro"
-                label="Camion"
-                value={formData.camionRitiro}
-                onchange={handleChange}
-                options={optionCamion}
-              />
-            </div>
-            <div className="flex flex-row basis-6/12">
-              <FormSelect
-                nome="autistaRitiro"
-                label="Autista"
-                value={formData.autistaRitiro}
-                onchange={handleChange}
-                options={optionAutisti}
-              />
-            </div>
-          </div>
           {/* VEICOLI DA RITIRARE */}
           <div className="flex flex-col gap-4 xl:basis-6/12 w-full p-1 h-60 overflow-auto">
             <div className="flex flex-col border border-brand p-5 rounded-2xl h-full gap-2">
@@ -450,10 +429,6 @@ export default function SECTIONtrasportoVeicoli({
                 ))}
               </div>
             </div>
-          </div>
-          {/* INSERIMENTO CAMION */}
-          <div className="flex flex-col gap-4 w-full bg-neutral-950 p-5 rounded-2xl">
-            ciao
           </div>
           {/* INSERIMENTO AUTISTA */}
           <div className="flex flex-col gap-4 w-full bg-neutral-950 p-5 rounded-2xl">

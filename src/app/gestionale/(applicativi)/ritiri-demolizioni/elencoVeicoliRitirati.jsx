@@ -6,14 +6,21 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 import DisplayAziendeRitiriDemolizioni from "./componenti/displayAziendeRitiriDemolizioni";
+import { useAdmin } from "@/app/admin/components/AdminContext";
 
 export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setStatusAziende }) {
+
+  const utente = useAdmin()
+  const role = utente?.utente?.user_metadata?.ruolo
+  const uuidUtente = utente?.utente?.id
   const [aziendaRitiroVeicoli, setAziendaRitiroVeicoli] = useState([])
   const [datiVeicoloRitirato, setDatiVeicoloRitirato] = useState([])
   // ricerca
   const [dataSearch, setDataSearch] = useState("")        // testo digitato
   const [dataSearchSubmit, setDataSearchSubmit] = useState("") // testo applicato
-
+  const isAdmin = role === "admin" || role === "superadmin"
+  const isTrasporter = role === "transporter"
+  const isCompany = role === "company"
   // paginazione
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
@@ -47,36 +54,50 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
   }
 
   useEffect(() => {
+    // 1) guardie come nel tuo secondo useEffect
+    if (!role) return
+    if ((!isAdmin || isCompany) && !uuidUtente) return
+
     const fetchData = async () => {
       let query = supabase
         .from("azienda_ritiro_veicoli")
-        .select(`
-        uuid_azienda_ritiro_veicoli,
-        ragione_sociale_arv,
-        piva_arv
-        `, { count: "exact" })
-        .order("ragione_sociale_arv", { ascending: false })
+        .select(
+          `
+            uuid_azienda_ritiro_veicoli,
+            ragione_sociale_arv,
+            piva_arv
+          `,
+          { count: "exact" }
+        )
+        .order("ragione_sociale_arv", { ascending: true })
         .range(from, to)
 
+      // 2) filtri ruolo
+      // Se sei company mostri SOLO la tua azienda (uuidUtente = uuid_azienda_ritiro_veicoli)
+      if (isCompany) {
+        query = query.eq("uuid_azienda_ritiro_veicoli", uuidUtente)
+      }
+
+      // 3) search
       if (dataSearchSubmit) {
         const q = escapeLike(dataSearchSubmit)
-        query = query.or(
-          `ragione_sociale_arv.ilike.%${q}%,piva_arv.ilike.%${q}%`
-        );
+        query = query.or(`ragione_sociale_arv.ilike.%${q}%,piva_arv.ilike.%${q}%`)
       }
 
       const { data, error, count } = await query
+
       if (error) {
         console.error("Errore:", error)
         setAziendaRitiroVeicoli([])
         return
       }
-      setAziendaRitiroVeicoli(data ?? [])
 
+      setAziendaRitiroVeicoli(data ?? [])
+      
     }
 
     fetchData()
-  }, [dataSearchSubmit, page, pageSize, from, to, statusAziende])
+  }, [ role, uuidUtente, isAdmin, isTrasporter, isCompany, dataSearchSubmit, page, pageSize, from, to, statusAziende ])
 
   //PRATICHE APERTE DA COMPLETARE
   useEffect(() => {
@@ -98,17 +119,8 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
 
   }, []);
 
-  console.log("datiVeicoloRitirato", datiVeicoloRitirato)
-
-
-
-  const iconaCestino = <FaUserSlash/>
-    
   return (
-    <div className={`${onDisplay === true ? '' : 'hidden'}
-      w-full h-full
-      flex-1 flex flex-col
-      md:p-0 md:pe-3 px-4 gap-4`}>
+    <div className={`${onDisplay === true ? '' : 'hidden'} w-full h-full flex-1 flex flex-col md:p-0 md:pe-3 px-4 gap-4`}>
       {/* Barra ricerca */}
       <div className="flex w-full items-center gap-2">
         <Input

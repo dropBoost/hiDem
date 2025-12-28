@@ -15,8 +15,6 @@ export default function LayoutGestionale({ children }) {
   const ruolo = utente?.user_metadata.ruolo
   const [openUpBar, setOpenUpBar] = useState(false)
 
-  console.log(ruolo)
-
   return (
     <div className="
       grid h-dvh min-h-0 overflow-hidden supports-[height:100svh]:h-[100svh]

@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabaseClient"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { FaPlusSquare, FaCar } from "react-icons/fa";
+import TargaDesign from "@/app/componenti/targaDesign"
 
 export default function SECTIONgestioneTrasporto({onDisplay, setStatusAziende}) {
     
@@ -223,9 +224,11 @@ export default function SECTIONgestioneTrasporto({onDisplay, setStatusAziende}) 
               <div className="col-span-12 flex flex-row justify-between">
                   <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">ELENCO CAMION</h4>
               </div>
-              <div className="">
+              <div className="flex flex-wrap  gap-2 w-full mt-2">
                 {camion.map((c, i) => (
-                  <span className="text-white" key={i}>{c.targa_camion}</span>
+                  <div key={c.uuid_camion_trasporto_veicoli} className="w-36">
+                  <TargaDesign targa={c.targa_camion}/>
+                  </div>
                 ))}
               </div>
             </div>

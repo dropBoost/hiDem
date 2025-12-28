@@ -49,13 +49,13 @@ export default function LayoutGestionale({ children }) {
 
   return (
       <AdminProvider>
-      {ruolo == "company" && ruolo !== "" ? 
-      <div className="
-      grid h-dvh min-h-0 overflow-hidden supports-[height:100svh]:h-[100svh]
-      grid-cols-1 grid-rows-[64px_1fr_48px]
-      md:grid-cols-[280px_1fr]
-      bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100
-      ">
+        {ruolo !== "" ? 
+        <div className="
+        grid h-dvh min-h-0 overflow-hidden supports-[height:100svh]:h-[100svh]
+        grid-cols-1 grid-rows-[64px_1fr_48px]
+        md:grid-cols-[280px_1fr]
+        bg-neutral-100 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100
+        ">
       {/* Sidebar desktop */}
       <aside className="hidden md:block md:row-span-3 border-neutral-200 dark:border-neutral-800 bg-neutral-500 dark:bg-neutral-900">
           <Sidebar pathname={pathname} u={utente}/>

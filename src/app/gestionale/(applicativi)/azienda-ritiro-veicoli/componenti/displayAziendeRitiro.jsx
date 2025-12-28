@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { FaFileDownload } from "react-icons/fa";
+import { FaFileDownload, FaCar } from "react-icons/fa";
 import { RiEyeCloseLine } from "react-icons/ri";
 import { BsFillTelephoneFill } from "react-icons/bs";
 import { TbBrandWhatsappFilled } from "react-icons/tb";
@@ -77,6 +77,7 @@ export default function DisplayAziendeRitiro ({uuid, ragioneSociale, piva, stato
             <div className="flex flex-row justify-end items-end gap-1 h-full text-xs">
                 <Link className="p-2 bg-brand/70 rounded-md hover:bg-brand" href={`ritiri-demolizioni/${uuid}`}><FaFileDownload /></Link>
                 <Link className="p-2 bg-brand/70 rounded-md hover:bg-brand" href={`ritiri-demolizioni/${uuid}`}><RiEyeCloseLine/></Link>
+                <Link className="p-2 bg-brand/70 rounded-md hover:bg-brand" href={`ritiri-demolizioni/${uuid}`}><FaCar/></Link>
             </div>
         </div>
         </>
