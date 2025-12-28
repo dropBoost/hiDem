@@ -365,14 +365,14 @@ export default function SECTIONtrasportoVeicoli({
             </div>
           </div>
           {/* VEICOLI DA RITIRARE */}
-          <div className="flex flex-col gap-4 xl:basis-6/12 w-full p-1 h-60 overflow-auto">
+          <div className="flex flex-col gap-4 xl:basis-6/12 w-full p-1">
             <div className="flex flex-col border border-brand p-5 rounded-2xl h-full gap-2">
               <div className="flex flex-row justify-between">
                 <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">
                   VEICOLI DA RITIRARE
                 </h4>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 overflow-auto pe-2">
                 {veicoliDaRitirare?.map((c, i) => (
                   <div
                     key={c.uuid_veicolo_ritirato}
@@ -403,7 +403,7 @@ export default function SECTIONtrasportoVeicoli({
             </div>
           </div>
           {/* VEICOLI RITIRATI */}
-          <div className="flex flex-col gap-2 xl:basis-6/12 w-full p-1 h-60">
+          <div className="flex flex-col gap-2 xl:basis-6/12 w-full p-1">
             <div className="flex flex-col border border-brand p-5 rounded-2xl h-full gap-2">
               <div className="flex flex-row justify-between items-start">
                 <h4 className="h-fit text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">
@@ -417,7 +417,7 @@ export default function SECTIONtrasportoVeicoli({
                   type="date"
                 />
               </div>
-              <div className="flex flex-col gap-2 overflow-auto">
+              <div className="flex flex-col gap-2 overflow-auto pe-2">
                 {veicoliRitirati?.map((vr, i) => (
                   <div
                     key={vr.uuid_log_trasporto_veicolo}
@@ -450,14 +450,6 @@ export default function SECTIONtrasportoVeicoli({
                 ))}
               </div>
             </div>
-          </div>
-          {/* INSERIMENTO CAMION */}
-          <div className="flex flex-col gap-4 w-full bg-neutral-950 p-5 rounded-2xl">
-            ciao
-          </div>
-          {/* INSERIMENTO AUTISTA */}
-          <div className="flex flex-col gap-4 w-full bg-neutral-950 p-5 rounded-2xl">
-            ciaoii
           </div>
         </div>
       </div>
