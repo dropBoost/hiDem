@@ -35,7 +35,7 @@ export default function DisplayVeicoliRitirati ({
                         </div>
                         <div className="flex flex-col gap-1">
                             <TargaDesign targa={targa}/>
-                            <span className={`border border-brand rounded-lg px-2 py-1 text-xs truncate text-ellipsis`}>Telaio:<font className="text-xs text-neutral-400 font-medium italic uppercase"> {telaio}</font></span>
+                            {telaio ? <span className={`border border-brand rounded-lg px-2 py-1 text-xs truncate text-ellipsis w-fit`}>Telaio:<font className="text-xs text-neutral-400 font-medium italic uppercase"> {telaio}</font></span> : <span className="border bg-red-700 rounded-lg px-2 py-1 text-[0.55rem] truncate text-ellipsis w-fit uppercase"> telaio non leggibile</span>}
                             <div className="flex flex-row gap-1 items-center border border-neutral-500 w-fit rounded-lg px-2">
                                 <FaCarAlt className="text-brand text-xs"/>
                                 <span className={`text-sm font-semibold uppercase truncate text-ellipsis`}>{modelloVeicolo} <font className="text-xs text-neutral-500 font-medium italic lowercase">{documento}</font></span>

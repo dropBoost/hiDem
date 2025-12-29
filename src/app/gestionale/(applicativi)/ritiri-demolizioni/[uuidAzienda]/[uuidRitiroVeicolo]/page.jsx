@@ -88,6 +88,21 @@ console.log(praticaAuto)
       <div className="">
         <h4 className="text-[0.6rem] font-bold text-dark dark:text-neutral-400 border border-neutral-400 px-3 py-2 w-fit rounded-xl">{praticaAuto[0]?.azienda.ragione_sociale_arv} / {praticaAuto[0]?.azienda.piva_arv}</h4>
       </div>
+			{/* APPROVAZIONE O RIFIUTO PRATICA */}
+      <div className="flex flex-row justify-between border border-brand p-3 w-full rounded-xl items-center text-xs">
+				<div className="flex lg:flex-row flex-col lg:gap-1">
+						<span>STATO ATTUALE:</span>
+						<span className="">
+						{" "}
+						{(() => {
+							if (praticaAuto[0]?.demolizione_approvata == null) return "in attesa"
+							if (praticaAuto[0]?.demolizione_approvata === true) return "approvata"
+							return "rifiutata"
+						})()}
+					</span>
+				</div>
+        <BTNapprovazionePratica uuidPratica={uuidRitiroVeicolo} setSUpdateComponent={setSUpdateComponent}/>
+      </div>
       {/* DATI */}
       <div className="flex flex-col w-full justify-between border border-brand rounded-xl p-5">
         <div id="maincontainergrid" className="flex lg:flex-row flex-col">
@@ -188,71 +203,99 @@ console.log(praticaAuto)
       <div className="">
         <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DOCUMENTI</h4>
       </div>
-      <div className="w-full border border-neutral-600 rounded-xl p-5">
+      <div className="w-full border rounded-xl p-4">
         <div id="mainImagecontainergridtwo" className="flex flex-row">
             {praticaAuto?.length ? praticaAuto.map((pa, index) => {
               return (
-                <div id="rowImageContainer" className="grid grid-cols-4 w-full gap-2" key={`${pa.uuid_veicolo_ritirato ?? index}`}>
-                    {pa.foto_documento_detentore_f ? 
-                    <div className="lg:col-span-1 col-start-1 col-span-2 flex flex-row items-start h-fit gap-2 text-sm">
-                      <div className="flex flex-col gap-1 w-full">
-                        <div className="relative w-full h-[200px] overflow-hidden rounded">
-                        <Image src={pa.foto_documento_detentore_f} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover object-center rounded"/>
-                        </div>
-                        <button className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg">
-                          <Link href={`${pa.foto_documento_detentore_f}?download=${pa.targa_veicolo_ritirato}-doc-detentore-fronte.jpg`} target="_blank">
-                            DETENTORE FRONTE
-                          </Link>
-                        </button>
-                      </div>
-                    </div> : null
-                    }
-                    {pa.foto_documento_detentore_r ? 
-                    <div className="lg:col-span-1 col-start-3 col-span-2 flex flex-row items-start h-fit gap-2 text-sm">
-                      <div className="flex flex-col gap-1 w-full">
-                        <div className="relative w-full h-[200px] overflow-hidden rounded">
-                        <Image src={pa.foto_documento_detentore_r} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover rounded"/>
-                        </div>
-                        <button asChild className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg">
-                          <Link href={`${pa.foto_documento_detentore_r}?download=${pa.targa_veicolo_ritirato}-doc-detentore-retro.jpg`} target="_blank">
-                            DETENTORE RETRO
-                          </Link>
-                        </button>
-                      </div>
-                    </div> : null
-                    }
-                    {pa.foto_documento_veicolo_ritirato_f ? 
-                    <div className="lg:col-span-1 col-start-1 lg:row-start-1 row-start-2 col-span-2 flex flex-row items-start h-fit gap-2 text-sm">
-                      <div className="flex flex-col gap-1 w-full">
-                        <div className="relative w-full h-[200px] overflow-hidden rounded">
-                        <Image src={pa.foto_documento_veicolo_ritirato_f} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover rounded"/>
-                        </div>
-                        <button asChild className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg">
-                          <Link href={`${pa.foto_documento_veicolo_ritirato_f}?download=${pa.targa_veicolo_ritirato}-doc-veicolo-fronte.jpg`} target="_blank">
-                            VEICOLO FRONTE
-                          </Link>
-                        </button>
-                      </div>
-                    </div> : null
-                    }  
-                    {pa.foto_documento_veicolo_ritirato_r ? 
-                    <div className="lg:col-span-1 col-start-3 lg:row-start-1 row-start-2 col-span-2 flex flex-row items-start h-fit gap-2 text-sm">
-                      <div className="flex flex-col gap-1 w-full">
-                        <div className="relative w-full h-[200px] overflow-hidden rounded">
-                        <Image src={pa.foto_documento_veicolo_ritirato_r} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover object-center rounded"/>
-                        </div>
-                        <button asChild className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg">
-                          <Link href={`${pa.foto_documento_veicolo_ritirato_r}?download=${pa.targa_veicolo_ritirato}-doc-veicolo-retro.jpg`} target="_blank">
-                            VEICOLO RETRO
-                          </Link>
-                        </button>
-                      </div>
-                    </div> : null
-                    }                    
+                <div id="rowImageContainer" className="flex flex-wrap w-full" key={`${pa.uuid_veicolo_ritirato ?? index}`}>
+									{pa.foto_documento_detentore_f ? 
+									<div className="xl:basis-2/12 basis-6/12 p-1 flex flex-row items-start h-fit gap-2 text-sm">
+										<div className="flex flex-col gap-1 w-full">
+											<div className="relative w-full h-[200px] overflow-hidden rounded">
+											<Image src={pa.foto_documento_detentore_f} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover object-center rounded"/>
+											</div>
+											<button className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg text-xs">
+												<Link href={`${pa.foto_documento_detentore_f}?download=${pa.targa_veicolo_ritirato}-doc-detentore-fronte.jpg`} target="_blank">
+													DETENTORE FRONTE
+												</Link>
+											</button>
+										</div>
+									</div> : null
+									}
+									{pa.foto_documento_detentore_r ? 
+									<div className="xl:basis-2/12 basis-6/12 p-1 flex flex-row items-start h-fit gap-2 text-sm">
+										<div className="flex flex-col gap-1 w-full">
+											<div className="relative w-full h-[200px] overflow-hidden rounded">
+											<Image src={pa.foto_documento_detentore_r} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover rounded"/>
+											</div>
+											<button className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg text-xs">
+												<Link href={`${pa.foto_documento_detentore_r}?download=${pa.targa_veicolo_ritirato}-doc-detentore-retro.jpg`} target="_blank">
+													DETENTORE RETRO
+												</Link>
+											</button>
+										</div>
+									</div> : null
+									}
+									{pa.foto_documento_veicolo_ritirato_f ? 
+									<div className="xl:basis-2/12 basis-6/12 p-1 flex flex-row items-start h-fit gap-2 text-sm">
+										<div className="flex flex-col gap-1 w-full">
+											<div className="relative w-full h-[200px] overflow-hidden rounded">
+											<Image src={pa.foto_documento_veicolo_ritirato_f} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover rounded"/>
+											</div>
+											<button className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg text-xs">
+												<Link href={`${pa.foto_documento_veicolo_ritirato_f}?download=${pa.targa_veicolo_ritirato}-doc-veicolo-fronte.jpg`} target="_blank">
+													VEICOLO FRONTE
+												</Link>
+											</button>
+										</div>
+									</div> : null
+									}  
+									{pa.foto_documento_veicolo_ritirato_r ? 
+									<div className="xl:basis-2/12 basis-6/12 p-1 flex flex-row items-start h-fit gap-2 text-sm">
+										<div className="flex flex-col gap-1 w-full">
+											<div className="relative w-full h-[200px] overflow-hidden rounded">
+											<Image src={pa.foto_documento_veicolo_ritirato_r} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover object-center rounded"/>
+											</div>
+											<button className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg text-xs">
+												<Link href={`${pa.foto_documento_veicolo_ritirato_r}?download=${pa.targa_veicolo_ritirato}-doc-veicolo-retro.jpg`} target="_blank">
+													VEICOLO RETRO
+												</Link>
+											</button>
+										</div>
+									</div> : null
+									}
+									{pa.foto_complementare_veicolo_ritirato_f ? 
+									<div className="xl:basis-2/12 basis-6/12 p-1 flex flex-row items-start h-fit gap-2 text-sm">
+										<div className="flex flex-col gap-1 w-full">
+											<div className="relative w-full h-[200px] overflow-hidden rounded">
+											<Image src={pa.foto_complementare_veicolo_ritirato_f} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover object-center rounded"/>
+											</div>
+											<button className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg text-xs">
+												<Link href={`${pa.foto_complementare_veicolo_ritirato_f}?download=${pa.targa_veicolo_ritirato}-complementare-veicolo-fronte.jpg`} target="_blank">
+													COMPLEMENTARE FRONTE
+												</Link>
+											</button>
+										</div>
+									</div> : null
+									}
+									{pa.foto_complementare_veicolo_ritirato_r ? 
+									<div className="xl:basis-2/12 basis-6/12 p-1 flex flex-row items-start h-fit gap-2 text-sm">
+										<div className="flex flex-col gap-1 w-full">
+											<div className="relative w-full h-[200px] overflow-hidden rounded">
+											<Image src={pa.foto_complementare_veicolo_ritirato_r} fill alt={`${pa.uuid_veicolo_ritirato}`} className="object-cover object-center rounded"/>
+											</div>
+											<button className="uppercase font-bold bg-brand py-2 px-1 rounded-b-lg text-xs">
+												<Link href={`${pa.foto_complementare_veicolo_ritirato_r}?download=${pa.targa_veicolo_ritirato}-complementare-veicolo-retro.jpg`} target="_blank">
+													COMPLEMENTARE RETRO
+												</Link>
+											</button>
+										</div>
+									</div> : null
+									}
                 </div>
               )
             }) : (
-              <div className="h-24 text-center">Nessun documento disponibile</div>
+              <div className="h-24 text-center">Nessun documento disponibile...</div>
             )}
         </div>
       </div>
@@ -260,7 +303,7 @@ console.log(praticaAuto)
       <div className="">
         <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">DEMOLIZIONE</h4>
       </div>
-      <div className="w-full border border-neutral-600 rounded-xl p-5">
+      <div className="w-full border rounded-xl p-5">
         <div id="mainImagecontainergridtwo" className="flex flex-row">
 
             {datiDemolizione.length ? datiDemolizione.map((dem, index) => {
@@ -311,18 +354,6 @@ console.log(praticaAuto)
       </div>
       <div className='p-6 rounded-2xl shadow-lg min-w-0 min-h-0 bg-white dark:bg-neutral-900 border'>
         <ReadTracking uuidRitiroVeicolo={uuidRitiroVeicolo} updateTracking={updateTracking}/>
-      </div>
-      {/* APPROVAZIONE O RIFIUTO PRATICA */}
-      <div className="flex flex-row justify-between border p-3 w-full rounded-xl items-center my-3">
-        <span className="text-sm font-medium">
-          STATO ATTUALE:{" "}
-          {(() => {
-            if (praticaAuto[0]?.demolizione_approvata == null) return "in attesa"
-            if (praticaAuto[0]?.demolizione_approvata === true) return "approvata"
-            return "rifiutata"
-          })()}
-        </span>
-        <BTNapprovazionePratica uuidPratica={uuidRitiroVeicolo} setSUpdateComponent={setSUpdateComponent}/>
       </div>
     </div>
   </>
