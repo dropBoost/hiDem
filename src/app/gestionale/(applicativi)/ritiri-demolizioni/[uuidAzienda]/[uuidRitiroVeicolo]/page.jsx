@@ -8,10 +8,13 @@ import { FaCircle, FaDotCircle } from "react-icons/fa";
 import Link from "next/link";
 import StatusTracking from "../../componenti/statusTracking";
 import ReadTracking from "../../componenti/readTracking";
-import BTNapprovazionePratica from "./componenti/bottoneApprovazionePratica";
+import BTNapprovazionePratica from "@/app/gestionale/(applicativi)/ritiri-demolizioni/[uuidAzienda]/[uuidRitiroVeicolo]/componenti/bottoneApprovazionePratica";
+import { useAdmin } from "@/app/admin/components/AdminContext";
 
   export default function SchedaVeicoli() {
 
+    const utente = useAdmin()
+    const role = utente?.utente?.user_metadata?.ruolo
     const params = useParams();
     const uuidRitiroVeicolo = params?.uuidRitiroVeicolo;
     const [praticaAuto, setPraticaAuto] = useState([])  
@@ -20,6 +23,7 @@ import BTNapprovazionePratica from "./componenti/bottoneApprovazionePratica";
     const [sUpdateComponent,setSUpdateComponent] = useState(false)
 
 console.log(praticaAuto)
+
     // CARICAMENTO PRATICA VEICOLO
     useEffect(() => {
         if (!params.uuidRitiroVeicolo){

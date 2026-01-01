@@ -37,7 +37,7 @@ export default function CertificatiDemolizione() {
     <div className="flex flex-col min-h-0 w-full justify-start items-start overflow-auto gap-3">
       <div className="flex items-start md:justify-start justify-center w-full gap-3">
         <ButtonSection click={ClickSectionOne} nome="INSERIMENTO DEMOLIZIONE" section={onDisplaySectionOne}/>
-        <ButtonSection click={ClickSectionTwo} nome="ELENCO DEMOLIZIONI" section={onDisplaySectionTwo}/>
+        <ButtonSection click={ClickSectionTwo} nome="DEMOLIZIONI EFFETTUATE" section={onDisplaySectionTwo}/>
         <ButtonSection click={ClickSectionThree} nome="CERCA TARGA" section={onDisplaySectionThree}/>
       </div>
       <div className="h-[1px] w-full bg-gradient-to-r from-brand to-brandDark"/>

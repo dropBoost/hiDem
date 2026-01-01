@@ -16,10 +16,7 @@ import {
   SelectGroup,
 } from "@/components/ui/select";
 
-export default function SECTIONtrasportoVeicoli({
-  onDisplay,
-  setStatusAziende,
-}) {
+export default function SECTIONtrasportoVeicoli({ onDisplay, setStatusAziende, statusAziende }) {
   const utente = useAdmin();
   const role = utente?.utente?.user_metadata.ruolo;
   const uuidUtente = utente?.utente?.id;
@@ -163,10 +160,18 @@ export default function SECTIONtrasportoVeicoli({
     const fetchData = async () => {
       let query = supabase
         .from("log_trasporto_veicolo")
-        .select(
-          `*, veicoloRitirato:dati_veicolo_ritirato(targa_veicolo_ritirato,uuid_azienda_ritiro_veicoli,aziendaRitiro:azienda_ritiro_veicoli(ragione_sociale_arv))`
+        .select(`*,
+          camion:camion_trasporto_veicoli(targa_camion),
+          autista:autista_camion_trasporto_veicoli(nome_autista,cognome_autista),
+          veicoloRitirato:dati_veicolo_ritirato!inner(
+            targa_veicolo_ritirato,
+            veicolo_consegnato,
+            uuid_azienda_ritiro_veicoli,
+            aziendaRitiro:azienda_ritiro_veicoli(ragione_sociale_arv)
+            )
+          `
         )
-        .eq("veicolo_consegnato", false)
+        .eq("veicoloRitirato.veicolo_consegnato", false)
         .gte("created_at_log_trasporto_veicolo", startIso)
         .lt("created_at_log_trasporto_veicolo", endIso);
 
@@ -185,7 +190,7 @@ export default function SECTIONtrasportoVeicoli({
     };
 
     fetchData();
-  }, [role, uuidUtente, updateList, formData.filtroData]);
+  }, [role, uuidUtente, updateList, formData.filtroData, statusAziende]);
 
   //CARICAMENTO CAMION
   useEffect(() => {
@@ -285,7 +290,7 @@ export default function SECTIONtrasportoVeicoli({
     }
 
     setUpdateList((prev) => !prev);
-
+    setStatusAziende(prev => !prev)
     alert("Trasporto Inserito con successo");
   }
 
@@ -326,11 +331,10 @@ export default function SECTIONtrasportoVeicoli({
     }
 
     setUpdateList((prev) => !prev);
-
+    setStatusAziende(prev => !prev)
     alert("Trasporto Eliminato");
   }
 
-  console.log(veicoliRitirati, "vr");
   return (
     <>
       <div className={`${onDisplay === true ? "" : "hidden"} w-full h-full`}>
@@ -418,23 +422,23 @@ export default function SECTIONtrasportoVeicoli({
                 />
               </div>
               <div className="flex flex-col gap-2 overflow-auto pe-2">
-                {veicoliRitirati?.map((vr, i) => (
-                  <div
-                    key={vr.uuid_log_trasporto_veicolo}
-                    className="flex flex-row justify-between border py-2 px-4 rounded-xl"
-                  >
+                {veicoliRitirati?.length > 0 ? veicoliRitirati?.map((vr, i) => (
+                  <div key={vr.uuid_log_trasporto_veicolo} className="flex flex-row justify-between border py-2 px-4 rounded-xl">
                     <div className="flex flex-row items-center gap-3">
                       <div className="w-36">
                         <TargaDesign
                           targa={vr?.veicoloRitirato?.targa_veicolo_ritirato}
                         />
                       </div>
-                      <span className="text-xs">
-                        {
-                          vr?.veicoloRitirato?.aziendaRitiro
-                            ?.ragione_sociale_arv
-                        }
-                      </span>
+                      <div className="flex lg:items-center items-start lg:flex-row flex-col lg:gap-2 gap-1">
+                        <span className="text-xs border px-2 py-1 rounded-lg">
+                          {
+                            vr?.veicoloRitirato?.aziendaRitiro
+                              ?.ragione_sociale_arv
+                          }
+                        </span>
+                        <span className="text-xs bg-brand/30 px-2 py-1 rounded-lg">{vr?.autista?.nome_autista} {vr?.autista?.cognome_autista} / {vr?.camion?.targa_camion}</span>
+                      </div>
                     </div>
                     <div className="flex items-center">
                       <ButtonEliminaRitira
@@ -447,7 +451,7 @@ export default function SECTIONtrasportoVeicoli({
                       />
                     </div>
                   </div>
-                ))}
+                )) : null}
               </div>
             </div>
           </div>

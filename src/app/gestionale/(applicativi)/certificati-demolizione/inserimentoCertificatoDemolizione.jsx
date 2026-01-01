@@ -56,7 +56,9 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
         .select(`*,
             aziendaRitiro:azienda_ritiro_veicoli(
             ragione_sociale_arv,provincia_legale_arv)`)
-        .eq("pratica_completata", false)
+        .eq("veicolo_consegnato", true)
+        .eq("demolizione_approvata", true)
+        .eq("veicolo_ritirato", true)
         .order("created_at_veicolo_ritirato", { ascending: false })
         
 
@@ -438,7 +440,6 @@ export function FormFileUpload({
   const slugify = (s) =>
     String(s).normalize('NFKD').replace(/[^\w.\-]+/g, '-').replace(/-+/g, '-').toLowerCase();
 
-  // --- NEW: normalizzazione sicura del pathPrefix (solo questa parte è nuova) ---
   const sanitizePathPrefix = (pp) => {
     if (!pp) return '';
     return String(pp)
@@ -453,7 +454,6 @@ export function FormFileUpload({
       )
       .join('/');                  // ricompone con uno slash singolo tra i segmenti
   };
-  // ------------------------------------------------------------------------------
 
   useEffect(() => {
     return () => previews.forEach(p => URL.revokeObjectURL(p.url));

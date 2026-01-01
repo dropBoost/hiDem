@@ -136,7 +136,6 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
         <Button type="button" onClick={handleSearchClick}>Cerca</Button>
         <Button type="button" variant="outline" onClick={handleReset}>Reset</Button>
       </div>
-
       <div className="flex flex-col gap-3">
         {aziendaRitiroVeicoli.length ? aziendaRitiroVeicoli.map((a, index) => {
           
