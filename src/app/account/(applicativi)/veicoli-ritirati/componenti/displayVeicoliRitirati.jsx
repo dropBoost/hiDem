@@ -8,7 +8,6 @@ import { MdEmail } from "react-icons/md";
 import { FaCarAlt } from "react-icons/fa";
 import { LinkComponentContact } from "@/app/gestionale/componenti/displayLinkComponentContact";
 import TargaDesign from "@/app/componenti/targaDesign";
-import DownloadRitiroVeicoloDOC from "@/app/componenti/pdf/DOWritiroveicolo";
 
 export default function DisplayVeicoliRitiratiACCOUNT ({
     uuid, targa, modelloVeicolo, telaio, nome, cognome, mobileDetentore,completata,tipologiaD,ragioneSociale, piva, cf, email, documento, data
