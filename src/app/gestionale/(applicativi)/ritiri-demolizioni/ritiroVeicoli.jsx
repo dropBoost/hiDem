@@ -390,6 +390,7 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
   ]);
 
   async function StatusUpdate(uuidVeicolo, uuidStatoAvanzamento) {
+
     const payloadStatus = {
       uuid_veicolo_ritirato: uuidVeicolo,
       uuid_stato_avanzamento: uuidStatoAvanzamento,
@@ -406,6 +407,7 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
     } else {
       console.log("Stato aggiornato:", data);
     }
+
   }
 
   function handleChangeCheckbox(e) {
@@ -413,7 +415,7 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
     setFormData((prev) => ({ ...prev, [name]: checked }));
 		setFormData((prev) => ({ ...prev, vin: "" }));
   }
-	console.log(formData, "form", gravamiSelect)
+	
   function handleChangeProvinciaLegale(e) {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -531,8 +533,8 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
       return;
     }
 
-    // // aggiorno lo stato avanzamento
-    // await StatusUpdate(data.uuid_veicolo_ritirato, "3a936e04-5e62-488a-8310-6fa81998fb5b")
+    // aggiorno lo stato avanzamento
+    await StatusUpdate(data.uuid_veicolo_ritirato, "3a936e04-5e62-488a-8310-6fa81998fb5b") //VEICOLO RITIRATO
 
     // reset form
     setFormData({

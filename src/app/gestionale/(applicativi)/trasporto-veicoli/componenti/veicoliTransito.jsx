@@ -87,6 +87,43 @@ export default function SECTIONveicoliTransito({ onDisplay, setStatusAziende, st
     fetchData();
   }, [role, uuidUtente, updateList]);
 
+  async function StatusUpdate(uuidVeicolo, uuidStatoAvanzamento) {
+
+		const payloadStatus = {
+			uuid_veicolo_ritirato: uuidVeicolo,
+			uuid_stato_avanzamento: uuidStatoAvanzamento,
+		};
+
+		const { data, error } = await supabase
+			.from("log_avanzamento_demolizione")
+			.insert(payloadStatus)
+			.select()
+			.single();
+
+		if (error) {
+			console.log("Errore statusUpdate:", error);
+		} else {
+			console.log("Stato aggiornato:", data);
+		}
+
+	}
+
+	async function StatusDowngrade(uuidVeicolo, uuidStatoAvanzamento) {
+
+		const { data, error } = await supabase
+			.from("log_avanzamento_demolizione")
+      .delete()
+      .eq("uuid_veicolo_ritirato", uuidVeicolo)
+			.eq("uuid_stato_avanzamento", uuidStatoAvanzamento)
+
+		if (error) {
+			console.log("Errore statusUpdate:", error);
+		} else {
+			console.log("Stato aggiornato:", data);
+		}
+
+	}  
+
   // INSERIMENTO CONSEGNA
   async function ConsegnaVeicolo(uuidVeicolo) {
     if (!uuidVeicolo) return alert("seleziona un veicolo");
@@ -107,6 +144,8 @@ export default function SECTIONveicoliTransito({ onDisplay, setStatusAziende, st
       alert(`Errore salvataggio: ${vrError.message}`);
       return;
     }
+
+    await StatusUpdate(uuidVeicolo, "95c6e1d5-94fc-40df-b5db-08e9bf36e730") //CONSEGNATO
 
     setUpdateList((prev) => !prev);
 		setStatusAziende(prev => !prev)
@@ -135,6 +174,8 @@ export default function SECTIONveicoliTransito({ onDisplay, setStatusAziende, st
       alert(`Errore salvataggio: ${vrError.message}`);
       return;
     }
+
+    await StatusDowngrade(uuidVeicolo, "6adcebac-b5db-452a-974d-912e1caab37b") //ELIMINA CONSEGNATO
 
     setUpdateList((prev) => !prev);
 		setStatusAziende(prev => !prev)

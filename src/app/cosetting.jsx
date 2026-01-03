@@ -40,6 +40,7 @@ export const version = "0.0.1"
 
 // PERSONALIZZAZIONI
 
+export const dominio = "https://hi-dem.vercel.app/"
 export const companyName = "ECOCAR Autodemolizione"
 export const logoDark = "/logo-black.png"
 export const logoLight = "/logo-white.png"

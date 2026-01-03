@@ -107,7 +107,7 @@ import DisplayVeicoliRitirati from "../componenti/displayVeicoliRitirati";
         setDataSearchSubmit("")
         setPage(1)
     }
-
+		console.log(listPraticheAzienda)
   return (
   <>
       <div className={`${listPraticheAzienda ? '' : 'hidden'} w-full min-h-0 flex-1 flex flex-col gap-4`}>
@@ -151,8 +151,8 @@ import DisplayVeicoliRitirati from "../componenti/displayVeicoliRitirati";
           return (
             <DisplayVeicoliRitirati
             key={lpa?.uuid_veicolo_ritirato} uuid={lpa?.uuid_veicolo_ritirato} data={DataFormat(lpa?.created_at_veicolo_ritirato)}
-            targa={lpa?.targa_veicolo_ritirato} telaio={lpa?.vin_veicolo_ritirato}
-            tipologiaD={lpa?.forma_legale_detentore} ragioneSociale={lpa?.ragione_sociale_detentore} nome={lpa?.nome_detentore} cognome={lpa?.cognome_detentore} piva={lpa?.piva_detentore}
+            targa={lpa?.targa_veicolo_ritirato} telaio={lpa?.vin_veicolo_ritirato} vinLeggibile={lpa?.vin_leggibile}
+            formaLegale={lpa?.forma_legale_detentore} tipologiaD={lpa?.tipologia_detentore} ragioneSociale={lpa?.ragione_sociale_detentore} nome={lpa?.nome_detentore} cognome={lpa?.cognome_detentore} piva={lpa?.piva_detentore}
             cf={lpa?.cf_detentore} modelloVeicolo={`${lpa?.modello.marca} ${lpa?.modello.modello}`} documento={lpa?.tipologia_documento_veicolo_ritirato}
             mobileDetentore={lpa?.mobile_detentore} email={lpa?.email_detentore}
             completata={lpa?.pratica_completata} veicoloConsegnato={lpa?.veicolo_consegnato} veicoloRitirato={lpa?.veicolo_ritirato} demolizioneApprovata={lpa?.demolizione_approvata}

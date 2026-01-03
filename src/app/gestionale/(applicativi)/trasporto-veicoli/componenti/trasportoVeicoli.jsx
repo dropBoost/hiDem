@@ -247,8 +247,46 @@ export default function SECTIONtrasportoVeicoli({ onDisplay, setStatusAziende, s
     label: `${c.cognome_autista} ${c.nome_autista}`,
   }));
 
+	async function StatusUpdate(uuidVeicolo, uuidStatoAvanzamento) {
+
+		const payloadStatus = {
+			uuid_veicolo_ritirato: uuidVeicolo,
+			uuid_stato_avanzamento: uuidStatoAvanzamento,
+		};
+
+		const { data, error } = await supabase
+			.from("log_avanzamento_demolizione")
+			.insert(payloadStatus)
+			.select()
+			.single();
+
+		if (error) {
+			console.log("Errore statusUpdate:", error);
+		} else {
+			console.log("Stato aggiornato:", data);
+		}
+
+	}
+
+	async function StatusDowngrade(uuidVeicolo, uuidStatoAvanzamento) {
+
+		const { data, error } = await supabase
+			.from("log_avanzamento_demolizione")
+      .delete()
+      .eq("uuid_veicolo_ritirato", uuidVeicolo)
+			.eq("uuid_stato_avanzamento", uuidStatoAvanzamento)
+
+		if (error) {
+			console.log("Errore statusUpdate:", error);
+		} else {
+			console.log("Stato aggiornato:", data);
+		}
+
+	}
+
   // INSERIMENTO RITIRO VEICOLO
   async function RitiroVeicolo(uuidVeicolo, uuidCamion, uuidAutista) {
+
     if (!uuidVeicolo) return alert("seleziona un veicolo");
     if (!uuidCamion) return alert("seleziona un camion");
     if (!uuidAutista) return alert("seleziona l'autista");
@@ -274,7 +312,6 @@ export default function SECTIONtrasportoVeicoli({ onDisplay, setStatusAziende, s
       uuid_veicolo_ritirato: uuidVeicolo,
       uuid_camion_tv: uuidCamion,
       uuid_autista_ctv: uuidAutista,
-      veicolo_consegnato: false,
     };
 
     const { data: trasportoData, error: trasportoError } = await supabase
@@ -289,26 +326,45 @@ export default function SECTIONtrasportoVeicoli({ onDisplay, setStatusAziende, s
       return;
     }
 
+    await StatusUpdate(uuidVeicolo, "6adcebac-6465-452a-974d-912e1caab37b") //IN TRANSITO
+
     setUpdateList((prev) => !prev);
     setStatusAziende(prev => !prev)
     alert("Trasporto Inserito con successo");
   }
 
-  // ELIMINA RITIRO VEICOLO
   async function EliminaRitiro(uuidVeicolo, uuidLog) {
     if (!uuidVeicolo) return alert("seleziona un veicolo");
     if (!uuidLog) return alert("seleziona Log");
 
-    const payloadVR = {
-      veicolo_ritirato: false,
-    };
-
-    const { data: vrData, error: vrError } = await supabase
+    // 1) Controllo: veicolo_consegnato deve essere false su dati_veicolo_ritirato
+    const { data: veicoloRow, error: checkErr } = await supabase
       .from("dati_veicolo_ritirato")
-      .update(payloadVR)
+      .select("uuid_veicolo_ritirato, veicolo_consegnato")
       .eq("uuid_veicolo_ritirato", uuidVeicolo)
-      .select()
-      .single();
+      .maybeSingle();
+
+    if (checkErr) {
+      console.error(checkErr);
+      alert(`Errore verifica: ${checkErr.message}`);
+      return;
+    }
+
+    if (!veicoloRow) {
+      alert("Veicolo non trovato.");
+      return;
+    }
+
+    if (veicoloRow.veicolo_consegnato !== false) {
+      alert("Non puoi eliminare: il veicolo risulta consegnato.");
+      return;
+    }
+
+    // 2) Update veicolo_ritirato -> false
+    const { error: vrError } = await supabase
+      .from("dati_veicolo_ritirato")
+      .update({ veicolo_ritirato: false })
+      .eq("uuid_veicolo_ritirato", uuidVeicolo);
 
     if (vrError) {
       console.error(vrError);
@@ -316,22 +372,30 @@ export default function SECTIONtrasportoVeicoli({ onDisplay, setStatusAziende, s
       return;
     }
 
+    // 3) Delete log SOLO se appartiene a quel veicolo (extra sicurezza)
     const { data: trasportoData, error: trasportoError } = await supabase
       .from("log_trasporto_veicolo")
       .delete()
       .eq("uuid_log_trasporto_veicolo", uuidLog)
-      .eq("veicolo_consegnato", false)
+      .eq("uuid_veicolo_ritirato", uuidVeicolo)
       .select()
-      .single();
+      .maybeSingle();
 
     if (trasportoError) {
       console.error(trasportoError);
-      alert("Errore eliminazione trasporto");
+      alert(`Errore eliminazione trasporto: ${trasportoError.message}`);
       return;
     }
 
+    if (!trasportoData) {
+      alert("Nessun log eliminato (log non trovato o non associato al veicolo).");
+      return;
+    }
+
+    await StatusDowngrade(uuidVeicolo, "6adcebac-6465-452a-974d-912e1caab37b"); // IN TRANSITO
+
     setUpdateList((prev) => !prev);
-    setStatusAziende(prev => !prev)
+    setStatusAziende((prev) => !prev);
     alert("Trasporto Eliminato");
   }
 

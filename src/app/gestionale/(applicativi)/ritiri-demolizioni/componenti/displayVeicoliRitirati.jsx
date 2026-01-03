@@ -3,10 +3,11 @@ import { FaFileDownload } from "react-icons/fa";
 import { RiEyeCloseLine } from "react-icons/ri";
 import { FaCarAlt } from "react-icons/fa";
 import TargaDesign from "@/app/componenti/targaDesign";
+import ButtonScaricaRitiroPDF from "@/app/componenti/pdf/buttonScaricaRitiroPDF";
 
 export default function DisplayVeicoliRitirati ({
 	uuid, targa, modelloVeicolo, telaio, nome, cognome, mobileDetentore,completata,tipologiaD,ragioneSociale, piva, cf, email, documento, data,
-	veicoloConsegnato, veicoloRitirato, demolizioneApprovata
+	veicoloConsegnato, veicoloRitirato, demolizioneApprovata, formaLegale, vinLeggibile
 	}) {
 	
 	const statoDemolizione = demolizioneApprovata == null ? "pratica in attesa" : (demolizioneApprovata ? "demolizione approvata" : "demolizione non approvata")
@@ -38,7 +39,7 @@ export default function DisplayVeicoliRitirati ({
 							</>    
 								:
 							<>    
-								<span className="text-xs font-light truncate">{nome} {cognome} / <font className="italic text-blue-600">{tipologiaD}</font></span>
+								<span className="text-xs font-light truncate">{nome} {cognome} / <font className="italic text-blue-600">{formaLegale}</font></span>
 								<span className="text-xs font-light truncate">{cf}</span>
 							</>    
 						}
@@ -59,7 +60,30 @@ export default function DisplayVeicoliRitirati ({
 			</div>
 			{/* BOTTONI */}
 			<div className="flex flex-row justify-end items-end h-full gap-1 text-xs">
-				<Link className="p-2 bg-brand/70 rounded-md hover:bg-brand" href={`ritiri-demolizioni/${uuid}`}><FaFileDownload /></Link>
+				<ButtonScaricaRitiroPDF payload={{
+					uuidRitiroVeicolo: uuid,
+					aziendaRitiro: "uno",
+					vinLeggibile: vinLeggibile,
+					vin: telaio,
+					targa: targa,
+					modello: modelloVeicolo,
+					tipologiaDetentore: tipologiaD,
+					formaLegale: formaLegale,
+					ragioneSociale: ragioneSociale,
+					indirizzo: `${"viaaaaa"}`,
+					nome: nome,
+					cognome: cognome,
+					cf: cf,
+					piva: piva,
+					tipologiaDocDet: documento,
+					numeroDocDet: "4444444",
+					email: email,
+					mobile: mobileDetentore,
+					tipDocVeic: `${"tipo doc veicolo"}`,
+					docGravami: `${"esito gravami"}`,
+					praticaCompletata: `${"fffff"}`,
+					dataRitiro: data,
+				}}/>
 				<Link className="p-2 bg-brand/70 rounded-md hover:bg-brand" href={`ritiri-demolizioni/${uuid}`}><RiEyeCloseLine/></Link>
 			</div>
 		</div>

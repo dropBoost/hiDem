@@ -74,7 +74,26 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
     label: `${prv.targa_veicolo_ritirato} / ${prv.aziendaRitiro?.ragione_sociale_arv} - ${prv.aziendaRitiro?.provincia_legale_arv}`,
   }))
 
+  async function StatusUpdate(uuidVeicolo, uuidStatoAvanzamento) {
 
+		const payloadStatus = {
+			uuid_veicolo_ritirato: uuidVeicolo,
+			uuid_stato_avanzamento: uuidStatoAvanzamento,
+		};
+
+		const { data, error } = await supabase
+			.from("log_avanzamento_demolizione")
+			.insert(payloadStatus)
+			.select()
+			.single();
+
+		if (error) {
+			console.log("Errore statusUpdate:", error);
+		} else {
+			console.log("Stato aggiornato:", data);
+		}
+
+	}
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -114,6 +133,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
     } else if (telaioCaricare === true){
       alert("Telaio Già inserito")
     } else {
+
       const { data, error } = await supabase.from("certificato_demolizione").insert(payload).select().single()
       if (error) {
         console.error(error)
@@ -127,10 +147,14 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
         demolizioneCompletata:false,
         noteDemolizione:"",
         })
+    
+        await StatusUpdate(praticaSelect, "ce62b302-fb4e-4f2c-9e2f-cb230b40275b") //DEMOLITO
+
         setResetUploadsTick(t => t + 1)
         setUploadingByField({});
         setStatusAziende(prev => !prev)
       }
+
       console.log("Inserito:", data)
       alert("Demolizione Inserita con successo!")
       

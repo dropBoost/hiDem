@@ -9,31 +9,26 @@ export default function BTNapprovazionePratica ({uuidPratica, sUpdateComponent, 
     const role = utente?.utente?.user_metadata?.ruolo
     const isAdmin = role == "superadmin" || role == "admin"
 
-    async function handleSubmit(value) {
-    
-    if (!isAdmin) return
-
-    const payload = {
-        demolizione_approvata: value,
-    }
-
-    const { data, error } = await supabase
-    .from("dati_veicolo_ritirato")
-    .update(payload)
-    .eq("uuid_veicolo_ritirato", uuidPratica)
-    .select()
-    .single()
-
-    if (error) {
-        console.error(error)
-        alert(`Errore salvataggio: ${error.message}`)
-        return
-    }
-
-    alert("Pratica accettata con successo!")
-
-    }
-
+		async function StatusUpdate(uuidVeicolo, uuidStatoAvanzamento) {
+	
+			const payloadStatus = {
+				uuid_veicolo_ritirato: uuidVeicolo,
+				uuid_stato_avanzamento: uuidStatoAvanzamento,
+			};
+	
+			const { data, error } = await supabase
+				.from("log_avanzamento_demolizione")
+				.insert(payloadStatus)
+				.select()
+				.single();
+	
+			if (error) {
+				console.log("Errore statusUpdate:", error);
+			} else {
+				console.log("Stato aggiornato:", data);
+			}
+	
+		}
     function handleChangeTrue(e) {
         e.preventDefault()
         handleSubmit(true)
@@ -49,6 +44,34 @@ export default function BTNapprovazionePratica ({uuidPratica, sUpdateComponent, 
         e.preventDefault()
         handleSubmit(null)
         setSUpdateComponent(prev=>!prev)
+    }
+    async function handleSubmit(value) {
+    
+			if (!isAdmin) return
+
+			const payload = {
+					demolizione_approvata: value,
+			}
+
+			const { data, error } = await supabase
+			.from("dati_veicolo_ritirato")
+			.update(payload)
+			.eq("uuid_veicolo_ritirato", uuidPratica)
+			.select()
+			.single()
+
+			if (error) {
+					console.error(error)
+					alert(`Errore salvataggio: ${error.message}`)
+					return
+			}
+
+			const statoAvenzamentoPratica = payload?.demolizione_approvata == true ? "55c72922-df24-4931-9191-aa0662f5d717" : "03e2958c-0a67-4e2b-920d-09a13a2e26f5"
+
+			await StatusUpdate(uuidPratica, statoAvenzamentoPratica) //DEMOLIZIONE APPROVATA
+			setSUpdateComponent(prev => !prev)
+			alert("Pratica accettata con successo!")
+
     }
 
     return (
