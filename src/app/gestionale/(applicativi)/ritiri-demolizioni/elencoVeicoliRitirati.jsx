@@ -117,7 +117,7 @@ export default function ElencoVeicoliRitirati({ onDisplay, statusAziende, setSta
 
     })();
 
-  }, []);
+  }, [statusAziende]);
 
   return (
     <div className={`${onDisplay === true ? '' : 'hidden'} w-full h-full flex-1 flex flex-col md:p-0 md:pe-3 px-4 gap-4`}>

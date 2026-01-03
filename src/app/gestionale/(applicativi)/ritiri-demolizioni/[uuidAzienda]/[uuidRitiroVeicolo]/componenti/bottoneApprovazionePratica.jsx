@@ -3,7 +3,7 @@
 import { useAdmin } from "@/app/admin/components/AdminContext"
 import { supabase } from "@/lib/supabaseClient"
 
-export default function BTNapprovazionePratica ({uuidPratica, setSUpdateComponent}) {
+export default function BTNapprovazionePratica ({uuidPratica, sUpdateComponent, setSUpdateComponent}) {
 
     const utente = useAdmin()
     const role = utente?.utente?.user_metadata?.ruolo

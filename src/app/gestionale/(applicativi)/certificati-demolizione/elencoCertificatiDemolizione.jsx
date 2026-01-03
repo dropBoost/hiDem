@@ -98,7 +98,7 @@ export default function ElencoCertificatiDemolizione({ onDisplay, statusAziende,
 
     })();
 
-  }, []);
+  }, [statusAziende]);
 
   //CERTIFICATI DEMOLIZIONE
   useEffect(() => {
@@ -136,42 +136,29 @@ export default function ElencoCertificatiDemolizione({ onDisplay, statusAziende,
 
       setCountDemolizione(data ?? [])
     })()
-  }, [])
+  }, [statusAziende])
 
-  return (
-    <div className={`${onDisplay === 'on' ? '' : 'hidden'}
-      w-full h-full
-      flex-1 flex flex-col
-      md:p-0 md:pe-3 px-4 gap-4`}>
-      {/* Barra ricerca */}
-      <div className="flex w-full items-center gap-2">
-        <Input
-          type="text"
-          id="cerca"
-          placeholder="Cerca ragione sociale o partita iva…"
-          value={dataSearch}
-          onChange={handleChangeSearchBar}
-          onKeyDown={handleSearchKeyDown}
-          className="appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand
-                     focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:border-brand placeholder:text-xs placeholder:text-neutral-500 placeholder:italic"
-        />
-        <Button type="button" onClick={handleSearchClick}>Cerca</Button>
-        <Button type="button" variant="outline" onClick={handleReset}>Reset</Button>
-      </div>
+  return ( 
+	<div className={`${onDisplay === 'on' ? '' : 'hidden'} w-full h-full flex-1 flex flex-col md:p-0 md:pe-3 px-4 gap-4`}>
+		{/* Barra ricerca */}
+		<div className="flex w-full items-center gap-2">
+			<Input type="text" id="cerca" placeholder="Cerca ragione sociale o partita iva…" value={dataSearch} onChange={handleChangeSearchBar} onKeyDown={handleSearchKeyDown} className="appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:border-brand placeholder:text-xs placeholder:text-neutral-500 placeholder:italic"/>
+			<Button type="button" onClick={handleSearchClick}>Cerca</Button>
+			<Button type="button" variant="outline" onClick={handleReset}>Reset</Button>
+		</div>
+		<div className="flex flex-col gap-3">
+			{aziendaRitiroVeicoli.length ? aziendaRitiroVeicoli.map((a, index) => {
+				
+				const n = countDemolizione?.filter(ua => ua.dati_veicolo_ritirato?.uuid_azienda_ritiro_veicoli === a?.uuid_azienda_ritiro_veicoli)?.length ?? 0
+				const uuid = a?.uuid_azienda_ritiro_veicoli ?? String(index);
 
-      <div className="flex flex-col gap-3">
-        {aziendaRitiroVeicoli.length ? aziendaRitiroVeicoli.map((a, index) => {
-          
-          const n = countDemolizione?.filter(ua => ua.dati_veicolo_ritirato?.uuid_azienda_ritiro_veicoli === a?.uuid_azienda_ritiro_veicoli)?.length ?? 0
-          const uuid = a?.uuid_azienda_ritiro_veicoli ?? String(index);
-
-          return (
-            <DisplayAziendeElencoDemolizioni key={uuid} ragioneSociale={a?.ragione_sociale_arv} piva={a?.piva_arv} uuid={uuid} n={n}/>
-          );
-        }) : (
-            <span colSpan={8} className="h-24 text-center">Nessun risultato.</span>
-        )}
-      </div>
+				return (
+					<DisplayAziendeElencoDemolizioni key={uuid} ragioneSociale={a?.ragione_sociale_arv} piva={a?.piva_arv} uuid={uuid} n={n}/>
+				);
+			}) : (
+					<span colSpan={8} className="h-24 text-center">Nessun risultato.</span>
+			)}
+		</div>
     </div>
   )
 }

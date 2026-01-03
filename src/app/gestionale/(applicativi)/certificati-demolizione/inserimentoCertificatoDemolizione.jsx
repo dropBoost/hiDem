@@ -28,21 +28,17 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
   const [open, setOpen] = useState(false)
 
   const [statusPratiche, setStatusPratiche] = useState(false)
-  const [aziendaScelta, setAziendaScelta] = useState("")
   const [uploadingByField, setUploadingByField] = useState({});
   const anyUploading = Object.values(uploadingByField).some(Boolean);
   const [resetUploadsTick, setResetUploadsTick] = useState(0);
   const [targaCaricare, setTargaCaricare] = useState(false)
   const [telaioCaricare, setTelaioCaricare] = useState(false)
-
-  const [threeStep, setThreeStep] = useState(false)
   const [fourStep, setFourStep] = useState(false)
   
   const [formData, setFormData] = useState({
     uuidVeicoloRitirato:"",
     documentoDemolizione:"",
     altroDocumentoDemolizione:"",
-    tipologiaDemolizione:"",
     demolizioneCompletata:false,
     noteDemolizione:"",
   })
@@ -56,6 +52,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
         .select(`*,
             aziendaRitiro:azienda_ritiro_veicoli(
             ragione_sociale_arv,provincia_legale_arv)`)
+        .eq("pratica_completata", false)
         .eq("veicolo_consegnato", true)
         .eq("demolizione_approvata", true)
         .eq("veicolo_ritirato", true)
@@ -77,11 +74,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
     label: `${prv.targa_veicolo_ritirato} / ${prv.aziendaRitiro?.ragione_sociale_arv} - ${prv.aziendaRitiro?.provincia_legale_arv}`,
   }))
 
-  // SELECT OPTION DEMOLIZIONE
-  const tipologiaDemolizione = [
-    { label:'Totale', value:'totale' },
-    { label:'Parziale', value:'parziale' }
-  ]
+
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -111,7 +104,7 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
         uuid_veicolo_ritirato: praticaSelect,
         documento_demolizione: formData.documentoDemolizione,
         altro_documento_demolizione: formData.altroDocumentoDemolizione,
-        tipologia_demolizione: formData.tipologiaDemolizione,
+        tipologia_demolizione: "totale",
         demolizione_completata: true,
         note_demolizione: formData.noteDemolizione
     }
@@ -131,7 +124,6 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
         uuidVeicoloRitirato:"",
         documentoDemolizione:"",
         altroDocumentoDemolizione:"",
-        tipologiaDemolizione:"",
         demolizioneCompletata:false,
         noteDemolizione:"",
         })
@@ -166,138 +158,126 @@ export default function InserimentoCertificatiDemolizione({onDisplay, statusAzie
     const compilato = (v) =>
       typeof v === "string" ? v?.trim() !== "" : v !== null && v !== undefined;
 
-    
-    const threeOk =
-    compilato(fd.tipologiaDemolizione)
-
     const fourOk =
     compilato(fd.documentoDemolizione);  
 
-    
-    setThreeStep(threeOk);
+
     setFourStep(fourOk);
-  }, [formData, setFourStep, setThreeStep]);
+  }, [formData, setFourStep]);
 
   const datiPraticaSelezionata = praticheRitiroVeicoli.find(p => p.uuid_veicolo_ritirato == praticaSelect)
 
   return (
     <>
-      <div className={`${onDisplay === 'on' ? '' : 'hidden'}
-      w-full h-full
-      flex-1 flex flex-col
-      md:p-0 md:pe-3 px-4`}>
-          <form onSubmit={handleSubmit} className="grid h-full grid-cols-12 gap-4">
-
-            <div id="oneStep" className='flex flex-col col-span-12 h-fit gap-3'>  
-              <div className="col-span-12 flex flex-row justify-between">
-                  <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">AZIENDA RITIRO VEICOLO</h4>
-                  <button
-                  type="submit"
-                  disabled={anyUploading}
-                  className={`${fourStep ? "" : "hidden"} bg-brand px-3 py-2 w-fit rounded-xl h-full`}>
-                    {anyUploading ? "Caricamento in corso..." : <FaPlusSquare className='font-bold text-dark dark:text-white'/>}
-                  </button>
-              </div>
-              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-brand/50'>
-                {/* SELECT DI RICERCA PRATICA */}
-                <div className="col-span-12 lg:col-span-12 min-w-0">
-                  <label className="block text-sm font-semibold mb-1">Seleziona una pratica</label>
-                  <Popover open={open} onOpenChange={setOpen} className="w-full">
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={open}
-                        className="w-full min-w-0 justify-between outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background data-[state=open]:ring-2 data-[state=open]:ring-ring data-[state=open]:ring-offset-2">
-                        {praticaSelect ? optionsPraticheRitiro.find((ar) => ar.value === praticaSelect)?.label  : "seleziona una pratica..."}
-                        <ChevronsUpDown className="opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent align="start" sideOffset={4} className="p-0 w-[var(--radix-popover-trigger-width)]">
-                      <Command className="p-1">
-                        <CommandInput placeholder="Cerca..." className="h-8 focus:ring-1 focus:ring-brand focus:border-brand outline-none focus:outline-none my-2" />
-                        <CommandList className="my-1">
-                          <CommandEmpty>Nessun risultato</CommandEmpty>
-                          <CommandGroup>
-                            {optionsPraticheRitiro.map((opt) => (
-                              <CommandItem
-                                key={opt.value}
-                                value={`${opt.value}`}
-                                onSelect={() => { setPraticaSelect(opt.value); setOpen(false) }}
-                              >
-                                {opt.label}
-                                <Check className={cn("ml-auto", optionsPraticheRitiro === opt.value ? "opacity-100" : "opacity-0")} />
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                </div>
+      <div className={`${onDisplay === 'on' ? '' : 'hidden'} w-full h-full flex-1 flex flex-col md:p-0 md:pe-3 px-4`}>
+				<form onSubmit={handleSubmit} className="grid h-full grid-cols-12 gap-4">
+					<div id="oneStep" className='flex flex-col col-span-12 h-fit gap-3'>  
+						<div className="col-span-12 flex flex-row justify-between">
+								<h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">AZIENDA RITIRO VEICOLO</h4>
+								<button
+								type="submit"
+								disabled={anyUploading}
+								className={`${fourStep ? "" : "hidden"} bg-brand px-3 py-2 w-fit rounded-xl h-full`}>
+									{anyUploading ? "Caricamento in corso..." : <FaPlusSquare className='font-bold text-dark dark:text-white'/>}
+								</button>
+						</div>
+						<div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl shadow-lg min-w-0 h-full bg-brand/50'>
+							{/* SELECT DI RICERCA PRATICA */}
+							<div className="col-span-12 lg:col-span-12 min-w-0">
+								<label className="block text-sm font-semibold mb-1">Seleziona una pratica</label>
+								<Popover open={open} onOpenChange={setOpen} className="w-full">
+									<PopoverTrigger asChild>
+										<Button
+											variant="outline"
+											role="combobox"
+											aria-expanded={open}
+											className="w-full min-w-0 justify-between outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background data-[state=open]:ring-2 data-[state=open]:ring-ring data-[state=open]:ring-offset-2">
+											{praticaSelect ? optionsPraticheRitiro.find((ar) => ar.value === praticaSelect)?.label  : "seleziona una pratica..."}
+											<ChevronsUpDown className="opacity-50" />
+										</Button>
+									</PopoverTrigger>
+									<PopoverContent align="start" sideOffset={4} className="p-0 w-[var(--radix-popover-trigger-width)]">
+										<Command className="p-1">
+											<CommandInput placeholder="Cerca..." className="h-8 focus:ring-1 focus:ring-brand focus:border-brand outline-none focus:outline-none my-2" />
+											<CommandList className="my-1">
+												<CommandEmpty>Nessun risultato</CommandEmpty>
+												<CommandGroup>
+													{optionsPraticheRitiro.map((opt) => (
+														<CommandItem
+															key={opt.value}
+															value={`${opt.value}`}
+															onSelect={() => { setPraticaSelect(opt.value); setOpen(false) }}
+														>
+															{opt.label}
+															<Check className={cn("ml-auto", optionsPraticheRitiro === opt.value ? "opacity-100" : "opacity-0")} />
+														</CommandItem>
+													))}
+												</CommandGroup>
+											</CommandList>
+										</Command>
+									</PopoverContent>
+								</Popover>
+							</div>
 
 
-              </div>
-            </div>
+						</div>
+					</div>
+					<div id="twoStep" className={`${praticaSelect ? "" : "hidden"} flex flex-col col-span-12 h-fit gap-3`}>             
+						<div className="col-span-12">
+							<h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">SPECIFICHE VEICOLO</h4>
+						</div>
+						<div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl dark:shadow-lg min-w-0 bg-white dark:bg-neutral-900 border'>
+							<FormTextarea nome="noteDemolizione" label='Note' value={formData.noteDemolizione} colspan="col-span-6" mdcolspan="lg:col-span-12" onchange={handleChange} type="textarea" as="textarea"/>
+						</div>
+					</div>
 
-            <div id="twoStep" className={`${praticaSelect ? "" : "hidden"} flex flex-col col-span-12 h-fit gap-3`}>             
-              <div className="col-span-12">
-                <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">SPECIFICHE VEICOLO</h4>
-              </div>
-              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl dark:shadow-lg min-w-0 bg-white dark:bg-neutral-900 border'>
-                <FormSelectRuoli nome="tipologiaDemolizione" label='Tipologia Demolizione' value={formData.tipologiaDemolizione} colspan="col-span-10" mdcolspan="lg:col-span-6" onchange={handleChange} options={tipologiaDemolizione}/>
-                <FormTextarea nome="noteDemolizione" label='Note' value={formData.noteDemolizione} colspan="col-span-6" mdcolspan="lg:col-span-12" onchange={handleChange} type="textarea" as="textarea"/>
-                
-              </div>
-            </div>
+					<div id="threeStep" className={`${praticaSelect ? "" : "hidden"} flex flex-col col-span-12 h-fit gap-3`}>              
+						<div className={"col-span-12"}>
+							<h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">FOTO</h4>
+						</div>
+						<div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl dark:shadow-lg min-w-0 bg-white dark:bg-neutral-900 border'>
+							<FormFileUpload
+								nome="documentoDemolizione"
+								label="Certificato Demolizione"
+								bucket="documentiveicoli"
+								accept="image/*,application/pdf"
+								campo="demolizione"
+								colspan="col-span-12"
+								mdcolspan="lg:col-span-6"
+								targa={datiPraticaSelezionata?.targa_veicolo_ritirato}
+								makePublic={true}
+								onchange={handleChangeUpload}
+								onBusyChange={handleBusyChange}
+								resetToken={resetUploadsTick}
+								pathPrefix={`public/${datiPraticaSelezionata?.uuid_azienda_ritiro_veicoli}/${datiPraticaSelezionata?.targa_veicolo_ritirato}`}
+							/>
+							<FormFileUpload
+								nome="altroDocumentoDemolizione"
+								label="Altro Documento"
+								bucket="documentiveicoli"
+								accept="image/*,application/pdf"
+								campo="altro"
+								colspan="col-span-12"
+								mdcolspan="lg:col-span-6"
+								targa={datiPraticaSelezionata?.targa_veicolo_ritirato}
+								makePublic={true}
+								onchange={handleChangeUpload}
+								onBusyChange={handleBusyChange}
+								resetToken={resetUploadsTick}
+								pathPrefix={`public/${datiPraticaSelezionata?.uuid_azienda_ritiro_veicoli}/${datiPraticaSelezionata?.targa_veicolo_ritirato}`}
+							/>
+						</div>              
+					</div>  
 
-            <div id="threeStep" className={`${threeStep ? "" : "hidden"} flex flex-col col-span-12 h-fit gap-3`}>              
-              <div className={"col-span-12"}>
-                <h4 className="text-[0.6rem] font-bold text-dark dark:text-brand border border-brand px-3 py-2 w-fit rounded-xl">FOTO</h4>
-              </div>
-              <div className='grid grid-cols-12 gap-4 p-6 col-span-12 rounded-2xl dark:shadow-lg min-w-0 bg-white dark:bg-neutral-900 border'>
-                <FormFileUpload
-                  nome="documentoDemolizione"
-                  label="Certificato Demolizione"
-                  bucket="documentiveicoli"
-                  accept="image/*,application/pdf"
-                  campo="demolizione"
-                  colspan="col-span-12"
-                  mdcolspan="lg:col-span-6"
-                  targa={datiPraticaSelezionata?.targa_veicolo_ritirato}
-                  makePublic={true}
-                  onchange={handleChangeUpload}
-                  onBusyChange={handleBusyChange}
-                  resetToken={resetUploadsTick}
-                  pathPrefix={`public/${datiPraticaSelezionata?.uuid_azienda_ritiro_veicoli}/${datiPraticaSelezionata?.targa_veicolo_ritirato}`}
-                />
-                <FormFileUpload
-                  nome="altroDocumentoDemolizione"
-                  label="Altro Documento"
-                  bucket="documentiveicoli"
-                  accept="image/*,application/pdf"
-                  campo="altro"
-                  colspan="col-span-12"
-                  mdcolspan="lg:col-span-6"
-                  targa={datiPraticaSelezionata?.targa_veicolo_ritirato}
-                  makePublic={true}
-                  onchange={handleChangeUpload}
-                  onBusyChange={handleBusyChange}
-                  resetToken={resetUploadsTick}
-                  pathPrefix={`public/${datiPraticaSelezionata?.uuid_azienda_ritiro_veicoli}/${datiPraticaSelezionata?.targa_veicolo_ritirato}`}
-                />
-              </div>              
-            </div>  
-
-            <div id="fourStep" className={`${fourStep ? "" : "hidden"} col-span-12 flex justify-end`}>
-              <button
-                type="submit"
-                disabled={anyUploading}
-                className="border border-brand hover:bg-brand text-neutral-600 dark:text-neutral-200 px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
-                {anyUploading ? "Caricamento in corso..." : "Inserisci"}
-              </button>
-            </div>
-          </form>
+					<div id="fourStep" className={`${fourStep ? "" : "hidden"} col-span-12 flex justify-end`}>
+						<button
+							type="submit"
+							disabled={anyUploading}
+							className="border border-brand hover:bg-brand text-neutral-600 dark:text-neutral-200 px-6 py-1 text-xs rounded-xl font-semibold transition disabled:opacity-60 lg:w-fit w-full h-8">
+							{anyUploading ? "Caricamento in corso..." : "Inserisci"}
+						</button>
+					</div>
+				</form>
       </div>
     </>
   )

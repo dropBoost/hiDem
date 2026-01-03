@@ -14,7 +14,7 @@ export default function DisplayVeicoliRitirati ({
 
 	return (
 		<>
-		<div className="flex flex-row min-h-0 lg:h-56 h-full w-full border justify-between items-start rounded-xl p-3 gap-2 shadow-xl">
+		<div className="flex flex-row min-h-0 lg:h-56 h-full w-full border justify-between items-start rounded-xl p-3 gap-2">
 			<div className="flex flex-1 flex-col justify-between items-start min-h-0 h-full lg:gap-0 gap-4">
 				{/* DATI VEICOLO */}
 				<div className="flex flex-col flex-1 justify-start items-start gap-1">

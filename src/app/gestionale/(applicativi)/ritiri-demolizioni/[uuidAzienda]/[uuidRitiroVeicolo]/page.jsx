@@ -22,8 +22,6 @@ import { useAdmin } from "@/app/admin/components/AdminContext";
     const [updateTracking, setUpdateTracking] = useState(false)
     const [sUpdateComponent,setSUpdateComponent] = useState(false)
 
-console.log(praticaAuto)
-
     // CARICAMENTO PRATICA VEICOLO
     useEffect(() => {
         if (!params.uuidRitiroVeicolo){
@@ -105,7 +103,7 @@ console.log(praticaAuto)
 						})()}
 					</span>
 				</div>
-        <BTNapprovazionePratica uuidPratica={uuidRitiroVeicolo} setSUpdateComponent={setSUpdateComponent}/>
+        <BTNapprovazionePratica uuidPratica={uuidRitiroVeicolo} sUpdateComponent={sUpdateComponent} setSUpdateComponent={setSUpdateComponent}/>
       </div>
       {/* DATI */}
       <div className="flex flex-col w-full justify-between border border-brand rounded-xl p-5">
