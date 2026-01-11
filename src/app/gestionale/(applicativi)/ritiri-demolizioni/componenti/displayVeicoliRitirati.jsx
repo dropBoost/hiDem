@@ -7,7 +7,8 @@ import ButtonScaricaRitiroPDF from "@/app/componenti/pdf/buttonScaricaRitiroPDF"
 
 export default function DisplayVeicoliRitirati ({
 	uuid, targa, modelloVeicolo, telaio, nome, cognome, mobileDetentore,completata,tipologiaD,ragioneSociale, piva, cf, email, documento, data,
-	veicoloConsegnato, veicoloRitirato, demolizioneApprovata, formaLegale, vinLeggibile
+	veicoloConsegnato, veicoloRitirato, demolizioneApprovata, formaLegale, vinLeggibile, documentoDetentore, nDocDetentore, indirizzo, gravami,
+	iDocVeicoloF, iDocVeicoloR, iDocDetentoreF, iDocDetentoreR, iComplementareF, iComplementareR
 	}) {
 	
 	const statoDemolizione = demolizioneApprovata == null ? "pratica in attesa" : (demolizioneApprovata ? "demolizione approvata" : "demolizione non approvata")
@@ -62,7 +63,6 @@ export default function DisplayVeicoliRitirati ({
 			<div className="flex flex-row justify-end items-end h-full gap-1 text-xs">
 				<ButtonScaricaRitiroPDF payload={{
 					uuidRitiroVeicolo: uuid,
-					aziendaRitiro: "uno",
 					vinLeggibile: vinLeggibile,
 					vin: telaio,
 					targa: targa,
@@ -70,19 +70,25 @@ export default function DisplayVeicoliRitirati ({
 					tipologiaDetentore: tipologiaD,
 					formaLegale: formaLegale,
 					ragioneSociale: ragioneSociale,
-					indirizzo: `${"viaaaaa"}`,
+					indirizzo: indirizzo,
 					nome: nome,
 					cognome: cognome,
 					cf: cf,
 					piva: piva,
-					tipologiaDocDet: documento,
-					numeroDocDet: "4444444",
+					tipologiaDocDet: documentoDetentore,
+					numeroDocDet: nDocDetentore,
 					email: email,
 					mobile: mobileDetentore,
-					tipDocVeic: `${"tipo doc veicolo"}`,
-					docGravami: `${"esito gravami"}`,
+					tipDocVeic: documento,
+					docGravami: gravami,
 					praticaCompletata: `${"fffff"}`,
 					dataRitiro: data,
+					iDocVeicoloF:iDocVeicoloF,
+					iDocVeicoloR:iDocVeicoloR,
+					iDocDetentoreF:iDocDetentoreF,
+					iDocDetentoreR:iDocDetentoreR,
+					iComplementareF:iComplementareF,
+					iComplementareR:iComplementareR,
 				}}/>
 				<Link className="p-2 bg-brand/70 rounded-md hover:bg-brand" href={`ritiri-demolizioni/${uuid}`}><RiEyeCloseLine/></Link>
 			</div>

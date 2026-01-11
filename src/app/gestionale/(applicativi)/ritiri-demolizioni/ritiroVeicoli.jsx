@@ -202,68 +202,60 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
     let cancelled = false;
 
     (async () => {
-      // conta senza scaricare dati
-      const [{ count: c1, error: e1 }, { count: c2, error: e2 }] =
-        await Promise.all([
-          supabase
-            .from("dati_veicolo_ritirato")
-            .select("targa_veicolo_ritirato", { count: "exact", head: true })
-            .eq("targa_veicolo_ritirato", targa),
-        ]);
+      const { count, error } = await supabase
+        .from("dati_veicolo_ritirato")
+        .select("targa_veicolo_ritirato", { count: "exact", head: true })
+        .eq("targa_veicolo_ritirato", targa);
 
-      if (e1 || e2) {
-        console.error(e1 || e2);
+      if (error) {
+        console.error(error);
         toast.error("Errore nel controllo targa");
         return;
       }
 
       if (!cancelled) {
-        setTargaCaricare((c1 ?? 0) > 0 || (c2 ?? 0) > 0);
+        setTargaCaricare((count ?? 0) > 0);
       }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [formData.targa, supabase, toast, setTargaCaricare]);
+  }, [formData.targa]);
 
   // VERIFICA TELAIO
-  useEffect(() => {
-    const raw = formData?.vin ?? "";
-    const telaio = raw.toUpperCase().replace(/\s+/g, ""); // normalizza
+	useEffect(() => {
+		const raw = formData?.vin ?? "";
+		const telaio = raw.toUpperCase().replace(/\s+/g, ""); // normalizza
 
-    if (telaio.length !== 17) {
-      setTelaioCaricare(false);
-      return;
-    }
+		if (telaio.length !== 17) {
+			setTelaioCaricare(false);
+			return;
+		}
 
-    let cancelled = false;
+		let cancelled = false;
 
-    (async () => {
-      // conta senza scaricare dati
-      const [{ count: c1, error: e1 }, { count: c2, error: e2 }] =
-        await Promise.all([
-          supabase
-            .from("dati_veicolo_ritirato")
-            .select("vin_veicolo_ritirato", { count: "exact", head: true })
-            .eq("vin_veicolo_ritirato", telaio),
-        ]);
+		(async () => {
+			const { count, error } = await supabase
+				.from("dati_veicolo_ritirato")
+				.select("vin_veicolo_ritirato", { count: "exact", head: true })
+				.eq("vin_veicolo_ritirato", telaio);
 
-      if (e1 || e2) {
-        console.error(e1 || e2);
-        toast.error("Errore nel controllo telaio");
-        return;
-      }
+			if (error) {
+				console.error(error);
+				toast.error("Errore nel controllo telaio");
+				return;
+			}
 
-      if (!cancelled) {
-        setTelaioCaricare((c1 ?? 0) > 0 || (c2 ?? 0) > 0);
-      }
-    })();
+			if (!cancelled) {
+				setTelaioCaricare((count ?? 0) > 0);
+			}
+		})();
 
-    return () => {
-      cancelled = true;
-    };
-  }, [formData.vin, supabase, toast, setTelaioCaricare]);
+		return () => {
+			cancelled = true;
+		};
+	}, [formData.vin]);
 
   const optionsModelliMarchio = modelliAuto
     .sort((a, b) =>
@@ -298,7 +290,7 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
     { label: "Altro", value: "altro" },
   ];
   const tipologiaDocumentoVeicoloOption = [
-    { label: "Libretto", value: "libretto" },
+    { label: "Carta di Circolazione", value: "carta di circolazione" },
     { label: "Denuncia", value: "denuncia" },
   ];
 	const statoGravamiOption = [
@@ -1078,7 +1070,7 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
 									nome="fronteDOCveicolo"
 									label="Documento Veicolo - Fronte"
 									bucket="documentiveicoli"
-									accept="image/*"
+									accept=".pdf,.jpg,.jpeg,.png"
 									campo="DOCVEICFronte"
 									basis={`xl:basis-6/12 basis-full`}
 									targa={formData.targa}
@@ -1092,7 +1084,7 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
 									nome="retroDOCveicolo"
 									label="Documento Veicolo - Retro"
 									bucket="documentiveicoli"
-									accept="image/*"
+									accept=".pdf,.jpg,.jpeg,.png"
 									campo="DOCVEICRetro"
 									basis={`xl:basis-6/12 basis-full`}
 									targa={formData.targa}
@@ -1112,7 +1104,7 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
 										nome="fronteDOCcomplementare"
 										label="Documento Complementare - Fronte"
 										bucket="documentiveicoli"
-										accept="image/*"
+										accept=".pdf,.jpg,.jpeg,.png"
 										campo="ComplementareFronte"
 										basis={`xl:basis-6/12 basis-full`}
 										targa={formData.targa}
@@ -1126,7 +1118,7 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
 										nome="retroDOCcomplementare"
 										label="Documento Complementare - Retro"
 										bucket="documentiveicoli"
-										accept="image/*"
+										accept=".pdf,.jpg,.jpeg,.png"
 										campo="ComplementareRetro"
 										basis={`xl:basis-6/12 basis-full`}
 										targa={formData.targa}
@@ -1146,7 +1138,7 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
 										nome="fronteDOCdetentore"
 										label="Documento Detentore - Fronte"
 										bucket="documentidetentori"
-										accept="image/*"
+										accept=".pdf,.jpg,.jpeg,.png"
 										campo="DOCDETENTFronte"
 										basis={`xl:basis-6/12 basis-full`}
 										targa={formData.targa}
@@ -1160,7 +1152,7 @@ export default function InserimentoVeicoliRitirati({  onDisplay,  statusAziende,
 										nome="retroDOCdetentore"
 										label="Documento Detentore - Retro"
 										bucket="documentidetentori"
-										accept="image/*"
+										accept=".pdf,.jpg,.jpeg,.png"
 										campo="DOCDETENTRetro"
 										basis={`xl:basis-6/12 basis-full`}
 										targa={formData.targa}

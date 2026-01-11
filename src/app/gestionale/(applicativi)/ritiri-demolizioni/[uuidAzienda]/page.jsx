@@ -150,12 +150,42 @@ import DisplayVeicoliRitirati from "../componenti/displayVeicoliRitirati";
 
           return (
             <DisplayVeicoliRitirati
-            key={lpa?.uuid_veicolo_ritirato} uuid={lpa?.uuid_veicolo_ritirato} data={DataFormat(lpa?.created_at_veicolo_ritirato)}
-            targa={lpa?.targa_veicolo_ritirato} telaio={lpa?.vin_veicolo_ritirato} vinLeggibile={lpa?.vin_leggibile}
-            formaLegale={lpa?.forma_legale_detentore} tipologiaD={lpa?.tipologia_detentore} ragioneSociale={lpa?.ragione_sociale_detentore} nome={lpa?.nome_detentore} cognome={lpa?.cognome_detentore} piva={lpa?.piva_detentore}
-            cf={lpa?.cf_detentore} modelloVeicolo={`${lpa?.modello.marca} ${lpa?.modello.modello}`} documento={lpa?.tipologia_documento_veicolo_ritirato}
-            mobileDetentore={lpa?.mobile_detentore} email={lpa?.email_detentore}
-            completata={lpa?.pratica_completata} veicoloConsegnato={lpa?.veicolo_consegnato} veicoloRitirato={lpa?.veicolo_ritirato} demolizioneApprovata={lpa?.demolizione_approvata}
+            key={lpa?.uuid_veicolo_ritirato}
+            uuid={lpa?.uuid_veicolo_ritirato}
+            data={DataFormat(lpa?.created_at_veicolo_ritirato)}
+
+            modelloVeicolo={`${lpa?.modello.marca} ${lpa?.modello.modello}`}
+            documento={lpa?.tipologia_documento_veicolo_ritirato}
+            targa={lpa?.targa_veicolo_ritirato}
+            telaio={lpa?.vin_veicolo_ritirato}
+            vinLeggibile={lpa?.vin_leggibile}
+            gravami={lpa?.stato_gravami}
+
+            formaLegale={lpa?.forma_legale_detentore}
+            tipologiaD={lpa?.tipologia_detentore}
+            ragioneSociale={lpa?.ragione_sociale_detentore}
+            nome={lpa?.nome_detentore}
+            cognome={lpa?.cognome_detentore}
+            piva={lpa?.piva_detentore}
+            cf={lpa?.cf_detentore}
+            documentoDetentore={lpa?.tipologia_documento_detentore}
+            nDocDetentore={lpa?.numero_documento_detentore}
+            mobileDetentore={lpa?.mobile_detentore}
+            email={lpa?.email_detentore}
+            indirizzo={`${lpa?.indirizzo_detentore} - ${lpa?.cap_detentore} ${lpa?.citta_detentore} (${lpa?.provincia_detentore})`}
+
+            completata={lpa?.pratica_completata}
+            veicoloConsegnato={lpa?.veicolo_consegnato}
+            veicoloRitirato={lpa?.veicolo_ritirato}
+            demolizioneApprovata={lpa?.demolizione_approvata}
+
+            iDocVeicoloF={lpa?.foto_documento_veicolo_ritirato_f}
+            iDocVeicoloR={lpa?.foto_documento_veicolo_ritirato_r}
+            iDocDetentoreF={lpa?.foto_documento_detentore_f}
+            iDocDetentoreR={lpa?.foto_documento_detentore_r}
+            iComplementareF={lpa?.foto_complementare_veicolo_ritirato_f}
+            iComplementareR={lpa?.foto_complementare_veicolo_ritirato_r}
+
             />
           );
           
