@@ -204,7 +204,7 @@ export default function SECTIONveicoliTransito({ onDisplay, setStatusAziende, st
 										VEICOLI IN CONSEGNA
 									</h4>
 								</div>
-								<div className="flex flex-col gap-2">
+								<div className="flex flex-col gap-2 overflow-auto">
 									{veicoliInConsegna?.map((c, i) => (
 										<div key={c.uuid_veicolo_ritirato} className="flex flex-row justify-between border py-2 px-4 rounded-xl">
 											<div className="flex flex-row items-center gap-3">
